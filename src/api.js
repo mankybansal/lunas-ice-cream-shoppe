@@ -52,7 +52,7 @@ function GetMenu() {
  */
 
 function SendPayment(amount, cardDetails) {
-    // Send payment info to gateway
+    // API Sends Payment Info to Gateway
 
     // Simulated Response
     return {
@@ -64,13 +64,19 @@ function SendPayment(amount, cardDetails) {
  * FRONTEND API CODE
  ********************/
 
+// Server Request Function
 function ServerRequest(request, callback) {
-    // HTTP REQUEST API CALLER GOES HERE
 
-    callback && callback(request);
+    // Make HTTP Request to API
+
+    // Simulate API Request
+    let response = request;
+
+    // Callback Function With Response
+    callback && callback(response);
 }
 
-// API REQUESTS
+// API Requests
 let REQUESTS = {
     GetMenu: function (callback) {
         ServerRequest(GetMenu(), callback);
