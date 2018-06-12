@@ -1,0 +1,14 @@
+[
+  {
+    "id": "SER1",
+    "name": "Bowl",
+    "desc": "Up to 3 Scoops + 2 Toppings",
+    "image": "default.png"
+  },
+  {
+    "id": "SER2",
+    "name": "Cone",
+    "desc": "Up to 2 Scoops + 1 Topping",
+    "image": "default.png"
+  }
+]
