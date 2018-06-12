@@ -5,6 +5,7 @@ import * as AppConfig from "./AppConfig";
 import REQUESTS from '../api';
 
 // Sample Card Details
+/*
 let cardDetails = {
     name: "Mayank Bansal",
     network: "Visa",
@@ -13,86 +14,157 @@ let cardDetails = {
     expiry: "02/19/2022",
     cvv: 999
 };
+*/
 
 class IceCreamKiosk extends Component {
 
     constructor(props) {
         super(props);
 
-        // GET MENU
-        console.log("API Data Dump:");
-        REQUESTS.GetMenu(function(GetMenuResponse){
-            if(GetMenuResponse.Success){
-                console.log(GetMenuResponse.Servings);
-                console.log(GetMenuResponse.Flavors);
-                console.log(GetMenuResponse.Toppings);
-            }
-        });
-
-        this.ConfirmOrder({name: "hello"},cardDetails);
-
+        // Set Application State
         this.state = {
-            currentStep: AppConfig.steps.Start
+            currentStep: AppConfig.steps.Start,
+            currentOrder: null,
+            Menu: {
+                Servings: null,
+                Flavors: null,
+                Toppings: null
+            },
+            Orders: []
         };
 
-        this.next = this.next.bind(this);
-        this.prev = this.prev.bind(this);
+        // this.ConfirmOrder({name: "hello"},cardDetails);
+        this.stepHandler = this.stepHandler.bind(this);
+        this.orderHandler = this.orderHandler.bind(this);
     }
 
-    next() {
-        let currentStep = this.state.currentStep;
-        if (currentStep < AppConfig.steps.Finish)
-            currentStep++;
+    async componentWillMount() {
+        // Request API for Menu
+        REQUESTS.GetMenu((GetMenuResponse) => {
+            if (GetMenuResponse.Success) {
+                this.setState({
+                    Menu: {
+                        Servings: GetMenuResponse.Servings,
+                        Flavors: GetMenuResponse.Flavors,
+                        Toppings: GetMenuResponse.Toppings,
+                    }
+                }, () => {
+                    console.log("Servings Available:", this.state.Menu.Servings);
+                    console.log("Flavors Available:", this.state.Menu.Flavors);
+                    console.log("Toppings Available:", this.state.Menu.Toppings);
+                });
 
-        this.setState({
-            currentStep: currentStep
+            }
         });
     }
 
-    prev() {
-        let currentStep = this.state.currentStep;
-
-        if (currentStep > AppConfig.steps.Start)
-            currentStep--;
-
+    stepHandler(gotoStep) {
         this.setState({
-            currentStep: currentStep
+            currentStep: gotoStep
         });
     }
+
+    orderHandler(orderID, serving, flavors, toppings) {
+        if (serving) {
+            this.setState({
+                currentOrder: {
+                    Serving: serving
+                }
+            });
+        }
+
+        if (flavors) {
+            this.setState({
+                currentOrder: {
+                    Flavors: flavors
+                }
+            });
+        }
+
+        if (toppings) {
+            this.setState({
+                currentOrder: {
+                    Toppings: toppings
+                }
+            });
+        }
+
+    }
+
 
     ConfirmOrder(order, cardDetails) {
         // calculate amount, complete payment and sendOrder
         let amount = 999;
 
         // send payment info to API
-        REQUESTS.SendPayment(amount, cardDetails, function (PaymentResponse) {
-            if (PaymentResponse.Success) {
-                console.log("Payment Processed");
+        REQUESTS.SendPayment(amount, cardDetails,
+            (PaymentResponse) => {
+                if (PaymentResponse.Success) {
+                    console.log("Payment Processed");
 
-                // send order to API
-                REQUESTS.SendOrder(order, function (SendOrderResponse) {
-                    if (SendOrderResponse.Success) {
-                        console.log("Order #" + SendOrderResponse.Order.number + " Processed");
-                    }
-                })
-            }
-        });
+                    // send order to API
+                    REQUESTS.SendOrder(order,
+                        (SendOrderResponse) => {
+                            if (SendOrderResponse.Success) {
+                                console.log("Order #" + SendOrderResponse.Order.number + " Processed");
+                            }
+                        })
+                }
+            });
     }
 
     render() {
+
         let currentStep = this.state.currentStep;
+        let servings = this.state.Menu.Servings;
+        let flavors = this.state.Menu.Flavors;
+        let toppings = this.state.Menu.Toppings;
+
         return (
             <div className="App">
-                <StartStep currentStep={currentStep}/>
-                <ServingsStep currentStep={currentStep}/>
-                <FlavorsStep currentStep={currentStep}/>
-                <ToppingsStep currentStep={currentStep}/>
-                <ConfirmStep currentStep={currentStep}/>
-                <PaymentStep currentStep={currentStep}/>
-                <FinishStep currentStep={currentStep}/>
 
-                <button onClick={this.prev}>Prev</button>
-                <button onClick={this.next}>Next</button>
+                <StartStep
+                    stepHandler={this.stepHandler}
+                    currentStep={currentStep}
+                />
+
+                <ServingsStep
+                    stepHandler={this.stepHandler}
+                    orderHandler={this.orderHandler}
+                    currentStep={currentStep}
+                    Servings={servings}
+                />
+
+                <FlavorsStep
+                    stepHandler={this.stepHandler}
+                    orderHandler={this.orderHandler}
+                    currentStep={currentStep}
+                    Flavors={flavors}
+                />
+
+                <ToppingsStep
+                    stepHandler={this.stepHandler}
+                    orderHandler={this.orderHandler}
+                    currentStep={currentStep}
+                    Toppings={toppings}
+                />
+
+                <ConfirmStep
+                    stepHandler={this.stepHandler}
+                    orderHandler={this.orderHandler}
+                    currentStep={currentStep}
+                />
+
+                <PaymentStep
+                    stepHandler={this.stepHandler}
+                    currentStep={currentStep}
+                />
+
+                <FinishStep
+                    stepHandler={this.stepHandler}
+                    currentStep={currentStep}
+                />
+
             </div>
         );
     }

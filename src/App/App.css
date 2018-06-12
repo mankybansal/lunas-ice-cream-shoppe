@@ -22,6 +22,27 @@
     font-size: large;
 }
 
+.servingContainer, .toppingContainer, .flavorContainer {
+    width: 250px;
+    margin: 25px;
+    height: 200px;
+    padding: 30px;
+    font-family: Calibri, sans-serif;
+    box-sizing: border-box;
+    display: inline-block;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.05);
+    vertical-align: top;
+    transition: all ease .3s;
+    cursor: pointer;
+}
+
+.servingContainer:hover, .toppingContainer:hover, .flavorContainer:hover {
+    background: #eee;
+    box-shadow: 0 0 20px rgba(0,0,0,0.02);
+}
+
 @keyframes App-logo-spin {
     from {
         transform: rotate(0deg);
