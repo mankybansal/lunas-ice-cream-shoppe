@@ -2,24 +2,41 @@ import React from 'react';
 import * as AppConfig from "../../AppConfig";
 
 
-function FlavorsList(props) {
-    const listItems = props.Flavors.map((Flavor) =>
-        <div key={Flavor.id.toString()} className="flavorContainer">
-            <b>{Flavor.name}</b>
-            <br/>
-            <div>
-                {Flavor.desc}
-            </div>
-            <br/>
-            <div>
-                {Flavor.calories} Cal &nbsp;&nbsp;&nbsp;  ${Flavor.price}
-            </div>
-        </div>
-    );
+class FlavorsList extends React.Component {
 
-    return (
-        <div>{listItems}</div>
-    );
+    constructor(props) {
+        super(props);
+
+        this.boundItemClick = this.onItemClick.bind(this);
+    }
+
+    onItemClick(item) {
+        console.log(item);
+    }
+
+    render() {
+        const listItems = this.props.Flavors.map((Flavor) => {
+                return (
+                    <div key={Flavor.id.toString()} className="flavorContainer" onClick={()=>this.boundItemClick(Flavor)}>
+                        <b>{Flavor.name}</b>
+                        <br/>
+                        <div>
+                            {Flavor.desc}
+                        </div>
+                        <br/>
+                        <div>
+                            {Flavor.calories} Cal &nbsp;&nbsp;&nbsp;  ${Flavor.price}
+                        </div>
+                    </div>
+                );
+            }
+        );
+
+
+        return (
+            <div>{listItems}</div>
+        );
+    }
 }
 
 class FlavorsStep extends React.Component {

@@ -11,6 +11,7 @@ class StartStep extends React.Component {
 
     stepHandler(gotoStep) {
         this.props.stepHandler(gotoStep);
+        this.props.orderHandler(333, false, false, false)
     }
 
     render() {
@@ -21,7 +22,7 @@ class StartStep extends React.Component {
         return (
             <div>
                 <p>Touch to Start</p>
-                <button onClick= {() => this.stepHandler(AppConfig.steps.Servings)}>Touch To Begin</button>
+                <button onClick={() => this.stepHandler(AppConfig.steps.Servings)}>Touch To Begin</button>
             </div>
         );
     }

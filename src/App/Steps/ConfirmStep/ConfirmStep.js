@@ -9,6 +9,12 @@ class ConfirmStep extends React.Component {
         this.stepHandler = this.stepHandler.bind(this);
     }
 
+    componentWillReceiveProps(){
+        this.setState({
+            order: this.props.order
+        });
+    }
+
     stepHandler(gotoStep) {
         this.props.stepHandler(gotoStep);
     }
@@ -18,11 +24,11 @@ class ConfirmStep extends React.Component {
             return null;
         }
 
-
         return (
             <div>
                 <p>Review Order</p>
 
+                <div>{ this.state.order.Number.toString() }</div>
 
                 <button onClick={() => this.stepHandler(AppConfig.steps.Servings)}>Add Another Order</button>
                 <button onClick={() => this.stepHandler(AppConfig.steps.Payment)}>Next: Payment</button>

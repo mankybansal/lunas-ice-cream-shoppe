@@ -24,7 +24,12 @@ class IceCreamKiosk extends Component {
         // Set Application State
         this.state = {
             currentStep: AppConfig.steps.Start,
-            currentOrder: null,
+            currentOrder: {
+                Number: null,
+                Serving: null,
+                Flavors: null,
+                Toppings: null
+            },
             Menu: {
                 Servings: null,
                 Flavors: null,
@@ -65,6 +70,14 @@ class IceCreamKiosk extends Component {
     }
 
     orderHandler(orderID, serving, flavors, toppings) {
+        if (orderID) {
+            this.setState({
+                currentOrder: {
+                    Number: orderID
+                }
+            });
+        }
+
         if (serving) {
             this.setState({
                 currentOrder: {
@@ -90,7 +103,6 @@ class IceCreamKiosk extends Component {
         }
 
     }
-
 
     ConfirmOrder(order, cardDetails) {
         // calculate amount, complete payment and sendOrder
@@ -125,6 +137,7 @@ class IceCreamKiosk extends Component {
 
                 <StartStep
                     stepHandler={this.stepHandler}
+                    orderHandler={this.orderHandler}
                     currentStep={currentStep}
                 />
 
@@ -151,7 +164,8 @@ class IceCreamKiosk extends Component {
 
                 <ConfirmStep
                     stepHandler={this.stepHandler}
-                    orderHandler={this.orderHandler}
+                    // orderHandler={this.orderHandler}
+                    order={this.state.currentOrder}
                     currentStep={currentStep}
                 />
 

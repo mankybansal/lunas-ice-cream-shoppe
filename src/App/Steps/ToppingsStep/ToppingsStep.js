@@ -1,25 +1,44 @@
 import React from 'react';
 import * as AppConfig from "../../AppConfig";
 
-function ToppingsList(props) {
-    const listItems = props.Toppings.map((Topping) =>
-        <div key={Topping.id.toString()} className="toppingContainer">
-            <b>{Topping.name}</b>
-            <br/>
-            <div>
-                {Topping.desc}
-            </div>
-            <br/>
-            <div>
-                {Topping.calories} Cal &nbsp;&nbsp;&nbsp;  ${Topping.price}
-            </div>
-        </div>
-    );
 
-    return (
-        <div>{listItems}</div>
-    );
+class ToppingsList extends React.Component {
+
+    constructor(props) {
+        super(props);
+
+        this.boundItemClick = this.onItemClick.bind(this);
+    }
+
+    onItemClick(item) {
+        console.log(item);
+    }
+
+    render() {
+        const listItems = this.props.Toppings.map((Topping) => {
+                return (
+                    <div key={Topping.id.toString()} className="flavorContainer" onClick={()=>this.boundItemClick(Topping)}>
+                        <b>{Topping.name}</b>
+                        <br/>
+                        <div>
+                            {Topping.desc}
+                        </div>
+                        <br/>
+                        <div>
+                            {Topping.calories} Cal &nbsp;&nbsp;&nbsp;  ${Topping.price}
+                        </div>
+                    </div>
+                );
+            }
+        );
+
+
+        return (
+            <div>{listItems}</div>
+        );
+    }
 }
+
 
 class ToppingsStep extends React.Component {
 

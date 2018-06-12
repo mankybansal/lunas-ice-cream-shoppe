@@ -2,20 +2,36 @@ import React from 'react';
 import * as AppConfig from "../../AppConfig";
 
 
-function ServingsList(props) {
-    const listItems = props.Servings.map((Serving) =>
-        <div key={Serving.id.toString()} className="servingContainer">
-            <b>{Serving.name}</b>
-            <br/>
-            <div>
-                {Serving.desc}
-            </div>
-        </div>
-    );
+class ServingsList extends React.Component {
 
-    return (
-        <div>{listItems}</div>
-    );
+    constructor(props){
+        super(props);
+
+        this.boundItemClick = this.onItemClick.bind(this);
+    }
+
+    onItemClick(item) {
+        console.log(item);
+    }
+
+    render(){
+        const listItems = this.props.Servings.map((Serving) => {
+                return (
+                    <div key={Serving.id.toString()} className="servingContainer" onClick={()=>this.boundItemClick(Serving)}>
+                        <b>{Serving.name}</b>
+                        <br/>
+                        <div>
+                            {Serving.desc}
+                        </div>
+                    </div>
+                )
+            }
+        );
+
+        return (
+            <div>{listItems}</div>
+        );
+    }
 }
 
 class ServingsStep extends React.Component {
