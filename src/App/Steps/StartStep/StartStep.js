@@ -8,20 +8,13 @@ class StartStep extends React.Component {
         this.stepHandler = this.stepHandler.bind(this);
     }
 
-    componentWillMount() {
-        this.setState({
-            Order: this.props.Order,
-        });
-    }
-
     stepHandler(gotoStep) {
         this.props.stepHandler(gotoStep);
     }
 
     render() {
-        if (this.props.currentStep !== AppConfig.steps.Start) {
+        if (this.props.currentStep !== AppConfig.steps.Start)
             return null;
-        }
 
         return (
             <div>

@@ -3,9 +3,9 @@ import './App.css';
 import {StartStep, ServingsStep, FlavorsStep, ToppingsStep, ConfirmStep, PaymentStep, FinishStep} from './Steps';
 import * as AppConfig from "./AppConfig";
 import REQUESTS from '../api';
+import * as Helpers from "./Helpers";
 
 // Sample Card Details
-/*
 let cardDetails = {
     name: "Mayank Bansal",
     network: "Visa",
@@ -14,7 +14,6 @@ let cardDetails = {
     expiry: "02/19/2022",
     cvv: 999
 };
-*/
 
 
 class IceCreamKiosk extends Component {
@@ -28,10 +27,16 @@ class IceCreamKiosk extends Component {
         // this.ConfirmOrder({name: "hello"},cardDetails);
         this.stepHandler = this.stepHandler.bind(this);
         this.orderHandler = this.orderHandler.bind(this);
+        this.priceHandler = this.priceHandler.bind(this);
+        this.paymentHandler = this.paymentHandler.bind(this);
     }
 
-    async componentWillMount() {
+    componentWillMount() {
         // Request API for Menu
+       this.getMenu();
+    }
+
+    async getMenu(){
         REQUESTS.GetMenu((GetMenuResponse) => {
             if (GetMenuResponse.Success) {
                 this.setState({
@@ -41,23 +46,29 @@ class IceCreamKiosk extends Component {
                         Toppings: GetMenuResponse.Toppings,
                     }
                 }, () => {
-                    console.log("Servings Available:", this.state.Menu.Servings);
-                    console.log("Flavors Available:", this.state.Menu.Flavors);
-                    console.log("Toppings Available:", this.state.Menu.Toppings);
+                    console.log("Servings Available:", this.state.Menu.Servings.length);
+                    console.log("Flavors Available:", this.state.Menu.Flavors.length);
+                    console.log("Toppings Available:", this.state.Menu.Toppings.length);
                 });
 
             }
         });
     }
 
-    stepHandler(gotoStep) {
+    /*****************
+     * APP HANDLERS
+     *****************/
 
-        if (gotoStep === AppConfig.steps.Start)
-            this.setState(AppConfig.resetOrder());
-        else
-            this.setState({
-                currentStep: gotoStep
-            });
+    stepHandler(gotoStep) {
+        if (gotoStep === AppConfig.steps.Start) {
+            this.setState(AppConfig.defaultState());
+            this.getMenu();
+        }
+
+
+        this.setState({
+            currentStep: gotoStep
+        });
     }
 
     orderHandler(Order) {
@@ -66,21 +77,25 @@ class IceCreamKiosk extends Component {
         });
     }
 
-    ConfirmOrder(order, cardDetails) {
-        // calculate amount, complete payment and sendOrder
-        let amount = 999;
+    priceHandler() {
+        this.setState({
+            TotalPrice: Helpers.calculatePrice(this.state.Order)
+        });
+    }
 
+    paymentHandler() {
         // send payment info to API
-        REQUESTS.SendPayment(amount, cardDetails,
+        REQUESTS.SendPayment(this.state.TotalPrice, cardDetails,
             (PaymentResponse) => {
                 if (PaymentResponse.Success) {
                     console.log("Payment Processed");
 
                     // send order to API
-                    REQUESTS.SendOrder(order,
+                    REQUESTS.SendOrder(this.state.Order,
                         (SendOrderResponse) => {
                             if (SendOrderResponse.Success) {
-                                console.log("Order #" + SendOrderResponse.Order.number + " Processed");
+                                console.log("Successfully Processed Order #" + SendOrderResponse.Order.Number);
+                                console.log("Placed at " + SendOrderResponse.Order.Time.toLocaleTimeString() + " on " + SendOrderResponse.Order.Time.toLocaleDateString());
                             }
                         })
                 }
@@ -124,6 +139,8 @@ class IceCreamKiosk extends Component {
                     currentStep={currentStep}
                     Toppings={toppings}
                     Order={this.state.Order}
+                    priceHandler={this.priceHandler}
+
                 />
 
                 <ConfirmStep
@@ -131,11 +148,15 @@ class IceCreamKiosk extends Component {
                     orderHandler={this.orderHandler}
                     Order={this.state.Order}
                     currentStep={currentStep}
+                    TotalPrice={this.state.TotalPrice}
                 />
 
                 <PaymentStep
                     stepHandler={this.stepHandler}
+                    paymentHandler={this.paymentHandler}
                     currentStep={currentStep}
+                    Order={this.state.Order}
+                    Price={this.state.TotalPrice}
                 />
 
                 <FinishStep

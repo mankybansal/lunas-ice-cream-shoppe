@@ -28,30 +28,6 @@ class Toppings extends React.Component {
 }
 
 class OrderList extends React.Component {
-    componentWillMount() {
-        this.setState({
-            Order: this.props.Order
-        }, () => {
-            let TotalPrice = 0;
-            let Order = this.state.Order;
-
-            Order.Items.map((Item) => {
-                Item.Flavors.map((Flavor) => {
-                    TotalPrice += Flavor.price;
-                    return 0;
-                });
-
-                Item.Toppings.map((Topping) => {
-                    TotalPrice += Topping.price;
-                    return 0;
-                });
-                return 0;
-            });
-
-            this.props.priceHandler(TotalPrice);
-        });
-    }
-
     render() {
         const listItems = this.props.Order.Items.map((Item, Index) => {
             return (
@@ -72,59 +48,36 @@ class OrderList extends React.Component {
     }
 }
 
-
 class ConfirmStep extends React.Component {
 
     constructor(props) {
         super(props);
-
-        this.state = {
-            Order: null,
-            TotalPrice: 0
-        };
-
         this.stepHandler = this.stepHandler.bind(this);
-        this.priceHandler = this.priceHandler.bind(this);
-    }
-
-    componentWillMount() {
-        this.setState({
-            Order: this.props.Order
-        });
     }
 
     stepHandler(gotoStep) {
+        this.props.orderHandler(this.props.Order);
         this.props.stepHandler(gotoStep);
     }
 
-    priceHandler(price) {
-        this.setState({
-            TotalPrice: price
-        });
-    }
-
     render() {
-        if (this.props.currentStep !== AppConfig.steps.Confirm) {
+        if (this.props.currentStep !== AppConfig.steps.Confirm)
             return null;
-        }
 
         return (
             <div>
                 <p>Review Order</p>
 
-                <OrderList Order={this.state.Order} priceHandler={this.priceHandler}/>
+                <OrderList
+                    Order={this.props.Order}
+                    orderHandler={this.props.orderHandler}
+                />
 
                 <br/>
-                <h1>Total: ${this.state.TotalPrice.toFixed(2)}</h1>
+                <h1>Total: ${this.props.TotalPrice.toFixed(2)}</h1>
 
                 <button onClick={() => this.stepHandler(AppConfig.steps.Servings)}>Add Another Order</button>
                 <button onClick={() => this.stepHandler(AppConfig.steps.Payment)}>Next: Payment</button>
-
-                <br/>
-                <br/>
-                <br/>
-
-
                 <button onClick={() => this.stepHandler(AppConfig.steps.Start)}>Cancel Order</button>
             </div>
         );

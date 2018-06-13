@@ -16,19 +16,20 @@ export function defaultState() {
             Flavors: null,
             Toppings: null
         },
-        Order: resetOrder()
+        Order: defaultOrder(),
+        TotalPrice: 0
     };
 }
 
-export function resetOrder() {
+export function defaultOrder() {
     return {
-        CurrentItem: resetCurrentItem(),
+        CurrentItem: defaultCurrentItem(),
         Number: -1,
         Items: []
     };
 }
 
-export function resetCurrentItem() {
+export function defaultCurrentItem() {
     return {
         Serving: null,
         Flavors: [],
