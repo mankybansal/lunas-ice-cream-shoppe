@@ -7,3 +7,31 @@ export const steps = {
     Payment: 5,
     Finish: 6
 };
+
+export function defaultState() {
+    return {
+        currentStep: steps.Start,
+        Menu: {
+            Servings: null,
+            Flavors: null,
+            Toppings: null
+        },
+        Order: resetOrder()
+    };
+}
+
+export function resetOrder() {
+    return {
+        CurrentItem: resetCurrentItem(),
+        Number: -1,
+        Items: []
+    };
+}
+
+export function resetCurrentItem() {
+    return {
+        Serving: null,
+        Flavors: [],
+        Toppings: []
+    };
+}

@@ -22,7 +22,7 @@
     font-size: large;
 }
 
-.servingContainer, .toppingContainer, .flavorContainer {
+.servingContainer, .toppingContainer, .flavorContainer, .orderContainer {
     width: 250px;
     margin: 25px;
     height: 200px;
@@ -38,8 +38,29 @@
     cursor: pointer;
 }
 
+.orderContainer {
+    width: 350px;
+    box-sizing: unset;
+    height: auto;
+    text-align: left;
+}
+
 .selected {
     background: cornflowerblue !important;
+}
+
+.orderItemContainer {
+    width: 100%;
+    display: inline-block;
+    margin-top: 5px;
+}
+
+.orderItemName {
+    float: left;
+}
+
+.orderItemPrice {
+    float: right;
 }
 
 .servingContainer:hover, .toppingContainer:hover, .flavorContainer:hover {

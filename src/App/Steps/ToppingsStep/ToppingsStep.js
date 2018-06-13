@@ -8,7 +8,7 @@ class ToppingsList extends React.Component {
         super(props);
 
         this.state = {
-            CurrentOrder: null,
+            Order: null,
         };
 
         this.boundItemClick = this.onItemClick.bind(this);
@@ -16,25 +16,23 @@ class ToppingsList extends React.Component {
 
     componentWillMount() {
         this.setState({
-            CurrentOrder: this.props.currentOrder
+            Order: this.props.Order
         });
     }
 
     onItemClick(item) {
-        console.log(item);
-
-        let CurrentOrder = this.state.CurrentOrder;
+        let Order = this.state.Order;
 
         // check what kind of serving it is
-
-        if (CurrentOrder.Toppings.includes(item)) {
-            CurrentOrder.Toppings.splice(CurrentOrder.Toppings.indexOf(item), 1);
-        } else {
-            CurrentOrder.Toppings.push(item);
+        if (Order.CurrentItem.Toppings.includes(item))
+            Order.CurrentItem.Toppings.splice(Order.CurrentItem.Toppings.indexOf(item), 1);
+        else {
+            if (Order.CurrentItem.Toppings.length < Order.CurrentItem.Serving.toppings)
+                Order.CurrentItem.Toppings.push(item);
         }
 
         this.setState({
-            CurrentOrder: CurrentOrder
+            Order: Order
         });
     }
 
@@ -42,12 +40,13 @@ class ToppingsList extends React.Component {
         const listItems = this.props.Toppings.map((Topping) => {
 
                 let defaultClass = "toppingContainer";
-                if (this.state.CurrentOrder.Toppings.length > 0 && this.state.CurrentOrder.Toppings.includes(Topping)) {
+                if (this.state.Order.CurrentItem.Toppings.length > 0 && this.state.Order.CurrentItem.Toppings.includes(Topping)) {
                     defaultClass += " selected"
                 }
 
                 return (
-                    <div key={Topping.id.toString()} className={defaultClass} onClick={() => this.boundItemClick(Topping)}>
+                    <div key={Topping.id.toString()} className={defaultClass}
+                         onClick={() => this.boundItemClick(Topping)}>
                         <b>{Topping.name}</b>
                         <br/>
                         <br/>
@@ -71,13 +70,15 @@ class ToppingsList extends React.Component {
 }
 
 
-class ToppingsStep extends React.Component {
+class ToppingsStep
+    extends React
+        .Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
-            CurrentOrder: null
+            Order: null
         };
 
         this.stepHandler = this.stepHandler.bind(this);
@@ -85,14 +86,29 @@ class ToppingsStep extends React.Component {
 
     componentWillMount() {
         this.setState({
-            CurrentOrder: this.props.currentOrder,
+            Order: this.props.Order,
             Toppings: this.props.Toppings
         });
     }
 
     stepHandler(gotoStep) {
-        this.props.orderHandler(this.state.CurrentOrder);
-        this.props.stepHandler(gotoStep);
+
+        if (gotoStep < this.props.currentStep)
+            this.props.stepHandler(gotoStep);
+        else {
+            let Order = this.state.Order;
+            if (Order.CurrentItem.Serving !== null) {
+                Order.Items.push(Order.CurrentItem);
+                Order.CurrentItem = AppConfig.resetCurrentItem();
+            }
+
+            this.setState({
+                Order: Order
+            }, () => {
+                this.props.orderHandler(this.state.Order);
+                this.props.stepHandler(gotoStep);
+            });
+        }
     }
 
     render() {
@@ -102,18 +118,11 @@ class ToppingsStep extends React.Component {
 
         return (
             <div>
-                <p>Select [number] Flavors</p>
+                <p>Select {(this.state.Order.CurrentItem.Serving) ? this.state.Order.CurrentItem.Serving.toppings : 0} Flavors</p>
 
-                <ToppingsList Toppings={this.state.Toppings} currentOrder={this.props.currentOrder}/>
-
+                <ToppingsList Toppings={this.state.Toppings} Order={this.props.Order}/>
                 <button onClick={() => this.stepHandler(AppConfig.steps.Flavors)}>Back: Select Flavors</button>
                 <button onClick={() => this.stepHandler(AppConfig.steps.Confirm)}>Next: Review Order</button>
-
-                <br/>
-                <br/>
-                <br/>
-
-
                 <button onClick={() => this.stepHandler(false, true)}>Cancel Order</button>
             </div>
         );

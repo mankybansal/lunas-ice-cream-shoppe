@@ -5,30 +5,16 @@ class StartStep extends React.Component {
 
     constructor(props) {
         super(props);
-
-        this.state = {
-            CurrentOrder: null,
-        };
-
         this.stepHandler = this.stepHandler.bind(this);
     }
 
     componentWillMount() {
         this.setState({
-            CurrentOrder: this.props.currentOrder,
+            Order: this.props.Order,
         });
     }
 
     stepHandler(gotoStep) {
-
-        let currentOrder = this.state.CurrentOrder;
-        currentOrder.Number = Math.floor(Math.random() * 1000) + 1;
-
-        this.setState({
-           CurrentOrder: currentOrder
-        });
-
-        this.props.orderHandler(this.state.CurrentOrder);
         this.props.stepHandler(gotoStep);
     }
 

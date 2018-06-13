@@ -7,42 +7,33 @@ class FlavorsList extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            CurrentOrder: null,
-        };
+        this.state = {Order: null,};
 
         this.boundItemClick = this.onItemClick.bind(this);
     }
 
-    componentWillMount(){
-        this.setState({
-            CurrentOrder: this.props.currentOrder
-        });
+    componentWillMount() {
+        this.setState({Order: this.props.Order});
     }
 
     onItemClick(item) {
-        console.log(item);
+        let Order = this.state.Order;
 
-        let CurrentOrder = this.state.CurrentOrder;
-
-        // check what kind of serving it is
-
-        if(CurrentOrder.Flavors.includes(item)){
-            CurrentOrder.Flavors.splice(CurrentOrder.Flavors.indexOf(item),1);
-        }else {
-            CurrentOrder.Flavors.push(item);
+        if (Order.CurrentItem.Flavors.includes(item))
+            Order.CurrentItem.Flavors.splice(Order.CurrentItem.Flavors.indexOf(item), 1);
+        else {
+            if (Order.CurrentItem.Flavors.length < Order.CurrentItem.Serving.scoops)
+                Order.CurrentItem.Flavors.push(item);
         }
 
-        this.setState({
-            CurrentOrder: CurrentOrder
-        });
+        this.setState({Order: Order});
     }
 
     render() {
         const listItems = this.props.Flavors.map((Flavor) => {
 
                 let defaultClass = "flavorContainer";
-                if (this.state.CurrentOrder.Flavors.length > 0 && this.state.CurrentOrder.Flavors.includes(Flavor)) {
+                if (this.state.Order.CurrentItem.Flavors.length > 0 && this.state.Order.CurrentItem.Flavors.includes(Flavor)) {
                     defaultClass += " selected"
                 }
 
@@ -76,7 +67,7 @@ class FlavorsStep extends React.Component {
         super(props);
 
         this.state = {
-            CurrentOrder: null
+            Order: null
         };
 
         this.stepHandler = this.stepHandler.bind(this);
@@ -84,14 +75,21 @@ class FlavorsStep extends React.Component {
 
     componentWillMount() {
         this.setState({
-            CurrentOrder: this.props.currentOrder,
+            Order: this.props.Order,
             Flavors: this.props.Flavors
         });
     }
 
     stepHandler(gotoStep) {
-        this.props.orderHandler(this.state.CurrentOrder);
-        this.props.stepHandler(gotoStep);
+        if (gotoStep < this.props.currentStep)
+            this.props.stepHandler(gotoStep);
+        else {
+            if (this.state.Order.CurrentItem.Flavors.length > 0) {
+                this.props.orderHandler(this.state.Order);
+                this.props.stepHandler(gotoStep);
+            } else
+                alert("Select at least one scoop");
+        }
     }
 
     render() {
@@ -101,18 +99,12 @@ class FlavorsStep extends React.Component {
 
         return (
             <div>
-                <p>Select [number] Flavors</p>
+                <p>Select {this.state.Order.CurrentItem.Serving.scoops} Flavors</p>
 
-                <FlavorsList Flavors={this.state.Flavors} currentOrder={this.props.currentOrder}/>
+                <FlavorsList Flavors={this.state.Flavors} Order={this.props.Order}/>
 
                 <button onClick={() => this.stepHandler(AppConfig.steps.Servings)}>Back: Select Serving</button>
                 <button onClick={() => this.stepHandler(AppConfig.steps.Toppings)}>Next: Choose Toppings</button>
-
-                <br/>
-                <br/>
-                <br/>
-
-
                 <button onClick={() => this.stepHandler(AppConfig.steps.Start)}>Cancel Order</button>
             </div>
         );

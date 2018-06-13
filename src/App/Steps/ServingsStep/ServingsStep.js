@@ -4,11 +4,11 @@ import * as AppConfig from "../../AppConfig";
 
 class ServingsList extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.state = {
-            CurrentOrder: null,
+            Order: null,
         };
 
         this.boundItemClick = this.onItemClick.bind(this);
@@ -16,31 +16,32 @@ class ServingsList extends React.Component {
 
     componentWillMount() {
         this.setState({
-            CurrentOrder: this.props.currentOrder,
+            Order: this.props.Order,
         });
     }
 
     onItemClick(item) {
-        console.log(item);
+        let Order = this.state.Order;
+        Order.CurrentItem.Serving = item;
 
-        let CurrentOrder = this.state.CurrentOrder;
-        CurrentOrder.Serving = item;
+        Order.CurrentItem.Flavors = Order.CurrentItem.Flavors.slice(0, Order.CurrentItem.Serving.scoops);
+        Order.CurrentItem.Toppings = Order.CurrentItem.Toppings.slice(0, Order.CurrentItem.Serving.toppings);
 
         this.setState({
-           CurrentOrder: CurrentOrder
+            Order: Order
         });
     }
 
-    render(){
+    render() {
         const listItems = this.props.Servings.map((Serving) => {
 
                 let defaultClass = "servingContainer";
-                if(this.state.CurrentOrder.Serving && this.state.CurrentOrder.Serving.id === Serving.id){
+                if (this.state.Order.CurrentItem.Serving && this.state.Order.CurrentItem.Serving.id === Serving.id) {
                     defaultClass += " selected"
                 }
 
                 return (
-                    <div key={Serving.id.toString()} className={defaultClass} onClick={()=>this.boundItemClick(Serving)}>
+                    <div key={Serving.id.toString()} className={defaultClass} onClick={() => this.boundItemClick(Serving)}>
                         <b>{Serving.name}</b>
                         <br/>
                         <br/>
@@ -62,7 +63,7 @@ class ServingsStep extends React.Component {
         super(props);
 
         this.state = {
-            CurrentOrder: null
+            Order: null
         };
 
         this.stepHandler = this.stepHandler.bind(this);
@@ -70,14 +71,18 @@ class ServingsStep extends React.Component {
 
     componentWillMount() {
         this.setState({
-            CurrentOrder: this.props.currentOrder,
+            Order: this.props.Order,
             Servings: this.props.Servings
         });
     }
 
     stepHandler(gotoStep) {
-        this.props.orderHandler(this.state.CurrentOrder);
-        this.props.stepHandler(gotoStep);
+        if(this.state.Order.CurrentItem.Serving) {
+            this.props.orderHandler(this.state.Order);
+            this.props.stepHandler(gotoStep);
+        }else{
+            alert("Please select a serving size");
+        }
     }
 
     render() {
@@ -88,10 +93,9 @@ class ServingsStep extends React.Component {
         return (
             <div>
                 <p>What would you like? (Cone/Bowl)</p>
-                <ServingsList Servings={this.state.Servings} orderHandler={this.orderHandler} currentOrder={this.state.CurrentOrder}/>
+                <ServingsList Servings={this.state.Servings} orderHandler={this.orderHandler} Order={this.state.Order}/>
                 <button onClick={() => this.stepHandler(AppConfig.steps.Flavors)}>Next: Choose Flavors</button>
                 <button onClick={() => this.stepHandler(AppConfig.steps.Start)}>Cancel Order</button>
-
             </div>
         );
     }
