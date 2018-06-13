@@ -28,7 +28,8 @@ class ConfirmStep extends React.Component {
             <div>
                 <p>Review Order</p>
 
-                <div>{ this.state.order.Number.toString() }</div>
+                <div>Order Number { this.state.order.Number.toString() }</div>
+                <div><b>{ this.state.order.Serving.name }</b></div>
 
                 <button onClick={() => this.stepHandler(AppConfig.steps.Servings)}>Add Another Order</button>
                 <button onClick={() => this.stepHandler(AppConfig.steps.Payment)}>Next: Payment</button>

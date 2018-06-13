@@ -25,10 +25,10 @@ class IceCreamKiosk extends Component {
         this.state = {
             currentStep: AppConfig.steps.Start,
             currentOrder: {
-                Number: null,
+                Number: -1,
                 Serving: null,
-                Flavors: null,
-                Toppings: null
+                Flavors: [],
+                Toppings: []
             },
             Menu: {
                 Servings: null,
@@ -69,39 +69,12 @@ class IceCreamKiosk extends Component {
         });
     }
 
-    orderHandler(orderID, serving, flavors, toppings) {
-        if (orderID) {
-            this.setState({
-                currentOrder: {
-                    Number: orderID
-                }
-            });
-        }
-
-        if (serving) {
-            this.setState({
-                currentOrder: {
-                    Serving: serving
-                }
-            });
-        }
-
-        if (flavors) {
-            this.setState({
-                currentOrder: {
-                    Flavors: flavors
-                }
-            });
-        }
-
-        if (toppings) {
-            this.setState({
-                currentOrder: {
-                    Toppings: toppings
-                }
-            });
-        }
-
+    orderHandler(currentOrder) {
+        this.setState({
+           currentOrder: currentOrder
+        }, ()=>{
+           console.log("APP STATE CURRENT ORDER: ", this.state.currentOrder);
+        });
     }
 
     ConfirmOrder(order, cardDetails) {
@@ -139,6 +112,7 @@ class IceCreamKiosk extends Component {
                     stepHandler={this.stepHandler}
                     orderHandler={this.orderHandler}
                     currentStep={currentStep}
+                    currentOrder={this.state.currentOrder}
                 />
 
                 <ServingsStep
@@ -146,6 +120,7 @@ class IceCreamKiosk extends Component {
                     orderHandler={this.orderHandler}
                     currentStep={currentStep}
                     Servings={servings}
+                    currentOrder={this.state.currentOrder}
                 />
 
                 <FlavorsStep
@@ -153,6 +128,7 @@ class IceCreamKiosk extends Component {
                     orderHandler={this.orderHandler}
                     currentStep={currentStep}
                     Flavors={flavors}
+                    currentOrder={this.state.currentOrder}
                 />
 
                 <ToppingsStep
@@ -160,6 +136,7 @@ class IceCreamKiosk extends Component {
                     orderHandler={this.orderHandler}
                     currentStep={currentStep}
                     Toppings={toppings}
+                    currentOrder={this.state.currentOrder}
                 />
 
                 <ConfirmStep

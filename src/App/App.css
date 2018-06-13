@@ -38,6 +38,10 @@
     cursor: pointer;
 }
 
+.selected {
+    background: cornflowerblue !important;
+}
+
 .servingContainer:hover, .toppingContainer:hover, .flavorContainer:hover {
     background: #eee;
     box-shadow: 0 0 20px rgba(0,0,0,0.02);
