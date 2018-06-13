@@ -10,22 +10,18 @@ export const steps = {
 
 export function defaultState() {
     return {
-        currentStep: steps.Start,
+        currentStep: -1,
         Menu: {
             Servings: null,
             Flavors: null,
             Toppings: null
         },
-        Order: defaultOrder(),
+        Order: {
+            CurrentItem: defaultCurrentItem(),
+            Number: -1,
+            Items: []
+        },
         TotalPrice: 0
-    };
-}
-
-export function defaultOrder() {
-    return {
-        CurrentItem: defaultCurrentItem(),
-        Number: -1,
-        Items: []
     };
 }
 
@@ -36,3 +32,13 @@ export function defaultCurrentItem() {
         Toppings: []
     };
 }
+
+// Sample Card Details
+export const CardDetails = {
+    name: "Mayank Bansal",
+    network: "Visa",
+    type: "Credit",
+    number: 5196000000001122,
+    expiry: "02/19/2022",
+    cvv: 999
+};

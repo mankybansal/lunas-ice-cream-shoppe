@@ -18,9 +18,20 @@ class StartStep extends React.Component {
 
         return (
             <div>
-                <h1> Welcome To Luna's Ice Cream Shoppe</h1>
-                <br/>
-                <button onClick={() => this.stepHandler(AppConfig.steps.Servings)}>Touch To Begin</button>
+                <div className="appTitle">Welcome to Luna's Ice Cream Shoppe</div>
+                <div className="appSubtitle">We have been crafting the most hip, award winning, delicious ice cream the
+                    world has ever seen for over 30 years.
+                </div>
+
+
+                <div onClick={() => this.stepHandler(AppConfig.steps.Servings)} className="circleClickerContainer">
+                    <div className="circleClicker">
+                        <div className="circleClickerPersistent">
+                        <div className="circleClickerPersistent2"/>
+                        </div>
+                    </div>
+                    <div className="circleClickerPrompt">Touch To Begin</div>
+                </div>
             </div>
         );
     }

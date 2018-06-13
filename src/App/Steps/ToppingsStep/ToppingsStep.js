@@ -1,15 +1,14 @@
 import React from 'react';
 import * as AppConfig from "../../AppConfig";
 
-
 class ToppingsList extends React.Component {
 
     constructor(props) {
         super(props);
-        this.boundItemClick = this.onItemClick.bind(this);
+        this.selectTopping = this.selectTopping.bind(this);
     }
 
-    onItemClick(item) {
+    selectTopping(item) {
         let Order = this.props.Order;
 
         if (Order.CurrentItem.Toppings.includes(item))
@@ -26,10 +25,10 @@ class ToppingsList extends React.Component {
         const listItems = this.props.Toppings.map((Topping) => {
                 let defaultClass = "toppingContainer";
                 if (this.props.Order.CurrentItem.Toppings.length > 0 && this.props.Order.CurrentItem.Toppings.includes(Topping))
-                    defaultClass += " selected"
+                    defaultClass += " selected";
 
                 return (
-                    <div key={Topping.id.toString()} className={defaultClass} onClick={() => this.boundItemClick(Topping)}>
+                    <div key={Topping.id.toString()} className={defaultClass} onClick={() => this.selectTopping(Topping)}>
                         <b>{Topping.name}</b>
                         <br/><br/>
                         <div>{Topping.desc}</div>
@@ -73,13 +72,25 @@ class ToppingsStep extends React.Component {
 
         return (
             <div>
-                <p>Select {(this.props.Order.CurrentItem.Serving) ? this.props.Order.CurrentItem.Serving.toppings : 0} Flavors</p>
+                <div className="prompt">Select {(this.props.Order.CurrentItem.Serving) ? this.props.Order.CurrentItem.Serving.toppings : 0} Topping(s)</div>
 
                 <ToppingsList Toppings={this.props.Toppings} orderHandler={this.props.orderHandler}
                               Order={this.props.Order}/>
-                <button onClick={() => this.stepHandler(AppConfig.steps.Flavors)}>Back: Select Flavors</button>
-                <button onClick={() => this.stepHandler(AppConfig.steps.Confirm)}>Next: Review Order</button>
-                <button onClick={() => this.stepHandler(AppConfig.steps.Start)}>Cancel Order</button>
+                <button className="buttonPrev" onClick={() => this.stepHandler(AppConfig.steps.Flavors)}>
+                    <div className="buttonLabel">Back</div>
+                    <hr/>
+                    Select Toppings
+                </button>
+                <button className="buttonNext" onClick={() => this.stepHandler(AppConfig.steps.Confirm)}>
+                    <div className="buttonLabel">Next</div>
+                    <hr/>
+                    Review Order
+                </button>
+
+                <br/>
+                <br/>
+                <br/>
+                <button className="buttonCancel" onClick={() => this.stepHandler(AppConfig.steps.Start)}>Cancel Order</button>
             </div>
         );
     }

@@ -6,10 +6,10 @@ class FlavorsList extends React.Component {
 
     constructor(props) {
         super(props);
-        this.boundItemClick = this.onItemClick.bind(this);
+        this.selectFlavor = this.selectFlavor.bind(this);
     }
 
-    onItemClick(item) {
+    selectFlavor(item) {
         let Order = this.props.Order;
 
         if (Order.CurrentItem.Flavors.includes(item))
@@ -31,7 +31,7 @@ class FlavorsList extends React.Component {
 
 
                 return (
-                    <div key={Flavor.id.toString()} className={defaultClass} onClick={() => this.boundItemClick(Flavor)}>
+                    <div key={Flavor.id.toString()} className={defaultClass} onClick={() => this.selectFlavor(Flavor)}>
                         <b>{Flavor.name}</b>
                         <br/>
                         <br/>
@@ -79,13 +79,26 @@ class FlavorsStep extends React.Component {
 
         return (
             <div>
-                <p>Select {(this.props.Order.CurrentItem.Serving) ? this.props.Order.CurrentItem.Serving.scoops : 0} Flavors</p>
+                <div className="prompt">Select Upto {(this.props.Order.CurrentItem.Serving) ? this.props.Order.CurrentItem.Serving.scoops : 0} Flavors</div>
 
                 <FlavorsList Flavors={this.props.Flavors} orderHandler={this.props.orderHandler} Order={this.props.Order}/>
 
-                <button onClick={() => this.stepHandler(AppConfig.steps.Servings)}>Back: Select Serving</button>
-                <button onClick={() => this.stepHandler(AppConfig.steps.Toppings)}>Next: Choose Toppings</button>
-                <button onClick={() => this.stepHandler(AppConfig.steps.Start)}>Cancel Order</button>
+                <div className="buttonPrev" onClick={() => this.stepHandler(AppConfig.steps.Servings)}>
+                    <div className="buttonLabel">Back</div>
+                    <hr/>
+                    Select Serving
+                </div>
+
+                <button className="buttonNext" onClick={() => this.stepHandler(AppConfig.steps.Toppings)}>
+                    <div className="buttonLabel">Next</div>
+                    <hr/>
+                    Select Toppings
+                </button>
+
+                <br/>
+                <br/>
+                <br/>
+                <button className="buttonCancel" onClick={() => this.stepHandler(AppConfig.steps.Start)}>Cancel Order</button>
             </div>
         );
     }

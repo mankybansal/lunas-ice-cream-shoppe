@@ -32,7 +32,7 @@ class OrderList extends React.Component {
         const listItems = this.props.Order.Items.map((Item, Index) => {
             return (
                 <div key={Index} className="orderContainer">
-                    <h3>{Item.Serving.name}</h3>
+                    <h2>{Item.Serving.name}</h2>
                     <b>Scoops</b>
                     <Flavors Flavors={Item.Flavors}/>
                     <br/>
@@ -66,7 +66,7 @@ class ConfirmStep extends React.Component {
 
         return (
             <div>
-                <p>Review Order</p>
+                <div className="prompt">Review Order</div>
 
                 <OrderList
                     Order={this.props.Order}
@@ -76,9 +76,22 @@ class ConfirmStep extends React.Component {
                 <br/>
                 <h1>Total: ${this.props.TotalPrice.toFixed(2)}</h1>
 
-                <button onClick={() => this.stepHandler(AppConfig.steps.Servings)}>Add Another Order</button>
-                <button onClick={() => this.stepHandler(AppConfig.steps.Payment)}>Next: Payment</button>
-                <button onClick={() => this.stepHandler(AppConfig.steps.Start)}>Cancel Order</button>
+                <button className="buttonNext" onClick={() => this.stepHandler(AppConfig.steps.Servings)}>
+                    <div className="buttonLabel">I'm Not Done</div>
+                    <hr/>
+                    Add Another Order
+                </button>
+
+                <button className="buttonNext" onClick={() => this.stepHandler(AppConfig.steps.Payment)}>
+                    <div className="buttonLabel">Next</div>
+                    <hr/>
+                    Payment
+                </button>
+
+                <br/>
+                <br/>
+                <br/>
+                <button className="buttonCancel" onClick={() => this.stepHandler(AppConfig.steps.Start)}>Cancel Order</button>
             </div>
         );
     }

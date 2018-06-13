@@ -8,22 +8,21 @@ import Toppings from './Data/toppings.json';
 
 /***
  * SendOrder API
- * @param order
+ * @param Order
+ * @param Payment
  * @returns {{Success: boolean, Order: *}}
  * @constructor
  */
 
-function SendOrder(Order) {
+function SendOrder(Order, Payment) {
     // Simulate Data Sent to API
-    console.log("\n\nOrder Sent to API");
+    console.log("\nProcessing Order...\n");
 
     // Simulate API generating order with order number
     Order.Number = Math.floor((Math.random() * 1000) + 1);
     Order.Time = new Date();
+    Order.Payment = Payment;
     delete Order.CurrentItem;
-
-    // Order Received By API
-    console.log(Order);
 
     // Simulated Response
     return {
@@ -59,10 +58,17 @@ function GetMenu() {
 function SendPayment(amount, cardDetails) {
     // API Sends Payment Info to Gateway
 
-    console.log("\n\n$" + amount.toFixed(2) + " payed by " + cardDetails.network + " " + cardDetails.type + " ending with " + cardDetails.number.toString().slice(11,15));
+    let Payment = cardDetails;
+    delete Payment.cvv;
+
+    Payment.Amount = amount;
+    Payment.Time = new Date();
+    Payment.number = "XXXXXXXXXXXX" + cardDetails.number.toString().slice(12,16);
+
     // Simulated Response
     return {
-        Success: true
+        Success: true,
+        Payment: Payment
     }
 }
 
@@ -73,13 +79,14 @@ function SendPayment(amount, cardDetails) {
 // Server Request Function
 function ServerRequest(request, callback) {
 
-    // Make HTTP Request to API
-
     // Simulate API Request
     let response = request;
 
-    // Callback Function With Response
-    callback && callback(response);
+    // Simulate API Response
+    setTimeout(function(){
+        // Callback Function With Response
+        callback && callback(response);
+    }, 0);
 }
 
 // API Requests
@@ -87,8 +94,8 @@ let REQUESTS = {
     GetMenu: function (callback) {
         ServerRequest(GetMenu(), callback);
     },
-    SendOrder: function (order, callback) {
-        ServerRequest(SendOrder(order), callback);
+    SendOrder: function (order, paymentDetails, callback) {
+        ServerRequest(SendOrder(order, paymentDetails), callback);
     },
     SendPayment: function (amount, cardDetails, callback){
         ServerRequest(SendPayment(amount, cardDetails), callback);

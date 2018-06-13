@@ -5,17 +5,6 @@ import * as AppConfig from "./AppConfig";
 import REQUESTS from '../api';
 import * as Helpers from "./Helpers";
 
-// Sample Card Details
-let cardDetails = {
-    name: "Mayank Bansal",
-    network: "Visa",
-    type: "Credit",
-    number: 519600000001122333344,
-    expiry: "02/19/2022",
-    cvv: 999
-};
-
-
 class IceCreamKiosk extends Component {
 
     constructor(props) {
@@ -24,7 +13,7 @@ class IceCreamKiosk extends Component {
         // Set Application State
         this.state = AppConfig.defaultState();
 
-        // this.ConfirmOrder({name: "hello"},cardDetails);
+        // Setup Handlers
         this.stepHandler = this.stepHandler.bind(this);
         this.orderHandler = this.orderHandler.bind(this);
         this.priceHandler = this.priceHandler.bind(this);
@@ -33,10 +22,13 @@ class IceCreamKiosk extends Component {
 
     componentWillMount() {
         // Request API for Menu
-       this.getMenu();
+        this.appInit();
     }
 
-    async getMenu(){
+    async appInit() {
+
+        Helpers.appInitPrinter();
+
         REQUESTS.GetMenu((GetMenuResponse) => {
             if (GetMenuResponse.Success) {
                 this.setState({
@@ -44,12 +36,9 @@ class IceCreamKiosk extends Component {
                         Servings: GetMenuResponse.Servings,
                         Flavors: GetMenuResponse.Flavors,
                         Toppings: GetMenuResponse.Toppings,
-                    }
-                }, () => {
-                    console.log("Servings Available:", this.state.Menu.Servings.length);
-                    console.log("Flavors Available:", this.state.Menu.Flavors.length);
-                    console.log("Toppings Available:", this.state.Menu.Toppings.length);
-                });
+                    },
+                    currentStep: AppConfig.steps.Start
+                }, Helpers.menuPrinter(GetMenuResponse));
 
             }
         });
@@ -62,9 +51,8 @@ class IceCreamKiosk extends Component {
     stepHandler(gotoStep) {
         if (gotoStep === AppConfig.steps.Start) {
             this.setState(AppConfig.defaultState());
-            this.getMenu();
+            this.appInit();
         }
-
 
         this.setState({
             currentStep: gotoStep
@@ -84,22 +72,23 @@ class IceCreamKiosk extends Component {
     }
 
     paymentHandler() {
-        // send payment info to API
-        REQUESTS.SendPayment(this.state.TotalPrice, cardDetails,
-            (PaymentResponse) => {
-                if (PaymentResponse.Success) {
-                    console.log("Payment Processed");
+        console.log("\nProcessing Payment...\n");
+        REQUESTS.SendPayment(this.state.TotalPrice, AppConfig.CardDetails, (PaymentResponse) => {
+            if (PaymentResponse.Success) {
+                Helpers.paymentPrinter(PaymentResponse);
 
-                    // send order to API
-                    REQUESTS.SendOrder(this.state.Order,
-                        (SendOrderResponse) => {
-                            if (SendOrderResponse.Success) {
-                                console.log("Successfully Processed Order #" + SendOrderResponse.Order.Number);
-                                console.log("Placed at " + SendOrderResponse.Order.Time.toLocaleTimeString() + " on " + SendOrderResponse.Order.Time.toLocaleDateString());
-                            }
-                        })
-                }
-            });
+                // send order to API
+                REQUESTS.SendOrder(this.state.Order, PaymentResponse.Payment, (SendOrderResponse) => {
+                    if (SendOrderResponse.Success) {
+                        this.setState({
+                            Order: SendOrderResponse.Order,
+                            currentStep: AppConfig.steps.Finish
+                        });
+                        Helpers.orderPrinter(SendOrderResponse);
+                    }
+                })
+            }
+        });
     }
 
     render() {
@@ -156,12 +145,13 @@ class IceCreamKiosk extends Component {
                     paymentHandler={this.paymentHandler}
                     currentStep={currentStep}
                     Order={this.state.Order}
-                    Price={this.state.TotalPrice}
+                    TotalPrice={this.state.TotalPrice}
                 />
 
                 <FinishStep
                     stepHandler={this.stepHandler}
                     currentStep={currentStep}
+                    Order={this.state.Order}
                 />
 
             </div>
