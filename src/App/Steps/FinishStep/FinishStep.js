@@ -7,19 +7,19 @@ class FinishStep extends React.Component {
         super(props);
 
         this.state = {
-            timer: 10,
+            timer: 20,
             rendered: false
         };
     }
 
     decrementCounter() {
-       let intervalFn = setInterval(function () {
+        let intervalFn = setInterval(function () {
 
-            if(this.state.timer <= 0) {
+            if (this.state.timer <= 0) {
                 this.props.stepHandler(AppConfig.steps.Start);
                 clearInterval(intervalFn);
                 this.setState({
-                    timer: 10,
+                    timer: 20,
                     rendered: false
                 });
             }
@@ -42,20 +42,23 @@ class FinishStep extends React.Component {
 
         return (
             <div>
-                <p>Thank You For Your Order</p>
+                <div className="prompt">Thank You For Your Order</div>
+                <div className="paymentAmount">
+                    ${this.props.Order.Payment.Amount.toFixed(2)} paid
+                    by {this.props.Order.Payment.network + " " + this.props.Order.Payment.type} ending
+                    with {this.props.Order.Payment.number.slice(12, 16)}
+                </div>
 
-                ${this.props.Order.Payment.Amount.toFixed(2)} payed
-                by {this.props.Order.Payment.network + " " + this.props.Order.Payment.type} ending
-                with {this.props.Order.Payment.number.slice(12, 16)}
-                <br/>
-                <br/>
-                Successfully Processed Order #{this.props.Order.Number}
-                <br/>
-                <br/>
-                Placed at {this.props.Order.Time.toLocaleTimeString()} on {this.props.Order.Time.toLocaleDateString()}
-                <br/>
-                <br/>
-                Page will refresh in <b>{this.state.timer}</b> seconds
+                <div className="paymentAmount orderNumber">
+                    Order #{this.props.Order.Number}
+                </div>
+                <div className="paymentAmount">
+                    Placed at {this.props.Order.Time.toLocaleTimeString()} on {this.props.Order.Time.toLocaleDateString()}
+                </div>
+                <br/><br/>
+                <br/><br/>
+                <br/><br/>
+                <div className="cardSwipePrompt">This page will refresh in {this.state.timer} seconds</div>
             </div>
         );
     }

@@ -1,5 +1,6 @@
 import React from 'react';
 import * as AppConfig from "../../AppConfig";
+import Header from "../../Header";
 
 class Flavors extends React.Component {
     render() {
@@ -42,9 +43,7 @@ class OrderList extends React.Component {
             );
         });
 
-        return (
-            <div>{listItems}</div>
-        );
+        return (<div>{listItems}</div>);
     }
 }
 
@@ -64,34 +63,20 @@ class ConfirmStep extends React.Component {
         if (this.props.currentStep !== AppConfig.steps.Confirm)
             return null;
 
+        let prompt = "Review Order";
+
         return (
-            <div>
-                <div className="prompt">Review Order</div>
+            <div className="header-padder">
+                <Header prompt={prompt} stepHandler={this.stepHandler}/>
 
-                <OrderList
-                    Order={this.props.Order}
-                    orderHandler={this.props.orderHandler}
-                />
+                <div className="ordersContainer">
+                    <OrderList Order={this.props.Order} orderHandler={this.props.orderHandler}/>
+                </div>
 
-                <br/>
-                <h1>Total: ${this.props.TotalPrice.toFixed(2)}</h1>
+                <div className="paymentBreakup">Order Total: &nbsp;&nbsp;${this.props.TotalPrice.toFixed(2)}</div>
 
-                <button className="buttonNext" onClick={() => this.stepHandler(AppConfig.steps.Servings)}>
-                    <div className="buttonLabel">I'm Not Done</div>
-                    <hr/>
-                    Add Another Order
-                </button>
-
-                <button className="buttonNext" onClick={() => this.stepHandler(AppConfig.steps.Payment)}>
-                    <div className="buttonLabel">Next</div>
-                    <hr/>
-                    Payment
-                </button>
-
-                <br/>
-                <br/>
-                <br/>
-                <button className="buttonCancel" onClick={() => this.stepHandler(AppConfig.steps.Start)}>Cancel Order</button>
+                <div className="stepButton prevButton" onClick={() => this.stepHandler(AppConfig.steps.Servings)}>Add Another Order</div>
+                <div className="stepButton nextButton" onClick={() => this.stepHandler(AppConfig.steps.Payment)}>I'm Ready to Pay</div>
             </div>
         );
     }

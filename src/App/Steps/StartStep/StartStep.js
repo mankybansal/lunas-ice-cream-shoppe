@@ -18,6 +18,7 @@ class StartStep extends React.Component {
 
         return (
             <div>
+
                 <div className="appTitle">Welcome to Luna's Ice Cream Shoppe</div>
                 <div className="appSubtitle">We have been crafting the most hip, award winning, delicious ice cream the
                     world has ever seen for over 30 years.

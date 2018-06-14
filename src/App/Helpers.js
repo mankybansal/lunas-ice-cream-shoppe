@@ -27,7 +27,7 @@ export function appInitPrinter(){
 export function paymentPrinter(PaymentResponse) {
     console.log("\n");
     console.log("Payment Processed");
-    console.log("$" + PaymentResponse.Payment.Amount.toFixed(2) + " payed by " + PaymentResponse.Payment.network + " " + PaymentResponse.Payment.type + " ending with " + PaymentResponse.Payment.number.slice(12, 16));
+    console.log("$" + PaymentResponse.Payment.Amount.toFixed(2) + " paid by " + PaymentResponse.Payment.network + " " + PaymentResponse.Payment.type + " ending with " + PaymentResponse.Payment.number.slice(12, 16));
     console.log("Payment", PaymentResponse.Payment);
 }
 

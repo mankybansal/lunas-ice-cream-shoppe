@@ -1,23 +1,31 @@
 import React from 'react';
 import * as AppConfig from "../../AppConfig";
-
+import Header from "../../Header";
 
 class FlavorsList extends React.Component {
 
     constructor(props) {
         super(props);
         this.selectFlavor = this.selectFlavor.bind(this);
+        this.removeFlavor = this.removeFlavor.bind(this);
     }
 
     selectFlavor(item) {
         let Order = this.props.Order;
 
+        if (Order.CurrentItem.Flavors.length < Order.CurrentItem.Serving.scoops)
+            Order.CurrentItem.Flavors.push(item);
+
+        this.props.orderHandler(Order);
+    }
+
+    removeFlavor(item, e) {
+        e.stopPropagation();
+
+        let Order = this.props.Order;
+
         if (Order.CurrentItem.Flavors.includes(item))
             Order.CurrentItem.Flavors.splice(Order.CurrentItem.Flavors.indexOf(item), 1);
-        else {
-            if (Order.CurrentItem.Flavors.length < Order.CurrentItem.Serving.scoops)
-                Order.CurrentItem.Flavors.push(item);
-        }
 
         this.props.orderHandler(Order);
     }
@@ -25,32 +33,38 @@ class FlavorsList extends React.Component {
     render() {
         const listItems = this.props.Flavors.map((Flavor) => {
 
+                let flavorCount = 0;
                 let defaultClass = "flavorContainer";
-                if (this.props.Order.CurrentItem.Flavors.length > 0 && this.props.Order.CurrentItem.Flavors.includes(Flavor))
-                    defaultClass += " selected"
+                let flavorCountMax = this.props.Order.CurrentItem.Serving.scoops;
 
+                if (this.props.Order.CurrentItem.Flavors.length > 0 && this.props.Order.CurrentItem.Flavors.includes(Flavor)) {
+                    defaultClass += " selected";
+                    this.props.Order.CurrentItem.Flavors.map((testFlavor) => {
+                        if (testFlavor === Flavor) flavorCount++;
+                        return 0;
+                    });
+                }
 
                 return (
                     <div key={Flavor.id.toString()} className={defaultClass} onClick={() => this.selectFlavor(Flavor)}>
-                        <b>{Flavor.name}</b>
+                        <div className="itemTitle">{Flavor.name}</div>
+                        <div>{Flavor.desc}</div>
                         <br/>
-                        <br/>
-                        <div>
-                            {Flavor.desc}
-                        </div>
-                        <br/>
-                        <div>
-                            {Flavor.calories} Cal &nbsp;&nbsp;&nbsp;  ${Flavor.price}
-                        </div>
+                        <div>{Flavor.calories} Calories &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>${Flavor.price}</b></div>
+
+                        {(flavorCount > 0) ?
+                            <div>
+                                <div className="selectedScoops"> {flavorCount} Scoop(s)</div>
+                                <div className={(flavorCount < flavorCountMax && this.props.Order.CurrentItem.Flavors.length < flavorCountMax) ? "selectedScoops picker" :"selectedScoops picker2"}>Add</div>
+                                <div className="selectedScoops picker" onClick={(e) => this.removeFlavor(Flavor, e)}>Remove</div>
+                            </div>
+                            : null}
                     </div>
                 );
             }
         );
 
-
-        return (
-            <div>{listItems}</div>
-        );
+        return (<div>{listItems}</div>);
     }
 }
 
@@ -77,28 +91,14 @@ class FlavorsStep extends React.Component {
         if (this.props.currentStep !== AppConfig.steps.Flavors)
             return null;
 
+        let prompt = "Select Up To " + ((this.props.Order.CurrentItem.Serving) ? this.props.Order.CurrentItem.Serving.scoops : 0) + " Flavors";
+
         return (
-            <div>
-                <div className="prompt">Select Upto {(this.props.Order.CurrentItem.Serving) ? this.props.Order.CurrentItem.Serving.scoops : 0} Flavors</div>
-
+            <div className="header-padder">
+                <Header prompt={prompt} stepHandler={this.stepHandler}/>
                 <FlavorsList Flavors={this.props.Flavors} orderHandler={this.props.orderHandler} Order={this.props.Order}/>
-
-                <div className="buttonPrev" onClick={() => this.stepHandler(AppConfig.steps.Servings)}>
-                    <div className="buttonLabel">Back</div>
-                    <hr/>
-                    Select Serving
-                </div>
-
-                <button className="buttonNext" onClick={() => this.stepHandler(AppConfig.steps.Toppings)}>
-                    <div className="buttonLabel">Next</div>
-                    <hr/>
-                    Select Toppings
-                </button>
-
-                <br/>
-                <br/>
-                <br/>
-                <button className="buttonCancel" onClick={() => this.stepHandler(AppConfig.steps.Start)}>Cancel Order</button>
+                <div className="stepButton prevButton" onClick={() => this.stepHandler(AppConfig.steps.Servings)}>Back</div>
+                <div className="stepButton nextButton" onClick={() => this.stepHandler(AppConfig.steps.Toppings)}>Select Flavors</div>
             </div>
         );
     }
