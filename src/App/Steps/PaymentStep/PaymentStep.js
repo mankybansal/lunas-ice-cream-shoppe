@@ -23,7 +23,7 @@ class PaymentStep extends React.Component {
         let prompt = "Make Payment";
 
         return (
-            <div className="App-header-padder">
+            <div className="App-header-padding">
                 <Header prompt={prompt} stepHandler={this.stepHandler}/>
 
                 <div className="Payment-amount">Your Card Will Be Charged: ${this.props.TotalPrice.toFixed(2)}</div>

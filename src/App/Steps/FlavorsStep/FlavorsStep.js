@@ -97,7 +97,7 @@ class FlavorsStep extends React.Component {
         let prompt = "Select Up To " + ((this.props.Order.CurrentItem.Serving) ? this.props.Order.CurrentItem.Serving.scoops : 0) + " Flavors";
 
         return (
-            <div className="App-header-padder">
+            <div className="App-header-padding">
                 <Header prompt={prompt} stepHandler={this.stepHandler}/>
 
                 <div className="Flavor-container">

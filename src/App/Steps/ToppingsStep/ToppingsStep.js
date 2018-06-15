@@ -76,7 +76,7 @@ class ToppingsStep extends React.Component {
         let prompt = "Select " + ((this.props.Order.CurrentItem.Serving) ? this.props.Order.CurrentItem.Serving.toppings : 0) + " Topping" + ((this.props.Order.CurrentItem.Serving && this.props.Order.CurrentItem.Serving.toppings <= 1) ? "" : "s");
 
         return (
-            <div className="App-header-padder">
+            <div className="App-header-padding">
                 <Header prompt={prompt} stepHandler={this.stepHandler}/>
 
                 <div className="Topping-container">

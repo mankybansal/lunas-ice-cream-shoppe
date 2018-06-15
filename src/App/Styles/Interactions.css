@@ -1,6 +1,8 @@
-/*************************
- * Touch Here Interaction
- *************************/
+/*
+**********************
+Touch Here Interaction
+**********************
+*/
 
 .circleClickerContainer {
     width: 100%;
@@ -88,9 +90,11 @@
 }
 
 
-/*************************
- * Card Swipe Interaction
- *************************/
+/*
+**********************
+Card Swipe Interaction
+**********************
+*/
 
 .paymentInteraction {
     width: 300px;

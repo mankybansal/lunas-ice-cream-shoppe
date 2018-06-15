@@ -67,7 +67,7 @@ class ServingsStep extends React.Component {
         let prompt = "What Serving Would You Like?";
 
         return (
-            <div className="App-header-padder">
+            <div className="App-header-padding">
                 <Header prompt={prompt} stepHandler={this.stepHandler}/>
 
                 <div className="Serving-container">

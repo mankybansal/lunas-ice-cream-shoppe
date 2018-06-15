@@ -90,7 +90,7 @@ class ConfirmStep extends React.Component {
         let prompt = "Review Order";
 
         return (
-            <div className="App-header-padder">
+            <div className="App-header-padding">
                 <Header prompt={prompt} stepHandler={this.stepHandler}/>
 
                 <div className="Order-container">
