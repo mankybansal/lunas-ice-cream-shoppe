@@ -22,14 +22,14 @@ class ServingsList extends React.Component {
     render() {
         const listItems = this.props.Servings.map((Serving) => {
 
-                let defaultClass = "servingContainer";
+                let defaultClass = "Serving-Item";
                 if (this.props.Order.CurrentItem.Serving && this.props.Order.CurrentItem.Serving.id === Serving.id)
-                    defaultClass += " selected";
+                    defaultClass += " Item-selected";
 
                 return (
                     <div key={Serving.id.toString()} className={defaultClass} onClick={() => this.selectServing(Serving)}>
-                        <img className="itemImage" src={Serving.image}/>
-                        <div className="itemTitle">{Serving.name}</div>
+                        <img className="Item-image" src={Serving.image}/>
+                        <div className="Item-title">{Serving.name}</div>
                         <div>{Serving.desc}</div>
                     </div>
                 )
@@ -67,19 +67,19 @@ class ServingsStep extends React.Component {
         let prompt = "What Serving Would You Like?";
 
         return (
-            <div className="header-padder">
+            <div className="App-header-padder">
                 <Header prompt={prompt} stepHandler={this.stepHandler}/>
 
-                <div className="servingsContainer">
+                <div className="Serving-container">
                     <ServingsList
                         Servings={this.props.Servings}
                         orderHandler={this.props.orderHandler}
                         Order={this.props.Order}/>
                 </div>
 
-                <div className="stepButton nextButton stepButton-full"
+                <div className="Button-step Button-next Button-step-full"
                      onClick={() => this.stepHandler(AppConfig.steps.Flavors)}>
-                    Select Flavors <i className="fa fa-chevron-right stepIcon"/>
+                    Select Flavors <i className="fa fa-chevron-right Icon-step"/>
                 </div>
             </div>
         );

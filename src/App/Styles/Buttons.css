@@ -1,0 +1,49 @@
+.Button-step {
+    padding: 40px;
+    font-size: 20px;
+    font-family: Roboto-Light, sans-serif;
+    outline: none;
+    border: 0;
+    display: inline-block;
+    box-sizing: border-box;
+    vertical-align: top;
+    bottom: 0;
+    position: fixed;
+    cursor: pointer;
+    color: white;
+}
+
+.Button-next {
+    background: cornflowerblue;
+    right: 0;
+    width: 70% !important;
+}
+
+.Button-prev {
+    background: #333;
+    left: 0;
+    color: white;
+    width: 30% !important;
+}
+
+.Button-step-full {
+    width: 100% !important;
+}
+
+.Button-cancel, .Button-help {
+    display: inline-block;
+    cursor: pointer;
+    padding: 12px 22px 12px 22px;
+    font-size: 14px;
+    font-family: Roboto-Light, sans-serif;
+    border: 1px solid #777;
+    color: #777;
+    border-radius: 5px;
+    position: fixed;
+    top: 40px;
+    right: 130px;
+}
+
+.Button-help {
+    right: 40px;
+}

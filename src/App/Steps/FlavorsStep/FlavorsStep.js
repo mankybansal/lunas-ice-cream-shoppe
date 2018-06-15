@@ -34,11 +34,11 @@ class FlavorsList extends React.Component {
         const listItems = this.props.Flavors.map((Flavor) => {
 
                 let flavorCount = 0;
-                let defaultClass = "flavorContainer";
+                let defaultClass = "Flavor-Item";
                 let flavorCountMax = this.props.Order.CurrentItem.Serving.scoops;
 
                 if (this.props.Order.CurrentItem.Flavors.length > 0 && this.props.Order.CurrentItem.Flavors.includes(Flavor)) {
-                    defaultClass += " selected";
+                    defaultClass += " Item-selected";
                     this.props.Order.CurrentItem.Flavors.map((testFlavor) => {
                         if (testFlavor === Flavor) flavorCount++;
                         return 0;
@@ -47,19 +47,19 @@ class FlavorsList extends React.Component {
 
                 return (
                     <div key={Flavor.id.toString()} className={defaultClass} onClick={() => this.selectFlavor(Flavor)}>
-                        <div className="itemTitle">{Flavor.name}</div>
-                        <div className="itemDesc">{Flavor.desc}</div>
+                        <div className="Item-title">{Flavor.name}</div>
+                        <div className="Item-desc">{Flavor.desc}</div>
 
-                        <div className="itemInfo">
-                            <div className="itemCalories">{Flavor.calories} Calories</div>
-                            <div className="itemPrice">${Flavor.price.toFixed(2)}</div>
+                        <div className="Item-info">
+                            <div className="Item-calories">{Flavor.calories} Calories</div>
+                            <div className="Item-price">${Flavor.price.toFixed(2)}</div>
                         </div>
 
                         {(flavorCount > 0) ?
-                            <div className="multiScoop">
-                                <div className="selectedScoops"> {flavorCount} Scoop(s)</div>
-                                <div className={(flavorCount < flavorCountMax && this.props.Order.CurrentItem.Flavors.length < flavorCountMax) ? "selectedScoops picker" : "selectedScoops picker2"}>Add</div>
-                                <div className="selectedScoops picker" onClick={(e) => this.removeFlavor(Flavor, e)}>Remove</div>
+                            <div className="MultiScoop-container">
+                                <div className="MultiScoop-selected"> {flavorCount} Scoop(s)</div>
+                                <div className={(flavorCount < flavorCountMax && this.props.Order.CurrentItem.Flavors.length < flavorCountMax) ? "MultiScoop-selected MultiScoop-action" : "MultiScoop-selected MultiScoop-action-disabled"}>Add</div>
+                                <div className="MultiScoop-selected MultiScoop-action" onClick={(e) => this.removeFlavor(Flavor, e)}>Remove</div>
                             </div>
                             : null}
                     </div>
@@ -97,10 +97,10 @@ class FlavorsStep extends React.Component {
         let prompt = "Select Up To " + ((this.props.Order.CurrentItem.Serving) ? this.props.Order.CurrentItem.Serving.scoops : 0) + " Flavors";
 
         return (
-            <div className="header-padder">
+            <div className="App-header-padder">
                 <Header prompt={prompt} stepHandler={this.stepHandler}/>
 
-                <div className="flavorsContainer">
+                <div className="Flavor-container">
                     <FlavorsList
                         Flavors={this.props.Flavors}
                         orderHandler={this.props.orderHandler}
@@ -108,11 +108,11 @@ class FlavorsStep extends React.Component {
                     />
                 </div>
 
-                <div className="stepButton prevButton" onClick={() => this.stepHandler(AppConfig.steps.Servings)}>
-                    <i className="fa fa-chevron-left stepIcon"/> Back
+                <div className="Button-step Button-prev" onClick={() => this.stepHandler(AppConfig.steps.Servings)}>
+                    <i className="fa fa-chevron-left Icon-step"/> Back
                 </div>
-                <div className="stepButton nextButton" onClick={() => this.stepHandler(AppConfig.steps.Toppings)}>
-                    Select Toppings <i className="fa fa-chevron-right stepIcon"/>
+                <div className="Button-step Button-next" onClick={() => this.stepHandler(AppConfig.steps.Toppings)}>
+                    Select Toppings <i className="fa fa-chevron-right Icon-step"/>
                 </div>
             </div>
         );

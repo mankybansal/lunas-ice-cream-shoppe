@@ -5,9 +5,9 @@ import Header from "../../Header";
 class Flavors extends React.Component {
     render() {
         const flavorList = this.props.Flavors.map((Flavor, FlavorIndex) => {
-            return (<div key={FlavorIndex} className="orderItemContainer">
-                <div className="orderItemName">{Flavor.name}</div>
-                <div className="orderItemPrice">${Flavor.price.toFixed(2)}</div>
+            return (<div key={FlavorIndex} className="Order-Item-container">
+                <div className="Order-Item-title-container">{Flavor.name}</div>
+                <div className="Order-Item-price-container">${Flavor.price.toFixed(2)}</div>
             </div>);
         });
 
@@ -18,9 +18,9 @@ class Flavors extends React.Component {
 class Toppings extends React.Component {
     render() {
         const toppingList = this.props.Toppings.map((Topping, ToppingIndex) => {
-            return (<div key={ToppingIndex} className="orderItemContainer">
-                <div className="orderItemName">{Topping.name}</div>
-                <div className="orderItemPrice">${Topping.price.toFixed(2)}</div>
+            return (<div key={ToppingIndex} className="Order-Item-container">
+                <div className="Order-Item-title-container">{Topping.name}</div>
+                <div className="Order-Item-price-container">${Topping.price.toFixed(2)}</div>
             </div>);
         });
 
@@ -51,18 +51,18 @@ class OrderList extends React.Component {
     render() {
         const listItems = this.props.Order.Items.map((Item, Index) => {
             return (
-                <div key={Index} className="orderContainer">
+                <div key={Index} className="Order-Item">
 
-                    <img className="itemImage" src={Item.Serving.image}/>
-                    <div className="itemTitle">{Item.Serving.name}</div>
+                    <img className="Item-image" src={Item.Serving.image}/>
+                    <div className="Item-title">{Item.Serving.name}</div>
 
-                    <div className="itemCategory">Scoops</div>
+                    <div className="Item-category">Scoops</div>
                     <Flavors Flavors={Item.Flavors}/>
 
-                    {(Item.Toppings.length > 0) ? <div className="itemCategory">Toppings</div> : null}
+                    {(Item.Toppings.length > 0) ? <div className="Item-category">Toppings</div> : null}
                     <Toppings Toppings={Item.Toppings}/>
 
-                    <div className="removeOrder" onClick={() => this.removeItem(Item)}>Remove</div>
+                    <div className="Order-action-remove" onClick={() => this.removeItem(Item)}>Remove</div>
                 </div>
             );
         });
@@ -90,10 +90,10 @@ class ConfirmStep extends React.Component {
         let prompt = "Review Order";
 
         return (
-            <div className="header-padder">
+            <div className="App-header-padder">
                 <Header prompt={prompt} stepHandler={this.stepHandler}/>
 
-                <div className="ordersContainer">
+                <div className="Order-container">
                     <OrderList
                         Order={this.props.Order}
                         orderHandler={this.props.orderHandler}
@@ -102,16 +102,16 @@ class ConfirmStep extends React.Component {
                     />
                 </div>
 
-                <div className="paymentBreakup">
-                    <i className="fa fa-shopping-cart stepIcon stepIconRight"/>
+                <div className="Payment-breakup-container">
+                    <i className="fa fa-shopping-cart Icon-step Icon-step-right"/>
                     Your Order Total Is: &nbsp;&nbsp;${this.props.TotalPrice.toFixed(2)}
                 </div>
 
-                <div className="stepButton prevButton" onClick={() => this.stepHandler(AppConfig.steps.Servings)}>
-                    <i className="fa fa-plus stepIcon"/> Add Another Item
+                <div className="Button-step Button-prev" onClick={() => this.stepHandler(AppConfig.steps.Servings)}>
+                    <i className="fa fa-plus Icon-step"/> Add Another Item
                 </div>
-                <div className="stepButton nextButton" onClick={() => this.stepHandler(AppConfig.steps.Payment)}>
-                    Checkout <i className="fa fa-check stepIcon"/>
+                <div className="Button-step Button-next" onClick={() => this.stepHandler(AppConfig.steps.Payment)}>
+                    Checkout <i className="fa fa-check Icon-step"/>
                 </div>
             </div>
         );

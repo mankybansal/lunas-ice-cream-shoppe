@@ -24,18 +24,18 @@ class ToppingsList extends React.Component {
 
     render() {
         const listItems = this.props.Toppings.map((Topping) => {
-                let defaultClass = "toppingContainer";
+                let defaultClass = "Topping-Item";
                 if (this.props.Order.CurrentItem.Toppings.length > 0 && this.props.Order.CurrentItem.Toppings.includes(Topping))
-                    defaultClass += " selected";
+                    defaultClass += " Item-selected";
 
                 return (
                     <div key={Topping.id.toString()} className={defaultClass} onClick={() => this.selectTopping(Topping)}>
-                        <div className="itemTitle">{Topping.name}</div>
-                        <div className="itemDesc">{Topping.desc}</div>
+                        <div className="Item-title">{Topping.name}</div>
+                        <div className="Item-desc">{Topping.desc}</div>
 
-                        <div className="itemInfo">
-                            <div className="itemCalories">{Topping.calories} Calories</div>
-                            <div className="itemPrice">${Topping.price.toFixed(2)}</div>
+                        <div className="Item-info">
+                            <div className="Item-calories">{Topping.calories} Calories</div>
+                            <div className="Item-price">${Topping.price.toFixed(2)}</div>
                         </div>
                     </div>
                 );
@@ -76,10 +76,10 @@ class ToppingsStep extends React.Component {
         let prompt = "Select " + ((this.props.Order.CurrentItem.Serving) ? this.props.Order.CurrentItem.Serving.toppings : 0) + " Topping" + ((this.props.Order.CurrentItem.Serving && this.props.Order.CurrentItem.Serving.toppings <= 1) ? "" : "s");
 
         return (
-            <div className="header-padder">
+            <div className="App-header-padder">
                 <Header prompt={prompt} stepHandler={this.stepHandler}/>
 
-                <div className="toppingsContainer">
+                <div className="Topping-container">
                     <ToppingsList
                         Toppings={this.props.Toppings}
                         orderHandler={this.props.orderHandler}
@@ -87,11 +87,11 @@ class ToppingsStep extends React.Component {
                     />
                 </div>
 
-                <div className="stepButton prevButton" onClick={() => this.stepHandler(AppConfig.steps.Flavors)}>
-                    <i className="fa fa-chevron-left stepIcon"/> Back
+                <div className="Button-step Button-prev" onClick={() => this.stepHandler(AppConfig.steps.Flavors)}>
+                    <i className="fa fa-chevron-left Icon-step"/> Back
                 </div>
-                <div className="stepButton nextButton" onClick={() => this.stepHandler(AppConfig.steps.Confirm)}>
-                    Review Order <i className="fa fa-shopping-cart stepIcon"/>
+                <div className="Button-step Button-next" onClick={() => this.stepHandler(AppConfig.steps.Confirm)}>
+                    Review Order <i className="fa fa-shopping-cart Icon-step"/>
                 </div>
             </div>
         );

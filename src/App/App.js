@@ -1,5 +1,11 @@
 import React, {Component} from 'react';
+
 import './App.css';
+import './Styles/Containers.css';
+import './Styles/Interactions.css';
+import './Styles/Buttons.css';
+import './Styles/Icons.css';
+
 import {StartStep, ServingsStep, FlavorsStep, ToppingsStep, ConfirmStep, PaymentStep, FinishStep} from './Steps';
 import * as AppConfig from "./AppConfig";
 import REQUESTS from '../api';
