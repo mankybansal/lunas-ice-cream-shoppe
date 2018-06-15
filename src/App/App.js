@@ -98,68 +98,54 @@ class IceCreamKiosk extends Component {
     }
 
     render() {
-
-        let currentStep = this.state.currentStep;
-        let servings = this.state.Menu.Servings;
-        let flavors = this.state.Menu.Flavors;
-        let toppings = this.state.Menu.Toppings;
-
         return (
             <div className="App">
 
                 <StartStep
                     stepHandler={this.stepHandler}
-                    currentStep={currentStep}
-                />
+                    currentStep={this.state.currentStep}/>
 
                 <ServingsStep
                     stepHandler={this.stepHandler}
                     orderHandler={this.orderHandler}
-                    currentStep={currentStep}
-                    Servings={servings}
-                    Order={this.state.Order}
-                />
+                    currentStep={this.state.currentStep}
+                    Servings={this.state.Menu.Servings}
+                    Order={this.state.Order}/>
 
                 <FlavorsStep
                     stepHandler={this.stepHandler}
                     orderHandler={this.orderHandler}
-                    currentStep={currentStep}
-                    Flavors={flavors}
-                    Order={this.state.Order}
-                />
+                    currentStep={this.state.currentStep}
+                    Flavors={this.state.Menu.Flavors}
+                    Order={this.state.Order}/>
 
                 <ToppingsStep
                     stepHandler={this.stepHandler}
                     orderHandler={this.orderHandler}
                     priceHandler={this.priceHandler}
-                    currentStep={currentStep}
-                    Toppings={toppings}
-                    Order={this.state.Order}
-
-                />
+                    currentStep={this.state.currentStep}
+                    Toppings={this.state.Menu.Toppings}
+                    Order={this.state.Order}/>
 
                 <ConfirmStep
                     stepHandler={this.stepHandler}
                     orderHandler={this.orderHandler}
                     priceHandler={this.priceHandler}
                     Order={this.state.Order}
-                    currentStep={currentStep}
-                    TotalPrice={this.state.TotalPrice}
-                />
+                    currentStep={this.state.currentStep}
+                    TotalPrice={this.state.TotalPrice}/>
 
                 <PaymentStep
                     stepHandler={this.stepHandler}
                     paymentHandler={this.paymentHandler}
-                    currentStep={currentStep}
+                    currentStep={this.state.currentStep}
                     Order={this.state.Order}
-                    TotalPrice={this.state.TotalPrice}
-                />
+                    TotalPrice={this.state.TotalPrice}/>
 
                 <FinishStep
                     stepHandler={this.stepHandler}
-                    currentStep={currentStep}
-                    Order={this.state.Order}
-                />
+                    currentStep={this.state.currentStep}
+                    Order={this.state.Order}/>
 
             </div>
         );
@@ -167,5 +153,3 @@ class IceCreamKiosk extends Component {
 }
 
 export default IceCreamKiosk;
-
-//TODO: Animations and Icons

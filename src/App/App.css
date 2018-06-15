@@ -62,3 +62,12 @@
 .App-header-padding {
     padding-top: 120px;
 }
+
+.example-appear {
+    opacity: 0.01;
+}
+
+.example-appear.example-appear-active {
+    opacity: 1;
+    transition: opacity 5s ease-in;
+}

@@ -3,7 +3,6 @@ import * as AppConfig from "../../AppConfig";
 import Header from "../../Header";
 
 class ServingsList extends React.Component {
-
     constructor(props) {
         super(props);
         this.selectServing = this.selectServing.bind(this);
@@ -22,21 +21,20 @@ class ServingsList extends React.Component {
     render() {
         const listItems = this.props.Servings.map((Serving) => {
 
-                let defaultClass = "Serving-Item";
-                if (this.props.Order.CurrentItem.Serving && this.props.Order.CurrentItem.Serving.id === Serving.id)
-                    defaultClass += " Item-selected";
+            let defaultClass = "Serving-Item";
+            if (this.props.Order.CurrentItem.Serving && this.props.Order.CurrentItem.Serving.id === Serving.id)
+                defaultClass += " Item-selected";
 
-                return (
-                    <div key={Serving.id.toString()} className={defaultClass} onClick={() => this.selectServing(Serving)}>
-                        <img className="Item-image" src={Serving.image}/>
-                        <div className="Item-title">{Serving.name}</div>
-                        <div>{Serving.desc}</div>
-                    </div>
-                )
-            }
-        );
+            return (
+                <div key={Serving.id.toString()} className={defaultClass} onClick={() => this.selectServing(Serving)}>
+                    <img className="Item-image" src={Serving.image} alt=""/>
+                    <div className="Item-title">{Serving.name}</div>
+                    <div>{Serving.desc}</div>
+                </div>
+            )
+        });
 
-        return (<div>{listItems}</div>);
+        return (<div className="Serving-container">{listItems}</div>);
     }
 }
 
@@ -70,12 +68,10 @@ class ServingsStep extends React.Component {
             <div className="App-header-padding">
                 <Header prompt={prompt} stepHandler={this.stepHandler}/>
 
-                <div className="Serving-container">
-                    <ServingsList
-                        Servings={this.props.Servings}
-                        orderHandler={this.props.orderHandler}
-                        Order={this.props.Order}/>
-                </div>
+                <ServingsList
+                    Servings={this.props.Servings}
+                    orderHandler={this.props.orderHandler}
+                    Order={this.props.Order}/>
 
                 <div className="Button-step Button-next Button-step-full"
                      onClick={() => this.stepHandler(AppConfig.steps.Flavors)}>

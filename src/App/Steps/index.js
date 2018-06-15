@@ -1,4 +1,3 @@
-
 export {default as StartStep} from "./StartStep/StartStep";
 export {default as ServingsStep} from "./ServingsStep/ServingsStep";
 export {default as FlavorsStep} from "./FlavorsStep/FlavorsStep";

@@ -3,7 +3,6 @@ import * as AppConfig from "../../AppConfig";
 import Header from "../../Header";
 
 class ToppingsList extends React.Component {
-
     constructor(props) {
         super(props);
         this.selectTopping = this.selectTopping.bind(this);
@@ -24,25 +23,23 @@ class ToppingsList extends React.Component {
 
     render() {
         const listItems = this.props.Toppings.map((Topping) => {
-                let defaultClass = "Topping-Item";
-                if (this.props.Order.CurrentItem.Toppings.length > 0 && this.props.Order.CurrentItem.Toppings.includes(Topping))
-                    defaultClass += " Item-selected";
+            let defaultClass = "Topping-Item";
+            if (this.props.Order.CurrentItem.Toppings.length > 0 && this.props.Order.CurrentItem.Toppings.includes(Topping))
+                defaultClass += " Item-selected";
 
-                return (
-                    <div key={Topping.id.toString()} className={defaultClass} onClick={() => this.selectTopping(Topping)}>
-                        <div className="Item-title">{Topping.name}</div>
-                        <div className="Item-desc">{Topping.desc}</div>
-
-                        <div className="Item-info">
-                            <div className="Item-calories">{Topping.calories} Calories</div>
-                            <div className="Item-price">${Topping.price.toFixed(2)}</div>
-                        </div>
+            return (
+                <div key={Topping.id.toString()} className={defaultClass} onClick={() => this.selectTopping(Topping)}>
+                    <div className="Item-title">{Topping.name}</div>
+                    <div className="Item-desc">{Topping.desc}</div>
+                    <div className="Item-info">
+                        <div className="Item-calories">{Topping.calories} Calories</div>
+                        <div className="Item-price">${Topping.price.toFixed(2)}</div>
                     </div>
-                );
-            }
-        );
+                </div>
+            );
+        });
 
-        return (<div>{listItems}</div>);
+        return (<div className="Topping-container">{listItems}</div>);
     }
 }
 
@@ -79,17 +76,15 @@ class ToppingsStep extends React.Component {
             <div className="App-header-padding">
                 <Header prompt={prompt} stepHandler={this.stepHandler}/>
 
-                <div className="Topping-container">
-                    <ToppingsList
-                        Toppings={this.props.Toppings}
-                        orderHandler={this.props.orderHandler}
-                        Order={this.props.Order}
-                    />
-                </div>
+                <ToppingsList
+                    Toppings={this.props.Toppings}
+                    orderHandler={this.props.orderHandler}
+                    Order={this.props.Order}/>
 
                 <div className="Button-step Button-prev" onClick={() => this.stepHandler(AppConfig.steps.Flavors)}>
                     <i className="fa fa-chevron-left Icon-step"/> Back
                 </div>
+
                 <div className="Button-step Button-next" onClick={() => this.stepHandler(AppConfig.steps.Confirm)}>
                     Review Order <i className="fa fa-shopping-cart Icon-step"/>
                 </div>
@@ -98,6 +93,5 @@ class ToppingsStep extends React.Component {
     }
 
 }
-
 
 export default ToppingsStep;

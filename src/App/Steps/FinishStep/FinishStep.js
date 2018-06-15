@@ -31,6 +31,7 @@ class FinishStep extends React.Component {
     }
 
     render() {
+
         if (this.props.currentStep !== AppConfig.steps.Finish)
             return null;
         else {
@@ -44,9 +45,8 @@ class FinishStep extends React.Component {
             <div>
                 <div className="App-prompt">Thank You For Your Order</div>
 
-                <div className="Payment-amount Order-number">
-                    Order #{this.props.Order.Number}
-                </div>
+                <div className="Payment-amount Order-number">Order #{this.props.Order.Number}</div>
+
                 <div className="Payment-amount-small">
                     Placed at {this.props.Order.Time.toLocaleTimeString()} on {this.props.Order.Time.toLocaleDateString()}
                 </div>
@@ -57,10 +57,10 @@ class FinishStep extends React.Component {
                     with {this.props.Order.Payment.number.slice(12, 16)}
                 </div>
 
+                <br/><br/>
+                <br/><br/>
+                <br/><br/>
 
-                <br/><br/>
-                <br/><br/>
-                <br/><br/>
                 <div className="cardSwipePrompt">This page will refresh in {this.state.timer} seconds</div>
             </div>
         );

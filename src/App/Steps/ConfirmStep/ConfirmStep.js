@@ -52,22 +52,18 @@ class OrderList extends React.Component {
         const listItems = this.props.Order.Items.map((Item, Index) => {
             return (
                 <div key={Index} className="Order-Item">
-
-                    <img className="Item-image" src={Item.Serving.image}/>
+                    <img className="Item-image" src={Item.Serving.image} alt=""/>
                     <div className="Item-title">{Item.Serving.name}</div>
-
                     <div className="Item-category">Scoops</div>
                     <Flavors Flavors={Item.Flavors}/>
-
                     {(Item.Toppings.length > 0) ? <div className="Item-category">Toppings</div> : null}
                     <Toppings Toppings={Item.Toppings}/>
-
                     <div className="Order-action-remove" onClick={() => this.removeItem(Item)}>Remove</div>
                 </div>
             );
         });
 
-        return (<div>{listItems}</div>);
+        return (<div className="Order-container">{listItems}</div>);
     }
 }
 
@@ -93,14 +89,11 @@ class ConfirmStep extends React.Component {
             <div className="App-header-padding">
                 <Header prompt={prompt} stepHandler={this.stepHandler}/>
 
-                <div className="Order-container">
-                    <OrderList
-                        Order={this.props.Order}
-                        orderHandler={this.props.orderHandler}
-                        priceHandler={this.props.priceHandler}
-                        stepHandler={this.props.stepHandler}
-                    />
-                </div>
+                <OrderList
+                    Order={this.props.Order}
+                    orderHandler={this.props.orderHandler}
+                    priceHandler={this.props.priceHandler}
+                    stepHandler={this.props.stepHandler}/>
 
                 <div className="Payment-breakup-container">
                     <i className="fa fa-shopping-cart Icon-step Icon-step-right"/>
@@ -110,6 +103,7 @@ class ConfirmStep extends React.Component {
                 <div className="Button-step Button-prev" onClick={() => this.stepHandler(AppConfig.steps.Servings)}>
                     <i className="fa fa-plus Icon-step"/> Add Another Item
                 </div>
+
                 <div className="Button-step Button-next" onClick={() => this.stepHandler(AppConfig.steps.Payment)}>
                     Checkout <i className="fa fa-check Icon-step"/>
                 </div>
