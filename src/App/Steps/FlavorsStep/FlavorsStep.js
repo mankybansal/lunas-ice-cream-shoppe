@@ -48,14 +48,17 @@ class FlavorsList extends React.Component {
                 return (
                     <div key={Flavor.id.toString()} className={defaultClass} onClick={() => this.selectFlavor(Flavor)}>
                         <div className="itemTitle">{Flavor.name}</div>
-                        <div>{Flavor.desc}</div>
-                        <br/>
-                        <div>{Flavor.calories} Calories &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>${Flavor.price}</b></div>
+                        <div className="itemDesc">{Flavor.desc}</div>
+
+                        <div className="itemInfo">
+                            <div className="itemCalories">{Flavor.calories} Calories</div>
+                            <div className="itemPrice">${Flavor.price.toFixed(2)}</div>
+                        </div>
 
                         {(flavorCount > 0) ?
-                            <div>
+                            <div className="multiScoop">
                                 <div className="selectedScoops"> {flavorCount} Scoop(s)</div>
-                                <div className={(flavorCount < flavorCountMax && this.props.Order.CurrentItem.Flavors.length < flavorCountMax) ? "selectedScoops picker" :"selectedScoops picker2"}>Add</div>
+                                <div className={(flavorCount < flavorCountMax && this.props.Order.CurrentItem.Flavors.length < flavorCountMax) ? "selectedScoops picker" : "selectedScoops picker2"}>Add</div>
                                 <div className="selectedScoops picker" onClick={(e) => this.removeFlavor(Flavor, e)}>Remove</div>
                             </div>
                             : null}
@@ -96,9 +99,21 @@ class FlavorsStep extends React.Component {
         return (
             <div className="header-padder">
                 <Header prompt={prompt} stepHandler={this.stepHandler}/>
-                <FlavorsList Flavors={this.props.Flavors} orderHandler={this.props.orderHandler} Order={this.props.Order}/>
-                <div className="stepButton prevButton" onClick={() => this.stepHandler(AppConfig.steps.Servings)}>Back</div>
-                <div className="stepButton nextButton" onClick={() => this.stepHandler(AppConfig.steps.Toppings)}>Select Flavors</div>
+
+                <div className="flavorsContainer">
+                    <FlavorsList
+                        Flavors={this.props.Flavors}
+                        orderHandler={this.props.orderHandler}
+                        Order={this.props.Order}
+                    />
+                </div>
+
+                <div className="stepButton prevButton" onClick={() => this.stepHandler(AppConfig.steps.Servings)}>
+                    <i className="fa fa-chevron-left stepIcon"/> Back
+                </div>
+                <div className="stepButton nextButton" onClick={() => this.stepHandler(AppConfig.steps.Toppings)}>
+                    Select Toppings <i className="fa fa-chevron-right stepIcon"/>
+                </div>
             </div>
         );
     }

@@ -31,9 +31,12 @@ class ToppingsList extends React.Component {
                 return (
                     <div key={Topping.id.toString()} className={defaultClass} onClick={() => this.selectTopping(Topping)}>
                         <div className="itemTitle">{Topping.name}</div>
-                        <div>{Topping.desc}</div>
-                        <br/>
-                        <div>{Topping.calories} Calories &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <b>${Topping.price}</b></div>
+                        <div className="itemDesc">{Topping.desc}</div>
+
+                        <div className="itemInfo">
+                            <div className="itemCalories">{Topping.calories} Calories</div>
+                            <div className="itemPrice">${Topping.price.toFixed(2)}</div>
+                        </div>
                     </div>
                 );
             }
@@ -75,9 +78,21 @@ class ToppingsStep extends React.Component {
         return (
             <div className="header-padder">
                 <Header prompt={prompt} stepHandler={this.stepHandler}/>
-                <ToppingsList Toppings={this.props.Toppings} orderHandler={this.props.orderHandler} Order={this.props.Order}/>
-                <div className="stepButton prevButton" onClick={() => this.stepHandler(AppConfig.steps.Flavors)}>Back</div>
-                <div className="stepButton nextButton" onClick={() => this.stepHandler(AppConfig.steps.Confirm)}>Select Topping(s)</div>
+
+                <div className="toppingsContainer">
+                    <ToppingsList
+                        Toppings={this.props.Toppings}
+                        orderHandler={this.props.orderHandler}
+                        Order={this.props.Order}
+                    />
+                </div>
+
+                <div className="stepButton prevButton" onClick={() => this.stepHandler(AppConfig.steps.Flavors)}>
+                    <i className="fa fa-chevron-left stepIcon"/> Back
+                </div>
+                <div className="stepButton nextButton" onClick={() => this.stepHandler(AppConfig.steps.Confirm)}>
+                    Review Order <i className="fa fa-shopping-cart stepIcon"/>
+                </div>
             </div>
         );
     }

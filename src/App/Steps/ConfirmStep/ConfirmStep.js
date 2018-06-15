@@ -7,7 +7,7 @@ class Flavors extends React.Component {
         const flavorList = this.props.Flavors.map((Flavor, FlavorIndex) => {
             return (<div key={FlavorIndex} className="orderItemContainer">
                 <div className="orderItemName">{Flavor.name}</div>
-                <div className="orderItemPrice">${Flavor.price}</div>
+                <div className="orderItemPrice">${Flavor.price.toFixed(2)}</div>
             </div>);
         });
 
@@ -20,7 +20,7 @@ class Toppings extends React.Component {
         const toppingList = this.props.Toppings.map((Topping, ToppingIndex) => {
             return (<div key={ToppingIndex} className="orderItemContainer">
                 <div className="orderItemName">{Topping.name}</div>
-                <div className="orderItemPrice">${Topping.price}</div>
+                <div className="orderItemPrice">${Topping.price.toFixed(2)}</div>
             </div>);
         });
 
@@ -29,16 +29,40 @@ class Toppings extends React.Component {
 }
 
 class OrderList extends React.Component {
+    constructor(props) {
+        super(props);
+        this.removeItem = this.removeItem.bind(this);
+    }
+
+    removeItem(Item) {
+        let Order = this.props.Order;
+
+        if (Order.Items.includes(Item))
+            Order.Items.splice(Order.Items.indexOf(Item), 1);
+
+        this.props.orderHandler(Order);
+        this.props.priceHandler();
+
+        if (Order.Items.length < 1) {
+            this.props.stepHandler(AppConfig.steps.Servings);
+        }
+    }
+
     render() {
         const listItems = this.props.Order.Items.map((Item, Index) => {
             return (
                 <div key={Index} className="orderContainer">
-                    <h2>{Item.Serving.name}</h2>
-                    <b>Scoops</b>
+
+                    <img className="itemImage" src={Item.Serving.image}/>
+                    <div className="itemTitle">{Item.Serving.name}</div>
+
+                    <div className="itemCategory">Scoops</div>
                     <Flavors Flavors={Item.Flavors}/>
-                    <br/>
-                    {(Item.Toppings.length > 0) ? <b>Toppings</b> : null}
+
+                    {(Item.Toppings.length > 0) ? <div className="itemCategory">Toppings</div> : null}
                     <Toppings Toppings={Item.Toppings}/>
+
+                    <div className="removeOrder" onClick={() => this.removeItem(Item)}>Remove</div>
                 </div>
             );
         });
@@ -70,13 +94,25 @@ class ConfirmStep extends React.Component {
                 <Header prompt={prompt} stepHandler={this.stepHandler}/>
 
                 <div className="ordersContainer">
-                    <OrderList Order={this.props.Order} orderHandler={this.props.orderHandler}/>
+                    <OrderList
+                        Order={this.props.Order}
+                        orderHandler={this.props.orderHandler}
+                        priceHandler={this.props.priceHandler}
+                        stepHandler={this.props.stepHandler}
+                    />
                 </div>
 
-                <div className="paymentBreakup">Order Total: &nbsp;&nbsp;${this.props.TotalPrice.toFixed(2)}</div>
+                <div className="paymentBreakup">
+                    <i className="fa fa-shopping-cart stepIcon stepIconRight"/>
+                    Your Order Total Is: &nbsp;&nbsp;${this.props.TotalPrice.toFixed(2)}
+                </div>
 
-                <div className="stepButton prevButton" onClick={() => this.stepHandler(AppConfig.steps.Servings)}>Add Another Order</div>
-                <div className="stepButton nextButton" onClick={() => this.stepHandler(AppConfig.steps.Payment)}>I'm Ready to Pay</div>
+                <div className="stepButton prevButton" onClick={() => this.stepHandler(AppConfig.steps.Servings)}>
+                    <i className="fa fa-plus stepIcon"/> Add Another Item
+                </div>
+                <div className="stepButton nextButton" onClick={() => this.stepHandler(AppConfig.steps.Payment)}>
+                    Checkout <i className="fa fa-check stepIcon"/>
+                </div>
             </div>
         );
     }

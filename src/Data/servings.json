@@ -5,7 +5,7 @@
     "desc": "Up to 3 Scoops + 2 Toppings",
     "scoops": 3,
     "toppings": 2,
-    "image": "default.png"
+    "image": "images/icon-bowl.png"
   },
   {
     "id": "SER2",
@@ -13,6 +13,6 @@
     "desc": "Up to 2 Scoops + 1 Topping",
     "scoops": 2,
     "toppings": 1,
-    "image": "default.png"
+    "image": "images/icon-cone.png"
   }
 ]

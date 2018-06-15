@@ -43,18 +43,21 @@ class FinishStep extends React.Component {
         return (
             <div>
                 <div className="prompt">Thank You For Your Order</div>
-                <div className="paymentAmount">
+
+                <div className="paymentAmount orderNumber">
+                    Order #{this.props.Order.Number}
+                </div>
+                <div className="paymentAmount-small">
+                    Placed at {this.props.Order.Time.toLocaleTimeString()} on {this.props.Order.Time.toLocaleDateString()}
+                </div>
+
+                <div className="paymentAmount-small">
                     ${this.props.Order.Payment.Amount.toFixed(2)} paid
                     by {this.props.Order.Payment.network + " " + this.props.Order.Payment.type} ending
                     with {this.props.Order.Payment.number.slice(12, 16)}
                 </div>
 
-                <div className="paymentAmount orderNumber">
-                    Order #{this.props.Order.Number}
-                </div>
-                <div className="paymentAmount">
-                    Placed at {this.props.Order.Time.toLocaleTimeString()} on {this.props.Order.Time.toLocaleDateString()}
-                </div>
+
                 <br/><br/>
                 <br/><br/>
                 <br/><br/>

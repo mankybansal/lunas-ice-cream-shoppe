@@ -14,10 +14,11 @@ class PaymentStep extends React.Component {
         else
             this.props.paymentHandler();
     }
-
     render() {
         if (this.props.currentStep !== AppConfig.steps.Payment)
             return null;
+
+        alert("Click on animation to simulate payment");
 
         let prompt = "Make Payment";
 

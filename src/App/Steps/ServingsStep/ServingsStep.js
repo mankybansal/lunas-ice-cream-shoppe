@@ -28,6 +28,7 @@ class ServingsList extends React.Component {
 
                 return (
                     <div key={Serving.id.toString()} className={defaultClass} onClick={() => this.selectServing(Serving)}>
+                        <img className="itemImage" src={Serving.image}/>
                         <div className="itemTitle">{Serving.name}</div>
                         <div>{Serving.desc}</div>
                     </div>
@@ -47,7 +48,7 @@ class ServingsStep extends React.Component {
     }
 
     stepHandler(gotoStep) {
-        if(gotoStep === AppConfig.steps.Start){
+        if (gotoStep === AppConfig.steps.Start) {
             this.props.stepHandler(gotoStep);
             return;
         }
@@ -68,8 +69,18 @@ class ServingsStep extends React.Component {
         return (
             <div className="header-padder">
                 <Header prompt={prompt} stepHandler={this.stepHandler}/>
-                <ServingsList Servings={this.props.Servings} orderHandler={this.props.orderHandler} Order={this.props.Order}/>
-                <div className="stepButton nextButton stepButton-full" onClick={() => this.stepHandler(AppConfig.steps.Flavors)}>Select Serving</div>
+
+                <div className="servingsContainer">
+                    <ServingsList
+                        Servings={this.props.Servings}
+                        orderHandler={this.props.orderHandler}
+                        Order={this.props.Order}/>
+                </div>
+
+                <div className="stepButton nextButton stepButton-full"
+                     onClick={() => this.stepHandler(AppConfig.steps.Flavors)}>
+                    Select Flavors <i className="fa fa-chevron-right stepIcon"/>
+                </div>
             </div>
         );
     }

@@ -125,16 +125,17 @@ class IceCreamKiosk extends Component {
                 <ToppingsStep
                     stepHandler={this.stepHandler}
                     orderHandler={this.orderHandler}
+                    priceHandler={this.priceHandler}
                     currentStep={currentStep}
                     Toppings={toppings}
                     Order={this.state.Order}
-                    priceHandler={this.priceHandler}
 
                 />
 
                 <ConfirmStep
                     stepHandler={this.stepHandler}
                     orderHandler={this.orderHandler}
+                    priceHandler={this.priceHandler}
                     Order={this.state.Order}
                     currentStep={currentStep}
                     TotalPrice={this.state.TotalPrice}
@@ -160,3 +161,5 @@ class IceCreamKiosk extends Component {
 }
 
 export default IceCreamKiosk;
+
+//TODO: Animations and Icons
