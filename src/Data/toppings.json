@@ -3,7 +3,7 @@
     "id": "TOP1",
     "name": "Peanuts",
     "desc": "They aren't just for planes",
-    "price": 0.50,
+    "price": 0.5,
     "calories": 25,
     "image": "default.png"
   },
@@ -11,7 +11,7 @@
     "id": "TOP2",
     "name": "Hershey's Chocolate Sauce",
     "desc": "The best sauce from Hershey's",
-    "price": 0.50,
+    "price": 0.5,
     "calories": 40,
     "image": "default.png"
   },
@@ -19,7 +19,7 @@
     "id": "TOP3",
     "name": "Bertie Bott's Every Flavor Beans",
     "desc": "Don't worry, we skipped toothpaste, eggs, garbage",
-    "price": 0.50,
+    "price": 0.5,
     "calories": 40,
     "image": "default.png"
   },
@@ -35,7 +35,7 @@
     "id": "TOP5",
     "name": "Cherrific",
     "desc": "Put a cherry on that",
-    "price": 0.50,
+    "price": 0.5,
     "calories": 30,
     "image": "default.png"
   },
@@ -43,7 +43,7 @@
     "id": "TOP6",
     "name": "Birthday Sprinkles",
     "desc": "Make everyday special",
-    "price": 0.50,
+    "price": 0.5,
     "calories": 25,
     "image": "default.png"
   },
@@ -51,7 +51,7 @@
     "id": "TOP7",
     "name": "Fresh Whipped Cream",
     "desc": "Just to put some more cream on that cream",
-    "price": 0.50,
+    "price": 0.5,
     "calories": 60,
     "image": "default.png"
   },
