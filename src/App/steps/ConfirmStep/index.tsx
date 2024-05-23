@@ -135,7 +135,8 @@ const ConfirmStep = ({
       <div className={"Action-Container"}>
         <div className="Payment-breakup-container">
           <i className="fa fa-shopping-cart Icon-step Icon-step-right" />
-          {strings.orderTotal} &nbsp;&nbsp;${totalPrice.toFixed(2)}
+          {strings.orderTotal} &nbsp;&nbsp;
+          <span style={{ color: "black" }}>${totalPrice.toFixed(2)}</span>
         </div>
 
         <div className={"Step-Control"}>
