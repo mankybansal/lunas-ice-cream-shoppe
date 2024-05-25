@@ -1,6 +1,8 @@
 import { useCallback, useEffect } from "react";
 import Header from "../../Header";
 import * as AppConfig from "../../config";
+import { usePaymentHandler } from "~/App/hooks/usePaymentHandler.ts";
+import { useStepHandler } from "~/App/hooks/useStepHandler.ts";
 
 const strings = {
   makePayment: "Make Payment",
@@ -9,21 +11,17 @@ const strings = {
   paymentAlert: "Click on animation to simulate payment"
 };
 
-interface PaymentStepProps {
-  totalPrice: number;
-  stepHandler: (step: number) => void;
-  paymentHandler: () => void;
-}
+const PaymentStep = () => {
+  const { paymentHandler, totalPrice } = usePaymentHandler();
+  const { stepHandler } = useStepHandler();
 
-const PaymentStep = ({
-  totalPrice,
-  stepHandler,
-  paymentHandler
-}: PaymentStepProps) => {
   const handleStep = useCallback(
     (gotoStep?: number) => () => {
-      if (gotoStep && gotoStep < AppConfig.steps.Payment) stepHandler(gotoStep);
-      else paymentHandler();
+      if (gotoStep && gotoStep < AppConfig.steps.Payment) {
+        return stepHandler(gotoStep);
+      }
+
+      return paymentHandler();
     },
     [stepHandler, paymentHandler]
   );

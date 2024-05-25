@@ -1,7 +1,10 @@
 import { useCallback } from "react";
 import * as AppConfig from "../../config";
 import Header from "../../Header";
-import { Flavor, Item, Order, Topping } from "~/App/types.ts";
+import { Flavor, Item, KioskFormData, Topping } from "~/App/types.ts";
+import * as Helpers from "~/App/utils.ts";
+import { useFormContext } from "react-hook-form";
+import { useStepHandler } from "~/App/hooks/useStepHandler.ts";
 
 const strings = {
   reviewOrder: "Review Order",
@@ -47,19 +50,11 @@ const Toppings = ({ toppings }: ToppingProps) => (
   </div>
 );
 
-interface OrderListProps {
-  order: Order;
-  orderHandler: (order: Order) => void;
-  priceHandler: () => void;
-  stepHandler: (step: number) => void;
-}
+const OrderList = () => {
+  const { watch, setValue } = useFormContext<KioskFormData>();
+  const order = watch("order");
+  const { stepHandler } = useStepHandler();
 
-const OrderList = ({
-  order,
-  orderHandler,
-  priceHandler,
-  stepHandler
-}: OrderListProps) => {
   const removeItem = useCallback(
     (item: Item) => {
       let updatedOrder = { ...order };
@@ -67,20 +62,19 @@ const OrderList = ({
       if (updatedOrder.items.includes(item))
         updatedOrder.items.splice(updatedOrder.items.indexOf(item), 1);
 
-      orderHandler(updatedOrder);
-      priceHandler();
+      setValue("order", updatedOrder);
 
       if (updatedOrder.items.length < 1) {
-        stepHandler(AppConfig.steps.Servings);
+        return stepHandler(AppConfig.steps.Servings);
       }
     },
-    [order, priceHandler, stepHandler]
+    [order, stepHandler, setValue]
   );
 
   const listItems = order.items.map((item: Item, i) => (
     <div key={i} className="Order-Item">
-      <img className="Item-image" src={item.serving.image} alt="" />
-      <div className="Item-title">{item.serving.name}</div>
+      <img className="Item-image" src={item.serving!.image} alt="" />
+      <div className="Item-title">{item.serving!.name}</div>
       <div className="Item-category">{strings.scoops}</div>
       <Flavors flavors={item.flavors} />
       {item.toppings.length > 0 && (
@@ -96,27 +90,19 @@ const OrderList = ({
   return <div className="Order-container">{listItems}</div>;
 };
 
-interface ConfirmStepProps {
-  order: Order;
-  orderHandler: (order: Order) => void;
-  priceHandler: () => void;
-  stepHandler: (step: number) => void;
-  totalPrice: number;
-}
+const ConfirmStep = () => {
+  const { stepHandler } = useStepHandler();
+  const { watch, setValue } = useFormContext<KioskFormData>();
 
-const ConfirmStep = ({
-  order,
-  orderHandler,
-  priceHandler,
-  stepHandler,
-  totalPrice
-}: ConfirmStepProps) => {
+  const order = watch("order");
+  const totalPrice = Helpers.calculatePrice(order);
+
   const handleStep = useCallback(
     (gotoStep: number) => {
-      orderHandler(order);
-      stepHandler(gotoStep);
+      setValue("order", order);
+      return stepHandler(gotoStep);
     },
-    [order, stepHandler]
+    [order, stepHandler, setValue]
   );
 
   const prompt = strings.reviewOrder;
@@ -125,12 +111,7 @@ const ConfirmStep = ({
     <div className="App-header-padding">
       <Header prompt={prompt} stepHandler={handleStep} />
 
-      <OrderList
-        order={order}
-        orderHandler={orderHandler}
-        priceHandler={priceHandler}
-        stepHandler={stepHandler}
-      />
+      <OrderList />
 
       <div className={"Action-Container"}>
         <div className="Payment-breakup-container">

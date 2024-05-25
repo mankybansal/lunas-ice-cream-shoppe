@@ -101,6 +101,7 @@ Card Swipe Interaction
   box-sizing: border-box;
   transform: scale(0.8);
   margin: -20px auto 0 auto;
+  cursor: pointer;
 }
 
 .paymentDevice {

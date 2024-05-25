@@ -37,7 +37,7 @@ export function defaultState(): State {
 
 export function defaultCurrentItem(): Item {
   return {
-    servings: [],
+    serving: undefined,
     flavors: [],
     toppings: []
   };

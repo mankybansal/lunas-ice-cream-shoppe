@@ -1,5 +1,6 @@
 import * as AppConfig from "../../config";
 import styled from "@emotion/styled";
+import { useStepHandler } from "~/App/hooks/useStepHandler.ts";
 
 const strings = {
   title: "Welcome to Luna's Ice Cream Shoppe",
@@ -12,14 +13,13 @@ const RootContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  height: 100%;
   align-items: center;
 `;
 
-interface StartStepProps {
-  stepHandler: (step: number) => void;
-}
-
-const StartStep = ({ stepHandler }: StartStepProps) => {
+const StartStep = () => {
+  const { stepHandler } = useStepHandler();
   return (
     <RootContainer>
       <div className="App-title">{strings.title}</div>

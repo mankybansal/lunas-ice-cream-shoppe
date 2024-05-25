@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useEffect } from "react";
 import "./App.css";
 import "./styles/Containers.css";
 import "./styles/Interactions.css";
@@ -14,134 +14,49 @@ import {
   FinishStep
 } from "./steps";
 import * as AppConfig from "./config";
-import REQUESTS, { ApiResponse, CompletedOrder, PaymentDetails } from "~/api";
-import * as Helpers from "./utils";
-import { Menu, Order } from "./types";
+
+import { KioskFormData } from "./types";
+import { FormProvider, useForm, useFormContext } from "react-hook-form";
+import { useAppInit } from "~/App/hooks/useAppInit.ts";
 
 const IceCreamKiosk = () => {
-  const [currentStep, setCurrentStep] = useState<number>(-1);
-  const [menu, setMenu] = useState<Menu>({
-    servings: [],
-    flavors: [],
-    toppings: []
+  const formMethods = useForm<KioskFormData>({
+    defaultValues: {
+      menu: AppConfig.defaultState().menu,
+      order: AppConfig.defaultState().order,
+      currentStep: AppConfig.steps.Start,
+      completedOrder: null,
+      totalPrice: 0
+    }
   });
-  const [completedOrder, setCompletedOrder] = useState<CompletedOrder | null>(
-    null
+
+  return (
+    <FormProvider {...formMethods}>
+      <KioskContent />
+    </FormProvider>
   );
-  const [order, setOrder] = useState<Order>(AppConfig.defaultState().order);
+};
 
-  const [totalPrice, setTotalPrice] = useState<number>(0);
-
-  const appInit = useCallback(() => {
-    Helpers.appInitPrinter();
-    return REQUESTS.GetMenu(({ success, data }) => {
-      if (!success) return;
-      setMenu(data);
-      setCurrentStep(AppConfig.steps.Start);
-      Helpers.menuPrinter(data);
-    });
-  }, []);
+const KioskContent = () => {
+  const { watch } = useFormContext<KioskFormData>();
+  const { appInit } = useAppInit();
 
   useEffect(() => {
     void appInit();
   }, [appInit]);
 
-  const stepHandler = (gotoStep: number) => {
-    if (gotoStep === AppConfig.steps.Start) {
-      setCurrentStep(AppConfig.steps.Start);
-      setOrder(AppConfig.defaultState().order);
-      setTotalPrice(0);
-      setCompletedOrder(null);
-      void appInit();
-    } else {
-      setCurrentStep(gotoStep);
-    }
-  };
-
-  const orderHandler = (newOrder: Order) => {
-    setOrder(newOrder);
-  };
-
-  const priceHandler = () => {
-    setTotalPrice(Helpers.calculatePrice(order));
-  };
-
-  const paymentHandler = async () => {
-    console.log("\nProcessing Payment...\n");
-    return REQUESTS.SendPayment(
-      totalPrice,
-      AppConfig.CardDetails,
-      (response: ApiResponse<PaymentDetails>) => {
-        const { success, data: sendPaymentResponse } = response;
-
-        if (!success || !sendPaymentResponse) return;
-
-        Helpers.paymentPrinter(sendPaymentResponse);
-        return REQUESTS.SendOrder(order, sendPaymentResponse, (response) => {
-          const { success, data: sendOrderResponse } = response;
-          if (!success) return;
-
-          setCompletedOrder(sendOrderResponse);
-          setCurrentStep(AppConfig.steps.Finish);
-          Helpers.orderPrinter(sendOrderResponse);
-        });
-      }
-    );
-  };
+  const currentStep = watch("currentStep");
+  const completedOrder = watch("completedOrder");
 
   return (
     <div className="App">
-      {currentStep === AppConfig.steps.Start && (
-        <StartStep stepHandler={stepHandler} />
-      )}
-      {currentStep === AppConfig.steps.Servings && (
-        <ServingsStep
-          stepHandler={stepHandler}
-          orderHandler={orderHandler}
-          servings={menu.servings}
-          order={order}
-        />
-      )}
-      {currentStep === AppConfig.steps.Flavors && (
-        <FlavorsStep
-          stepHandler={stepHandler}
-          orderHandler={orderHandler}
-          flavors={menu.flavors}
-          order={order}
-        />
-      )}
-      {currentStep === AppConfig.steps.Toppings && (
-        <ToppingsStep
-          stepHandler={stepHandler}
-          orderHandler={orderHandler}
-          priceHandler={priceHandler}
-          toppings={menu.toppings}
-          order={order}
-        />
-      )}
-      {currentStep === AppConfig.steps.Confirm && (
-        <ConfirmStep
-          stepHandler={stepHandler}
-          orderHandler={orderHandler}
-          priceHandler={priceHandler}
-          order={order}
-          totalPrice={totalPrice}
-        />
-      )}
-      {currentStep === AppConfig.steps.Payment && (
-        <PaymentStep
-          stepHandler={stepHandler}
-          paymentHandler={paymentHandler}
-          totalPrice={totalPrice}
-        />
-      )}
-      {completedOrder && (
-        <FinishStep
-          stepHandler={stepHandler}
-          currentStep={currentStep}
-          order={completedOrder}
-        />
-      )}
+      {currentStep === AppConfig.steps.Start && <StartStep />}
+      {currentStep === AppConfig.steps.Servings && <ServingsStep />}
+      {currentStep === AppConfig.steps.Flavors && <FlavorsStep />}
+      {currentStep === AppConfig.steps.Toppings && <ToppingsStep />}
+      {currentStep === AppConfig.steps.Confirm && <ConfirmStep />}
+      {currentStep === AppConfig.steps.Payment && <PaymentStep />}
+      {completedOrder && <FinishStep />}
     </div>
   );
 };

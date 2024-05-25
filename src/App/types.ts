@@ -1,3 +1,13 @@
+import { CompletedOrder } from "~/api.ts";
+
+export interface KioskFormData {
+  menu: Menu;
+  completedOrder: CompletedOrder | null;
+  order: Order;
+  totalPrice: number;
+  currentStep: number;
+}
+
 export interface Flavor {
   id: string;
   name: string;
@@ -26,7 +36,7 @@ export interface Serving {
 }
 
 export interface Item {
-  serving: Serving;
+  serving: Serving | undefined;
   flavors: Flavor[];
   toppings: Topping[];
 }
