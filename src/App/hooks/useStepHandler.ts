@@ -9,13 +9,13 @@ export const useStepHandler = () => {
 
   const currentStep = watch("currentStep");
 
-  const stepHandler = async (gotoStep: number) => {
-    if (gotoStep === AppConfig.steps.Start) {
+  const stepHandler = async (gotoStep: AppConfig.Steps) => {
+    if (gotoStep === AppConfig.Steps.Start) {
       reset();
-      await appInit();
-    } else {
-      setValue("currentStep", gotoStep);
+      return appInit();
     }
+
+    setValue("currentStep", gotoStep);
   };
 
   return { stepHandler, currentStep };

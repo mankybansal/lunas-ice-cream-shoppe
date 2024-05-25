@@ -103,8 +103,8 @@ const FlavorsStep = () => {
   const order = watch("order");
 
   const handleStep = useCallback(
-    (gotoStep: number) => {
-      if (gotoStep < AppConfig.steps.Flavors) {
+    (gotoStep: AppConfig.Steps) => {
+      if (gotoStep < AppConfig.Steps.Flavors) {
         return stepHandler(gotoStep);
       }
 
@@ -124,21 +124,21 @@ const FlavorsStep = () => {
 
   return (
     <div className="App-header-padding">
-      <Header prompt={prompt} stepHandler={handleStep} />
+      <Header prompt={prompt} />
 
       <FlavorsList />
       <div className={"Action-Container"}>
         <div className={"Step-Control"}>
           <div
             className="Button-step Button-prev"
-            onClick={() => handleStep(AppConfig.steps.Servings)}
+            onClick={() => handleStep(AppConfig.Steps.Servings)}
           >
             <i className="fa fa-chevron-left Icon-step" /> {strings.back}
           </div>
 
           <div
             className="Button-step Button-next"
-            onClick={() => handleStep(AppConfig.steps.Toppings)}
+            onClick={() => handleStep(AppConfig.Steps.Toppings)}
           >
             {strings.selectToppings}{" "}
             <i className="fa fa-chevron-right Icon-step" />

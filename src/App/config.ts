@@ -1,16 +1,14 @@
 import { Item, Menu, Order } from "~/App/types.ts";
 
-export const steps = {
-  Start: 0,
-  Servings: 1,
-  Flavors: 2,
-  Toppings: 3,
-  Confirm: 4,
-  Payment: 5,
-  Finish: 6
-} as const;
-
-export type Steps = (typeof steps)[keyof typeof steps];
+export enum Steps {
+  Start = 0,
+  Servings = 1,
+  Flavors = 2,
+  Toppings = 3,
+  Confirm = 4,
+  Payment = 5,
+  Finish = 6
+}
 
 export interface State {
   currentStep: Steps | -1;
@@ -21,7 +19,7 @@ export interface State {
 
 export function defaultState(): State {
   return {
-    currentStep: -1,
+    currentStep: Steps.Start,
     menu: {
       servings: [],
       flavors: [],

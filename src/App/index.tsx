@@ -24,7 +24,7 @@ const IceCreamKiosk = () => {
     defaultValues: {
       menu: AppConfig.defaultState().menu,
       order: AppConfig.defaultState().order,
-      currentStep: AppConfig.steps.Start,
+      currentStep: AppConfig.Steps.Start,
       completedOrder: null,
       totalPrice: 0
     }
@@ -46,17 +46,16 @@ const KioskContent = () => {
   }, [appInit]);
 
   const currentStep = watch("currentStep");
-  const completedOrder = watch("completedOrder");
 
   return (
     <div className="App">
-      {currentStep === AppConfig.steps.Start && <StartStep />}
-      {currentStep === AppConfig.steps.Servings && <ServingsStep />}
-      {currentStep === AppConfig.steps.Flavors && <FlavorsStep />}
-      {currentStep === AppConfig.steps.Toppings && <ToppingsStep />}
-      {currentStep === AppConfig.steps.Confirm && <ConfirmStep />}
-      {currentStep === AppConfig.steps.Payment && <PaymentStep />}
-      {completedOrder && <FinishStep />}
+      {currentStep === AppConfig.Steps.Start && <StartStep />}
+      {currentStep === AppConfig.Steps.Servings && <ServingsStep />}
+      {currentStep === AppConfig.Steps.Flavors && <FlavorsStep />}
+      {currentStep === AppConfig.Steps.Toppings && <ToppingsStep />}
+      {currentStep === AppConfig.Steps.Confirm && <ConfirmStep />}
+      {currentStep === AppConfig.Steps.Payment && <PaymentStep />}
+      {currentStep === AppConfig.Steps.Finish && <FinishStep />}
     </div>
   );
 };

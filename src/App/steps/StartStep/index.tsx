@@ -26,7 +26,7 @@ const StartStep = () => {
       <div className="App-subtitle">{strings.subtitle}</div>
 
       <div
-        onClick={() => stepHandler(AppConfig.steps.Servings)}
+        onClick={() => stepHandler(AppConfig.Steps.Servings)}
         className="circleClickerContainer"
       >
         <div className="circleClicker">

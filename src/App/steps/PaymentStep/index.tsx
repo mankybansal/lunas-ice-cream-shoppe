@@ -16,8 +16,8 @@ const PaymentStep = () => {
   const { stepHandler } = useStepHandler();
 
   const handleStep = useCallback(
-    (gotoStep?: number) => () => {
-      if (gotoStep && gotoStep < AppConfig.steps.Payment) {
+    (gotoStep?: AppConfig.Steps) => () => {
+      if (gotoStep && gotoStep < AppConfig.Steps.Payment) {
         return stepHandler(gotoStep);
       }
 
@@ -32,7 +32,7 @@ const PaymentStep = () => {
 
   return (
     <div className="App-header-padding">
-      <Header prompt={strings.makePayment} stepHandler={(s) => handleStep(s)} />
+      <Header prompt={strings.makePayment} />
 
       <div className="Payment-amount">
         {strings.cardCharged}

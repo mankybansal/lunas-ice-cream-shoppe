@@ -65,7 +65,7 @@ const OrderList = () => {
       setValue("order", updatedOrder);
 
       if (updatedOrder.items.length < 1) {
-        return stepHandler(AppConfig.steps.Servings);
+        return stepHandler(AppConfig.Steps.Servings);
       }
     },
     [order, stepHandler, setValue]
@@ -92,24 +92,16 @@ const OrderList = () => {
 
 const ConfirmStep = () => {
   const { stepHandler } = useStepHandler();
-  const { watch, setValue } = useFormContext<KioskFormData>();
+  const { watch } = useFormContext<KioskFormData>();
 
   const order = watch("order");
   const totalPrice = Helpers.calculatePrice(order);
-
-  const handleStep = useCallback(
-    (gotoStep: number) => {
-      setValue("order", order);
-      return stepHandler(gotoStep);
-    },
-    [order, stepHandler, setValue]
-  );
 
   const prompt = strings.reviewOrder;
 
   return (
     <div className="App-header-padding">
-      <Header prompt={prompt} stepHandler={handleStep} />
+      <Header prompt={prompt} />
 
       <OrderList />
 
@@ -123,14 +115,14 @@ const ConfirmStep = () => {
         <div className={"Step-Control"}>
           <div
             className="Button-step Button-prev"
-            onClick={() => handleStep(AppConfig.steps.Servings)}
+            onClick={() => stepHandler(AppConfig.Steps.Servings)}
           >
             <i className="fa fa-plus Icon-step" /> {strings.addItem}
           </div>
 
           <div
             className="Button-step Button-next"
-            onClick={() => handleStep(AppConfig.steps.Payment)}
+            onClick={() => stepHandler(AppConfig.Steps.Payment)}
           >
             {strings.checkout} <i className="fa fa-check Icon-step" />
           </div>
