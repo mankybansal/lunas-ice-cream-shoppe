@@ -1,7 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import * as AppConfig from "../../config";
-import { CompletedOrder } from "~/api.ts";
+
 import styled from "@emotion/styled";
+import { useStepHandler } from "~/App/hooks/useStepHandler.ts";
+import { KioskFormData } from "~/App/types.ts";
+import { useFormContext } from "react-hook-form";
 
 const strings = {
   thankYou: "Thank You For Your Order",
@@ -19,13 +22,12 @@ const RootContainer = styled.div`
   align-items: center;
 `;
 
-interface FinishStepProps {
-  currentStep: number;
-  order: CompletedOrder;
-  stepHandler: (step: number) => void;
-}
+const FinishStep = () => {
+  const { stepHandler, currentStep } = useStepHandler();
 
-const FinishStep = ({ currentStep, order, stepHandler }: FinishStepProps) => {
+  const { getValues } = useFormContext<KioskFormData>();
+  const order = getValues("completedOrder")!;
+
   const [timer, setTimer] = useState<number>(20);
   const intervalRef = useRef<number | null>(null);
 
@@ -33,7 +35,7 @@ const FinishStep = ({ currentStep, order, stepHandler }: FinishStepProps) => {
     intervalRef.current = setInterval(() => {
       setTimer((prevTimer) => {
         if (prevTimer <= 0) {
-          stepHandler(AppConfig.steps.Start);
+          void stepHandler(AppConfig.steps.Start);
           if (intervalRef.current) clearInterval(intervalRef.current);
           return 20;
         }
@@ -43,7 +45,7 @@ const FinishStep = ({ currentStep, order, stepHandler }: FinishStepProps) => {
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [currentStep, stepHandler]);
+  }, [stepHandler]);
 
   if (currentStep !== AppConfig.steps.Finish) return null;
 

@@ -1,37 +1,37 @@
 import { useCallback } from "react";
 import * as AppConfig from "../../config";
 import Header from "../../Header";
-import { Order, Serving } from "~/App/types";
+import { KioskFormData, Serving } from "~/App/types";
+import { useStepHandler } from "~/App/hooks/useStepHandler.ts";
+import { useFormContext } from "react-hook-form";
 
 const strings = {
   prompt: "What Serving Would You Like?",
   selectFlavors: "Select Flavors"
 };
 
-interface ServingsListProps {
-  servings: Serving[];
-  order: Order;
-  orderHandler: (order: Order) => void;
-}
+const ServingsList = () => {
+  const { watch, setValue, getValues } = useFormContext<KioskFormData>();
+  const order = watch("order");
+  const servings = getValues("menu.servings");
 
-const ServingsList = ({ servings, order, orderHandler }: ServingsListProps) => {
   const selectServing = useCallback(
     (serving: Serving) => {
-      let updatedOrder = { ...order };
-      updatedOrder.currentItem.serving = serving;
-      updatedOrder.currentItem.flavors = updatedOrder.currentItem.flavors.slice(
-        0,
-        updatedOrder.currentItem.serving.scoops
-      );
-      updatedOrder.currentItem.toppings =
-        updatedOrder.currentItem.toppings.slice(
-          0,
-          updatedOrder.currentItem.serving.toppings
-        );
+      setValue("order.currentItem.serving", serving);
 
-      orderHandler(updatedOrder);
+      // Remove flavors and toppings if they exceed the serving size.
+      setValue(
+        "order.currentItem.flavors",
+        order.currentItem.flavors.splice(0, serving.scoops)
+      );
+
+      // Remove toppings if they exceed the serving size.
+      setValue(
+        "order.currentItem.toppings",
+        order.currentItem.toppings.splice(0, serving.toppings)
+      );
     },
-    [order]
+    [setValue, order.currentItem.flavors, order.currentItem.toppings]
   );
 
   const listItems = servings.map((serving) => {
@@ -58,45 +58,34 @@ const ServingsList = ({ servings, order, orderHandler }: ServingsListProps) => {
   return <div className="Serving-container">{listItems}</div>;
 };
 
-interface ServingsStepProps {
-  servings: Serving[];
-  order: Order;
-  orderHandler: (order: any) => void;
-  stepHandler: (step: number) => void;
-}
+const ServingsStep = () => {
+  const { setValue, watch } = useFormContext<KioskFormData>();
+  const { stepHandler } = useStepHandler();
 
-const ServingsStep = ({
-  servings,
-  order,
-  orderHandler,
-  stepHandler
-}: ServingsStepProps) => {
+  const order = watch("order");
+
   const handleStep = useCallback(
     (gotoStep: number) => {
       if (gotoStep === AppConfig.steps.Start) {
-        stepHandler(gotoStep);
-        return;
+        return stepHandler(gotoStep);
       }
 
       if (order.currentItem.serving) {
-        orderHandler(order);
-        stepHandler(gotoStep);
+        setValue("order", order);
+
+        return stepHandler(gotoStep);
       } else {
         alert("Please select a serving size");
       }
     },
-    [order, orderHandler, stepHandler]
+    [order, stepHandler, setValue]
   );
 
   return (
     <div className="App-header-padding">
       <Header prompt={strings.prompt} stepHandler={handleStep} />
 
-      <ServingsList
-        servings={servings}
-        orderHandler={orderHandler}
-        order={order}
-      />
+      <ServingsList />
 
       <div className={"Action-Container"}>
         <div className={"Step-Control"}>

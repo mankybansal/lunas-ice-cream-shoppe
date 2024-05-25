@@ -1,7 +1,9 @@
 import React, { useCallback } from "react";
 import * as AppConfig from "../../config";
 import Header from "../../Header";
-import { Flavor, Order } from "~/App/types";
+import { Flavor, KioskFormData } from "~/App/types";
+import { useFormContext } from "react-hook-form";
+import { useStepHandler } from "~/App/hooks/useStepHandler";
 
 const strings = {
   selectToppings: "Select Toppings",
@@ -9,53 +11,48 @@ const strings = {
   selectAtLeastOneScoop: "Select at least one scoop"
 };
 
-interface FlavorsListProps {
-  flavors: Flavor[];
-  order: Order;
-  orderHandler: (order: Order) => void;
-}
+const FlavorsList = () => {
+  const { watch, setValue, getValues } = useFormContext<KioskFormData>();
+  const order = watch("order");
+  const flavors = getValues("menu.flavors");
 
-const FlavorsList = ({ flavors, order, orderHandler }: FlavorsListProps) => {
   const selectFlavor = useCallback(
     (flavor: Flavor) => {
-      let updatedOrder = { ...order };
-      if (
-        updatedOrder.currentItem.flavors.length <
-        updatedOrder.currentItem.serving.scoops
-      ) {
-        updatedOrder.currentItem.flavors.push(flavor);
+      const newFlavors = [...order.currentItem.flavors];
+
+      if (newFlavors.length < order.currentItem.serving!.scoops) {
+        newFlavors.push(flavor);
       }
-      orderHandler(updatedOrder);
+
+      setValue("order.currentItem.flavors", newFlavors);
     },
-    [order]
+    [setValue, order.currentItem.flavors, order.currentItem.serving]
   );
 
   const removeFlavor = useCallback(
     (flavor: Flavor, e: React.MouseEvent) => {
       e.stopPropagation();
-      let updatedOrder = { ...order };
-      const index = updatedOrder.currentItem.flavors.indexOf(flavor);
-      if (index > -1) {
-        updatedOrder.currentItem.flavors.splice(index, 1);
-      }
-      orderHandler(updatedOrder);
+
+      const newFlavors = [...order.currentItem.flavors];
+      const index = newFlavors.findIndex((f) => f.id === flavor.id);
+      if (index > -1) newFlavors.splice(index, 1);
+
+      setValue("order.currentItem.flavors", newFlavors);
     },
-    [order]
+    [setValue, order.currentItem.flavors]
   );
 
   const listItems = flavors.map((flavor) => {
-    let flavorCount = 0;
-    let defaultClass = "Flavor-Item";
-    const flavorCountMax = order.currentItem.serving.scoops;
+    const currentFlavorSelections = order.currentItem.flavors.filter(
+      (f) => f.id === flavor.id
+    );
 
-    if (
-      order.currentItem.flavors.length > 0 &&
-      order.currentItem.flavors.includes(flavor)
-    ) {
+    let flavorCount = currentFlavorSelections.length;
+    let defaultClass = "Flavor-Item";
+    const flavorCountMax = order.currentItem.serving!.scoops;
+
+    if (order.currentItem.flavors.length > 0 && flavorCount > 0) {
       defaultClass += " Item-selected";
-      order.currentItem.flavors.forEach((testFlavor: Flavor) => {
-        if (testFlavor === flavor) flavorCount++;
-      });
     }
 
     return (
@@ -99,33 +96,26 @@ const FlavorsList = ({ flavors, order, orderHandler }: FlavorsListProps) => {
   return <div className="Flavor-container">{listItems}</div>;
 };
 
-interface FlavorsStepProps {
-  flavors: Flavor[];
-  order: Order;
-  orderHandler: (order: Order) => void;
-  stepHandler: (step: number) => void;
-}
+const FlavorsStep = () => {
+  const { stepHandler } = useStepHandler();
 
-const FlavorsStep = ({
-  flavors,
-  order,
-  orderHandler,
-  stepHandler
-}: FlavorsStepProps) => {
+  const { watch, setValue } = useFormContext<KioskFormData>();
+  const order = watch("order");
+
   const handleStep = useCallback(
     (gotoStep: number) => {
       if (gotoStep < AppConfig.steps.Flavors) {
-        stepHandler(gotoStep);
-      } else {
-        if (order.currentItem.flavors.length > 0) {
-          orderHandler(order);
-          stepHandler(gotoStep);
-        } else {
-          alert(strings.selectAtLeastOneScoop);
-        }
+        return stepHandler(gotoStep);
       }
+
+      if (order.currentItem.flavors.length > 0) {
+        setValue("order", order);
+        return stepHandler(gotoStep);
+      }
+
+      alert(strings.selectAtLeastOneScoop);
     },
-    [order, orderHandler, stepHandler]
+    [order, stepHandler, setValue]
   );
 
   const prompt = `Select Up To ${
@@ -136,11 +126,7 @@ const FlavorsStep = ({
     <div className="App-header-padding">
       <Header prompt={prompt} stepHandler={handleStep} />
 
-      <FlavorsList
-        flavors={flavors}
-        orderHandler={orderHandler}
-        order={order}
-      />
+      <FlavorsList />
       <div className={"Action-Container"}>
         <div className={"Step-Control"}>
           <div

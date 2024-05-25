@@ -1,67 +1,58 @@
-import React, { useCallback } from "react";
+import { useCallback } from "react";
 import * as AppConfig from "../../config";
 import Header from "../../Header";
-import { Order, Topping } from "~/App/types";
+import { KioskFormData, Topping } from "~/App/types";
+import { useStepHandler } from "~/App/hooks/useStepHandler.ts";
+import { useFormContext } from "react-hook-form";
 
 const strings = {
   back: "Back",
   reviewOrder: "Review Order"
 };
 
-interface ToppingsListProps {
-  toppings: Topping[];
-  order: Order;
-  orderHandler: (order: Order) => void;
-}
+const ToppingsList = () => {
+  const { watch, setValue, getValues } = useFormContext<KioskFormData>();
+  const order = watch("order");
+  const toppings = getValues("menu.toppings");
 
-const ToppingsList: React.FC<ToppingsListProps> = ({
-  toppings,
-  order,
-  orderHandler
-}) => {
   const selectTopping = useCallback(
     (topping: Topping) => {
-      let updatedOrder = { ...order };
+      const newToppings = [...order.currentItem.toppings];
 
-      if (updatedOrder.currentItem.toppings.includes(topping)) {
-        updatedOrder.currentItem.toppings.splice(
-          updatedOrder.currentItem.toppings.indexOf(topping),
-          1
-        );
+      const toppingIndex = newToppings.findIndex((t) => t.id === topping.id);
+      if (toppingIndex > -1) {
+        newToppings.splice(toppingIndex, 1);
       } else {
-        if (
-          updatedOrder.currentItem.toppings.length <
-          updatedOrder.currentItem.serving.toppings
-        ) {
-          updatedOrder.currentItem.toppings.push(topping);
+        if (newToppings.length < order.currentItem.serving!.toppings) {
+          newToppings.push(topping);
         }
       }
 
-      orderHandler(updatedOrder);
+      setValue("order.currentItem.toppings", newToppings);
     },
-    [order, orderHandler]
+    [setValue, order.currentItem.toppings, order.currentItem.serving]
   );
 
-  const listItems = toppings.map((Topping) => {
+  const listItems = toppings.map((topping) => {
     let defaultClass = "Topping-Item";
-    if (
-      order.currentItem.toppings.length > 0 &&
-      order.currentItem.toppings.includes(Topping)
-    ) {
-      defaultClass += " Item-selected";
-    }
+
+    const hasTopping = order.currentItem.toppings.find(
+      (t) => t.id === topping.id
+    );
+
+    if (hasTopping) defaultClass += " Item-selected";
 
     return (
       <div
-        key={Topping.id.toString()}
+        key={topping.id.toString()}
         className={defaultClass}
-        onClick={() => selectTopping(Topping)}
+        onClick={() => selectTopping(topping)}
       >
-        <div className="Item-title">{Topping.name}</div>
-        <div className="Item-desc">{Topping.desc}</div>
+        <div className="Item-title">{topping.name}</div>
+        <div className="Item-desc">{topping.desc}</div>
         <div className="Item-info">
-          <div className="Item-calories">{Topping.calories} Calories</div>
-          <div className="Item-price">${Topping.price.toFixed(2)}</div>
+          <div className="Item-calories">{topping.calories} Calories</div>
+          <div className="Item-price">${topping.price.toFixed(2)}</div>
         </div>
       </div>
     );
@@ -70,35 +61,28 @@ const ToppingsList: React.FC<ToppingsListProps> = ({
   return <div className="Topping-container">{listItems}</div>;
 };
 
-interface ToppingsStepProps extends ToppingsListProps {
-  priceHandler: () => void;
-  stepHandler: (step: number) => void;
-}
+const ToppingsStep = () => {
+  const { stepHandler } = useStepHandler();
+  const { watch, setValue } = useFormContext<KioskFormData>();
+  const order = watch("order");
 
-const ToppingsStep = ({
-  toppings,
-  order,
-  orderHandler,
-  priceHandler,
-  stepHandler
-}: ToppingsStepProps) => {
   const handleStep = useCallback(
     (gotoStep: number) => {
       if (gotoStep < AppConfig.steps.Toppings) {
-        stepHandler(gotoStep);
-      } else {
-        let updatedOrder = { ...order };
-        if (updatedOrder.currentItem.serving !== null) {
-          updatedOrder.items.push(updatedOrder.currentItem);
-          updatedOrder.currentItem = AppConfig.defaultCurrentItem();
-        }
-
-        priceHandler();
-        orderHandler(updatedOrder);
-        stepHandler(gotoStep);
+        return stepHandler(gotoStep);
       }
+
+      let updatedOrder = { ...order };
+      if (updatedOrder.currentItem.serving !== null) {
+        updatedOrder.items.push(updatedOrder.currentItem);
+        updatedOrder.currentItem = AppConfig.defaultCurrentItem();
+      }
+
+      setValue("order", updatedOrder);
+
+      return stepHandler(gotoStep);
     },
-    [order, priceHandler, stepHandler]
+    [order, stepHandler, setValue]
   );
 
   const prompt = `Select ${order.currentItem.serving ? order.currentItem.serving.toppings : 0} Topping${order.currentItem.serving && order.currentItem.serving.toppings <= 1 ? "" : "s"}`;
@@ -107,11 +91,7 @@ const ToppingsStep = ({
     <div className="App-header-padding">
       <Header prompt={prompt} stepHandler={handleStep} />
 
-      <ToppingsList
-        toppings={toppings}
-        orderHandler={orderHandler}
-        order={order}
-      />
+      <ToppingsList />
 
       <div className={"Action-Container"}>
         <div className={"Step-Control"}>

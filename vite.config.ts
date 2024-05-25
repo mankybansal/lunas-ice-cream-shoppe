@@ -17,5 +17,8 @@ export default defineConfig({
   build: {
     outDir: "build",
     assetsDir: "."
+  },
+  optimizeDeps: {
+    exclude: ["react-hook-form"]
   }
 });
