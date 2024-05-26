@@ -66,7 +66,6 @@ const KioskContent = () => {
       : currentStep === AppConfig.Steps.Servings
         ? ["FLA0", "FLA0"]
         : selectedScoops;
-  console.log(scoopsToShow);
 
   return (
     <div className="App">

@@ -115,11 +115,9 @@ export const IceCreamRenderer = ({ scoopsToShow }: Props) => {
       });
     });
 
-    console.log(scoops);
-
     // Load the waffle texture
     const textureLoader = new THREE.TextureLoader();
-    const waffleTexture = textureLoader.load("waffle-texture.png", () => {
+    const waffleTexture = textureLoader.load("waffle-texture.jpg", () => {
       animate(); // Start animation loop after texture is loaded
     });
     const geometry = new THREE.ConeGeometry(1.5, 6, 50);
