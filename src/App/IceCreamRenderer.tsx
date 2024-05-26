@@ -22,6 +22,18 @@ const RootContainer = styled.div`
   color: #556b2f;
 `;
 
+const flavorToFile: Record<string, string> = {
+  FLA0: "scoop-init.gltf",
+  FLA1: "scoop-vanilla.gltf",
+  FLA2: "scoop-chocolate.gltf",
+  FLA3: "scoop-strawberry.gltf",
+  FLA4: "scoop-coffee.gltf",
+  FLA5: "scoop-mango.gltf",
+  FLA6: "scoop-cookies.gltf",
+  FLA7: "scoop-mint.gltf",
+  FLA8: "scoop-caramel.gltf"
+};
+
 interface Props {
   scoopsToShow: string[];
 }
@@ -66,37 +78,13 @@ export const IceCreamRenderer = ({ scoopsToShow }: Props) => {
     directionalLight.shadow.camera.right = 10;
     directionalLight.shadow.camera.top = 10;
 
-    // const lightHelper = new THREE.DirectionalLightHelper(directionalLight, 1);
-    // scene.add(lightHelper);
-    // const shadowHelper = new THREE.CameraHelper(directionalLight.shadow.camera);
-    // scene.add(shadowHelper);
-
     const gltfLoader = new GLTFLoader();
 
     let scoops: THREE.Group[] = [];
 
+    // TODO Preload all the flavors, then show the scoops.
     scoopsToShow.forEach((flavor, i) => {
-      let file = "scoop-init.gltf";
-
-      if (flavor === "FLA0") {
-        file = "scoop-init.gltf";
-      } else if (flavor === "FLA1") {
-        file = "scoop-vanilla.gltf";
-      } else if (flavor === "FLA2") {
-        file = "scoop-chocolate.gltf";
-      } else if (flavor === "FLA3") {
-        file = "scoop-strawberry.gltf";
-      } else if (flavor === "FLA4") {
-        file = "scoop-coffee.gltf";
-      } else if (flavor === "FLA5") {
-        file = "scoop-mango.gltf";
-      } else if (flavor === "FLA6") {
-        file = "scoop-cookies.gltf";
-      } else if (flavor === "FLA7") {
-        file = "scoop-mint.gltf";
-      } else if (flavor === "FLA8") {
-        file = "scoop-caramel.gltf";
-      }
+      let file = flavorToFile[flavor];
 
       gltfLoader.load("gltf/" + file, (gltf) => {
         const scoopGLTF = gltf.scene;
@@ -145,9 +133,6 @@ export const IceCreamRenderer = ({ scoopsToShow }: Props) => {
       scoops.forEach((scoop) => {
         scoop.rotation.y -= 0.002;
       });
-
-      // lightHelper.update();
-      // shadowHelper.update();
 
       // Render the scene
       renderer.render(scene, camera);
