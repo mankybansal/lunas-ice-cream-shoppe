@@ -83,7 +83,7 @@ const ServingsStep = () => {
 
   return (
     <div className="App-header-padding">
-      <Header prompt={strings.prompt} stepHandler={handleStep} />
+      <Header prompt={strings.prompt} />
 
       <ServingsList />
 

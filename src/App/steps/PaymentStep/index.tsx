@@ -32,7 +32,7 @@ const PaymentStep = () => {
 
   return (
     <div className="App-header-padding">
-      <Header prompt={strings.makePayment} stepHandler={(s) => handleStep(s)} />
+      <Header prompt={strings.makePayment} />
 
       <div className="Payment-amount">
         {strings.cardCharged}

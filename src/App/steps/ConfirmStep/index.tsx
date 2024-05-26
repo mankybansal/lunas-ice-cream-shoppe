@@ -109,7 +109,7 @@ const ConfirmStep = () => {
 
   return (
     <div className="App-header-padding">
-      <Header prompt={prompt} stepHandler={handleStep} />
+      <Header prompt={prompt} />
 
       <OrderList />
 

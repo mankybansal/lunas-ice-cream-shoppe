@@ -67,7 +67,7 @@ const ToppingsStep = () => {
   const order = watch("order");
 
   const handleStep = useCallback(
-    (gotoStep: number) => {
+    (gotoStep: AppConfig.Steps) => {
       if (gotoStep < AppConfig.Steps.Toppings) {
         return stepHandler(gotoStep);
       }
@@ -89,7 +89,7 @@ const ToppingsStep = () => {
 
   return (
     <div className="App-header-padding">
-      <Header prompt={prompt} stepHandler={handleStep} />
+      <Header prompt={prompt} />
 
       <ToppingsList />
 

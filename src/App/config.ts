@@ -11,7 +11,7 @@ export enum Steps {
 }
 
 export interface State {
-  currentStep: Steps | -1;
+  currentStep: Steps;
   menu: Menu;
   order: Order;
   totalPrice: number;
@@ -19,7 +19,7 @@ export interface State {
 
 export function defaultState(): State {
   return {
-    currentStep: -1,
+    currentStep: Steps.Start,
     menu: {
       servings: [],
       flavors: [],
