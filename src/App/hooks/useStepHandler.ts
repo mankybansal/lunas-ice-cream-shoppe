@@ -12,10 +12,10 @@ export const useStepHandler = () => {
   const stepHandler = async (gotoStep: number) => {
     if (gotoStep === AppConfig.Steps.Start) {
       reset();
-      await appInit();
-    } else {
-      setValue("currentStep", gotoStep);
+      return appInit();
     }
+
+    setValue("currentStep", gotoStep);
   };
 
   return { stepHandler, currentStep };
