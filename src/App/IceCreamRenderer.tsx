@@ -5,21 +5,9 @@ import React, { useEffect } from "react";
 
 const RootContainer = styled.div`
   width: 100%;
-  max-width: 350px;
+  max-width: 400px;
   height: 100vh;
   overflow: hidden;
-
-  color: #f5e6cc;
-  color: #fff4e6;
-  color: #ffdab9;
-  color: #f4cba0;
-  color: #fff9c4;
-  color: #ffa07a;
-  color: #ffd1dc;
-  color: #e0f7fa;
-  color: #5d4037;
-  color: #424242;
-  color: #556b2f;
 `;
 
 const flavorToFile: Record<string, string> = {
@@ -34,12 +22,20 @@ const flavorToFile: Record<string, string> = {
   FLA8: "scoop-caramel.gltf"
 };
 
+const servingToObject: Record<any, any> = {
+  SER1: "cup",
+  SER2: "cone"
+};
+
 interface Props {
   scoopsToShow: string[];
+  serving: string;
 }
 
-export const IceCreamRenderer = ({ scoopsToShow }: Props) => {
+export const IceCreamRenderer = ({ scoopsToShow, serving }: Props) => {
   const ref = React.useRef<HTMLDivElement>(null);
+
+  const servingType = servingToObject[serving];
 
   useEffect(() => {
     // Set up the scene, camera, and renderer
@@ -64,7 +60,7 @@ export const IceCreamRenderer = ({ scoopsToShow }: Props) => {
     scene.add(ambientLight);
 
     // Add a directional light
-    const directionalLight = new THREE.DirectionalLight(0xf5f5dc, 3); // Increase directional light intensity
+    const directionalLight = new THREE.DirectionalLight(0xf5f5dc, 1.5); // Increase directional light intensity
     directionalLight.position.set(8, 8, 6.5);
     directionalLight.castShadow = true; // Enable shadows for the light
     scene.add(directionalLight);
@@ -78,18 +74,57 @@ export const IceCreamRenderer = ({ scoopsToShow }: Props) => {
     directionalLight.shadow.camera.right = 10;
     directionalLight.shadow.camera.top = 10;
 
+    const sceneGroup = new THREE.Group();
+    scene.add(sceneGroup);
+
+    const textureLoader = new THREE.TextureLoader();
+
+    if (servingType === "cup") {
+      // Create Cup
+      const cupTexture = textureLoader.load("cup-texture.png", animate);
+      const geometry = new THREE.CylinderGeometry(2, 2.6, 2, 32);
+      const material = new THREE.MeshPhongMaterial({ map: cupTexture });
+      const cup = new THREE.Mesh(geometry, material);
+      cup.position.y = -0.5;
+      cup.castShadow = true;
+      cup.receiveShadow = true;
+      cup.rotation.x = Math.PI;
+      sceneGroup.add(cup);
+    }
+
+    if (servingType === "cone") {
+      // Create Cone
+      const waffleTexture = textureLoader.load("waffle-texture.jpg", animate);
+      const geometry = new THREE.ConeGeometry(1.5, 6, 50);
+      const material = new THREE.MeshPhongMaterial({ map: waffleTexture });
+      const cone = new THREE.Mesh(geometry, material);
+      cone.position.y = -3;
+      cone.castShadow = true;
+      cone.receiveShadow = true;
+      cone.rotation.x = Math.PI;
+      sceneGroup.add(cone);
+    }
+
     const gltfLoader = new GLTFLoader();
 
-    let scoops: THREE.Group[] = [];
-
     // TODO Preload all the flavors, then show the scoops.
-    scoopsToShow.forEach((flavor, i) => {
-      let file = flavorToFile[flavor];
-
-      gltfLoader.load("gltf/" + file, (gltf) => {
+    scoopsToShow.forEach((flavor, i) =>
+      gltfLoader.load("gltf/" + flavorToFile[flavor], (gltf) => {
         const scoopGLTF = gltf.scene;
-        scoopGLTF.scale.set(2.5, 2.5, 2.5);
-        scoopGLTF.position.y = 0.5 + i * 1.5;
+        if (servingType === "cone") {
+          scoopGLTF.scale.set(2.5, 2.5, 2.5);
+          scoopGLTF.position.y = 0.5 + i * 1.5;
+        } else {
+          scoopGLTF.scale.set(2, 2, 2);
+
+          if (i == 2) {
+            scoopGLTF.position.y = 1.7;
+            scoopGLTF.position.x = 0.2;
+          } else {
+            scoopGLTF.position.y = 0.4;
+            scoopGLTF.position.x = -1 + i * 2;
+          }
+        }
         scoopGLTF.rotation.y = THREE.MathUtils.degToRad(5) * (i * 300);
 
         // Traverse the model and enable shadows for all meshes
@@ -98,41 +133,18 @@ export const IceCreamRenderer = ({ scoopsToShow }: Props) => {
           child.receiveShadow = true;
         });
 
-        scene.add(scoopGLTF);
-        scoops.push(scoopGLTF);
-      });
-    });
-
-    // Load the waffle texture
-    const textureLoader = new THREE.TextureLoader();
-    const waffleTexture = textureLoader.load("waffle-texture.jpg", () => {
-      animate(); // Start animation loop after texture is loaded
-    });
-    const geometry = new THREE.ConeGeometry(1.5, 6, 50);
-    const material = new THREE.MeshPhongMaterial({ map: waffleTexture });
-    const cone = new THREE.Mesh(geometry, material);
-    cone.position.y = -3;
-    cone.castShadow = true;
-    cone.receiveShadow = true;
-    scene.add(cone);
+        sceneGroup.add(scoopGLTF);
+      })
+    );
 
     // Position the camera
     camera.position.z = 10;
-
-    // Flip the cone upside down
-    cone.rotation.x = Math.PI;
 
     // Create the animation loop
     function animate() {
       requestAnimationFrame(animate);
 
-      // Rotate the cone
-      cone.rotation.y += 0.002;
-
-      // Rotate the scoops
-      scoops.forEach((scoop) => {
-        scoop.rotation.y -= 0.002;
-      });
+      sceneGroup.rotation.y -= 0.002;
 
       // Render the scene
       renderer.render(scene, camera);
@@ -153,7 +165,7 @@ export const IceCreamRenderer = ({ scoopsToShow }: Props) => {
       ref.current?.removeChild(renderer.domElement);
       renderer.dispose();
     };
-  }, [scoopsToShow]);
+  }, [servingType, scoopsToShow]);
 
   return <RootContainer id="ice-cream-renderer" ref={ref} />;
 };

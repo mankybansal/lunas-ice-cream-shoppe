@@ -38,13 +38,18 @@ const IceCreamKiosk = () => {
   );
 };
 
-const getRandomFlavors = (): string[] => {
+const getRandomFlavors = (scoops: number): string[] => {
   const selectedFlavors = new Set<string>();
-  while (selectedFlavors.size < 2) {
+  while (selectedFlavors.size < scoops) {
     const randomIndex = Math.floor(Math.random() * 8) + 1;
     selectedFlavors.add("FLA" + randomIndex.toString());
   }
   return Array.from(selectedFlavors);
+};
+
+const getRandomServing = (): string => {
+  const randomIndex = Math.floor(Math.random() * 2) + 1;
+  return "SER" + randomIndex.toString();
 };
 
 const KioskContent = () => {
@@ -55,21 +60,28 @@ const KioskContent = () => {
     void appInit();
   }, [appInit]);
 
-  const randomFlavors = useMemo(() => getRandomFlavors(), []);
+  const serving = watch("order.currentItem.serving");
+  const selectedServing = useMemo(
+    () => (serving ? serving.id : getRandomServing()),
+    [serving]
+  );
+
+  console.log(selectedServing);
+
+  const randomFlavors = useMemo(
+    () => getRandomFlavors(selectedServing === "SER1" ? 3 : 2),
+    [selectedServing]
+  );
 
   const currentStep = watch("currentStep");
   const selectedScoops = watch("order.currentItem.flavors").map((f) => f.id);
 
   const scoopsToShow =
-    currentStep === AppConfig.Steps.Start
-      ? randomFlavors
-      : currentStep === AppConfig.Steps.Servings
-        ? ["FLA0", "FLA0"]
-        : selectedScoops;
+    currentStep === AppConfig.Steps.Start ? randomFlavors : selectedScoops;
 
   return (
     <div className="App">
-      <IceCreamRenderer scoopsToShow={scoopsToShow} />
+      <IceCreamRenderer scoopsToShow={scoopsToShow} serving={selectedServing} />
       {currentStep === AppConfig.Steps.Start && <StartStep />}
       {currentStep === AppConfig.Steps.Servings && <ServingsStep />}
       {currentStep === AppConfig.Steps.Flavors && <FlavorsStep />}
