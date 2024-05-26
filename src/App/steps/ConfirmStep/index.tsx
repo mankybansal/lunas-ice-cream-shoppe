@@ -65,7 +65,7 @@ const OrderList = () => {
       setValue("order", updatedOrder);
 
       if (updatedOrder.items.length < 1) {
-        return stepHandler(AppConfig.steps.Servings);
+        return stepHandler(AppConfig.Steps.Servings);
       }
     },
     [order, stepHandler, setValue]
@@ -123,14 +123,14 @@ const ConfirmStep = () => {
         <div className={"Step-Control"}>
           <div
             className="Button-step Button-prev"
-            onClick={() => handleStep(AppConfig.steps.Servings)}
+            onClick={() => handleStep(AppConfig.Steps.Servings)}
           >
             <i className="fa fa-plus Icon-step" /> {strings.addItem}
           </div>
 
           <div
             className="Button-step Button-next"
-            onClick={() => handleStep(AppConfig.steps.Payment)}
+            onClick={() => handleStep(AppConfig.Steps.Payment)}
           >
             {strings.checkout} <i className="fa fa-check Icon-step" />
           </div>

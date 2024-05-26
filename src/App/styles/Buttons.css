@@ -37,7 +37,7 @@
 }
 
 .Button-next {
-  background: cornflowerblue;
+  background: #5D4037;
   flex: 2;
 
   @media screen (max-width: 768px) {
@@ -47,8 +47,8 @@
 }
 
 .Button-prev {
-  background: #333;
-  color: white;
+  background: #f5e6cc;
+  color: black;
   flex: 1;
 
   @media screen (max-width: 768px) {

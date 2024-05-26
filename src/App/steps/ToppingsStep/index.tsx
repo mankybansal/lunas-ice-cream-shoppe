@@ -68,7 +68,7 @@ const ToppingsStep = () => {
 
   const handleStep = useCallback(
     (gotoStep: number) => {
-      if (gotoStep < AppConfig.steps.Toppings) {
+      if (gotoStep < AppConfig.Steps.Toppings) {
         return stepHandler(gotoStep);
       }
 
@@ -97,14 +97,14 @@ const ToppingsStep = () => {
         <div className={"Step-Control"}>
           <div
             className="Button-step Button-prev"
-            onClick={() => handleStep(AppConfig.steps.Flavors)}
+            onClick={() => handleStep(AppConfig.Steps.Flavors)}
           >
             <i className="fa fa-chevron-left Icon-step" /> {strings.back}
           </div>
 
           <div
             className="Button-step Button-next"
-            onClick={() => handleStep(AppConfig.steps.Confirm)}
+            onClick={() => handleStep(AppConfig.Steps.Confirm)}
           >
             {strings.reviewOrder}{" "}
             <i className="fa fa-shopping-cart Icon-step" />

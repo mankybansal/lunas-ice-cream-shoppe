@@ -13,7 +13,7 @@ export const useAppInit = () => {
     return REQUESTS.GetMenu(({ success, data }) => {
       if (!success) return;
       setValue("menu", data);
-      setValue("currentStep", AppConfig.steps.Start);
+      setValue("currentStep", AppConfig.Steps.Start);
       Helpers.menuPrinter(data);
     });
   }, [setValue]);

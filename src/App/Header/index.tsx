@@ -19,7 +19,7 @@ const Header = ({ prompt, stepHandler }: HeaderProps) => (
       <div style={{ display: "flex", gap: "16px" }}>
         <div
           className="Button-cancel"
-          onClick={() => stepHandler(AppConfig.steps.Start)}
+          onClick={() => stepHandler(AppConfig.Steps.Start)}
         >
           {strings.cancelOrder}
         </div>

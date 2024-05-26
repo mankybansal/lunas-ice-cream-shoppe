@@ -35,7 +35,7 @@ const FinishStep = () => {
     intervalRef.current = setInterval(() => {
       setTimer((prevTimer) => {
         if (prevTimer <= 0) {
-          void stepHandler(AppConfig.steps.Start);
+          void stepHandler(AppConfig.Steps.Start);
           if (intervalRef.current) clearInterval(intervalRef.current);
           return 20;
         }
@@ -47,7 +47,7 @@ const FinishStep = () => {
     };
   }, [stepHandler]);
 
-  if (currentStep !== AppConfig.steps.Finish) return null;
+  if (currentStep !== AppConfig.Steps.Finish) return null;
 
   return (
     <RootContainer>

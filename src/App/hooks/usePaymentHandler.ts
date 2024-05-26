@@ -25,7 +25,7 @@ export const usePaymentHandler = () => {
           const { success, data: sendOrderResponse } = response;
           if (!success) return;
           setValue("completedOrder", sendOrderResponse);
-          setValue("currentStep", AppConfig.steps.Finish);
+          setValue("currentStep", AppConfig.Steps.Finish);
           Helpers.orderPrinter(sendOrderResponse);
         });
       }

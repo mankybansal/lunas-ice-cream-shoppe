@@ -10,7 +10,7 @@ export const useStepHandler = () => {
   const currentStep = watch("currentStep");
 
   const stepHandler = async (gotoStep: number) => {
-    if (gotoStep === AppConfig.steps.Start) {
+    if (gotoStep === AppConfig.Steps.Start) {
       reset();
       await appInit();
     } else {

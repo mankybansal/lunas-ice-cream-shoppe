@@ -66,7 +66,7 @@ const ServingsStep = () => {
 
   const handleStep = useCallback(
     (gotoStep: number) => {
-      if (gotoStep === AppConfig.steps.Start) {
+      if (gotoStep === AppConfig.Steps.Start) {
         return stepHandler(gotoStep);
       }
 
@@ -91,7 +91,7 @@ const ServingsStep = () => {
         <div className={"Step-Control"}>
           <div
             className="Button-step Button-next"
-            onClick={() => handleStep(AppConfig.steps.Flavors)}
+            onClick={() => handleStep(AppConfig.Steps.Flavors)}
           >
             {strings.selectFlavors}{" "}
             <i className="fa fa-chevron-right Icon-step" />

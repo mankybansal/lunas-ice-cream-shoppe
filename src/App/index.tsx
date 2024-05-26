@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import "./App.css";
 import "./styles/Containers.css";
 import "./styles/Interactions.css";
@@ -18,13 +18,14 @@ import * as AppConfig from "./config";
 import { KioskFormData } from "./types";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { useAppInit } from "~/App/hooks/useAppInit.ts";
+import { IceCreamRenderer } from "~/App/IceCreamRenderer.tsx";
 
 const IceCreamKiosk = () => {
   const formMethods = useForm<KioskFormData>({
     defaultValues: {
       menu: AppConfig.defaultState().menu,
       order: AppConfig.defaultState().order,
-      currentStep: AppConfig.steps.Start,
+      currentStep: AppConfig.Steps.Start,
       completedOrder: null,
       totalPrice: 0
     }
@@ -37,6 +38,15 @@ const IceCreamKiosk = () => {
   );
 };
 
+const getRandomFlavors = (): string[] => {
+  const selectedFlavors = new Set<string>();
+  while (selectedFlavors.size < 2) {
+    const randomIndex = Math.floor(Math.random() * 8) + 1;
+    selectedFlavors.add("FLA" + randomIndex.toString());
+  }
+  return Array.from(selectedFlavors);
+};
+
 const KioskContent = () => {
   const { watch } = useFormContext<KioskFormData>();
   const { appInit } = useAppInit();
@@ -45,18 +55,28 @@ const KioskContent = () => {
     void appInit();
   }, [appInit]);
 
+  const randomFlavors = useMemo(() => getRandomFlavors(), []);
+
   const currentStep = watch("currentStep");
-  const completedOrder = watch("completedOrder");
+  const selectedScoops = watch("order.currentItem.flavors").map((f) => f.id);
+
+  const scoopsToShow =
+    currentStep === AppConfig.Steps.Start
+      ? randomFlavors
+      : currentStep === AppConfig.Steps.Servings
+        ? ["FLA0", "FLA0"]
+        : selectedScoops;
 
   return (
     <div className="App">
-      {currentStep === AppConfig.steps.Start && <StartStep />}
-      {currentStep === AppConfig.steps.Servings && <ServingsStep />}
-      {currentStep === AppConfig.steps.Flavors && <FlavorsStep />}
-      {currentStep === AppConfig.steps.Toppings && <ToppingsStep />}
-      {currentStep === AppConfig.steps.Confirm && <ConfirmStep />}
-      {currentStep === AppConfig.steps.Payment && <PaymentStep />}
-      {completedOrder && <FinishStep />}
+      <IceCreamRenderer scoopsToShow={scoopsToShow} />
+      {currentStep === AppConfig.Steps.Start && <StartStep />}
+      {currentStep === AppConfig.Steps.Servings && <ServingsStep />}
+      {currentStep === AppConfig.Steps.Flavors && <FlavorsStep />}
+      {currentStep === AppConfig.Steps.Toppings && <ToppingsStep />}
+      {currentStep === AppConfig.Steps.Confirm && <ConfirmStep />}
+      {currentStep === AppConfig.Steps.Payment && <PaymentStep />}
+      {currentStep === AppConfig.Steps.Finish && <FinishStep />}
     </div>
   );
 };

@@ -17,7 +17,7 @@ const PaymentStep = () => {
 
   const handleStep = useCallback(
     (gotoStep?: number) => () => {
-      if (gotoStep && gotoStep < AppConfig.steps.Payment) {
+      if (gotoStep && gotoStep < AppConfig.Steps.Payment) {
         return stepHandler(gotoStep);
       }
 
