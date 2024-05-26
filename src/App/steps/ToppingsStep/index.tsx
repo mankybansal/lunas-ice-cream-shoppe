@@ -4,6 +4,16 @@ import Header from "../../Header";
 import { KioskFormData, Topping } from "~/App/types";
 import { useStepHandler } from "~/App/hooks/useStepHandler.ts";
 import { useFormContext } from "react-hook-form";
+import {
+  ItemCalories,
+  ItemContainer,
+  ItemDescription,
+  ItemPrice,
+  ItemPrimaryInfo,
+  ItemsContainer,
+  ItemSecondaryInfo,
+  ItemTitle
+} from "~/App/Styled.ts";
 
 const strings = {
   back: "Back",
@@ -15,50 +25,54 @@ const ToppingsList = () => {
   const order = watch("order");
   const toppings = getValues("menu.toppings");
 
+  const selectedToppings = order.currentItem.toppings;
+  const selectedServing = order.currentItem.serving!;
+
   const selectTopping = useCallback(
     (topping: Topping) => {
-      const newToppings = [...order.currentItem.toppings];
+      const newToppings = [...selectedToppings];
 
-      const toppingIndex = newToppings.findIndex((t) => t.id === topping.id);
+      const toppingIndex = newToppings.findIndex(({ id }) => id === topping.id);
+
       if (toppingIndex > -1) {
         newToppings.splice(toppingIndex, 1);
-      } else {
-        if (newToppings.length < order.currentItem.serving!.toppings) {
-          newToppings.push(topping);
-        }
+        setValue("order.currentItem.toppings", newToppings);
+        return;
       }
 
+      if (newToppings.length >= selectedServing.toppings) return;
+
+      newToppings.push(topping);
       setValue("order.currentItem.toppings", newToppings);
     },
-    [setValue, order.currentItem.toppings, order.currentItem.serving]
+    [setValue, selectedToppings]
   );
 
-  const listItems = toppings.map((topping) => {
-    let defaultClass = "Topping-Item";
-
-    const hasTopping = order.currentItem.toppings.find(
-      (t) => t.id === topping.id
-    );
-
-    if (hasTopping) defaultClass += " Item-selected";
-
-    return (
-      <div
-        key={topping.id.toString()}
-        className={defaultClass}
-        onClick={() => selectTopping(topping)}
-      >
-        <div className="Item-title">{topping.name}</div>
-        <div className="Item-desc">{topping.desc}</div>
-        <div className="Item-info">
-          <div className="Item-calories">{topping.calories} Calories</div>
-          <div className="Item-price">${topping.price.toFixed(2)}</div>
-        </div>
-      </div>
-    );
-  });
-
-  return <div className="Topping-container">{listItems}</div>;
+  return (
+    <ItemsContainer>
+      {toppings.map((topping) => {
+        const isSelected = !!selectedToppings.find(
+          ({ id }) => id === topping.id
+        );
+        return (
+          <ItemContainer
+            key={topping.id.toString()}
+            selected={isSelected}
+            onClick={() => selectTopping(topping)}
+          >
+            <ItemPrimaryInfo>
+              <ItemTitle>{topping.name}</ItemTitle>
+              <ItemDescription>{topping.desc}</ItemDescription>
+            </ItemPrimaryInfo>
+            <ItemSecondaryInfo>
+              <ItemCalories>{topping.calories} Calories</ItemCalories>
+              <ItemPrice>${topping.price.toFixed(2)}</ItemPrice>
+            </ItemSecondaryInfo>
+          </ItemContainer>
+        );
+      })}
+    </ItemsContainer>
+  );
 };
 
 const ToppingsStep = () => {

@@ -4,6 +4,14 @@ import Header from "../../Header";
 import { KioskFormData, Serving } from "~/App/types";
 import { useStepHandler } from "~/App/hooks/useStepHandler.ts";
 import { useFormContext } from "react-hook-form";
+import {
+  ItemContainer,
+  ItemDescription,
+  ItemImage,
+  ItemPrimaryInfo,
+  ItemsContainer,
+  ItemTitle
+} from "~/App/Styled.ts";
 
 const strings = {
   prompt: "What Serving Would You Like?",
@@ -15,6 +23,10 @@ const ServingsList = () => {
   const order = watch("order");
   const servings = getValues("menu.servings");
 
+  const selectedFlavors = order.currentItem.flavors;
+  const selectedToppings = order.currentItem.toppings;
+  const selectedServing = order.currentItem.serving!;
+
   const selectServing = useCallback(
     (serving: Serving) => {
       setValue("order.currentItem.serving", serving);
@@ -22,40 +34,38 @@ const ServingsList = () => {
       // Remove flavors and toppings if they exceed the serving size.
       setValue(
         "order.currentItem.flavors",
-        order.currentItem.flavors.splice(0, serving.scoops)
+        selectedFlavors.splice(0, serving.scoops)
       );
 
       // Remove toppings if they exceed the serving size.
       setValue(
         "order.currentItem.toppings",
-        order.currentItem.toppings.splice(0, serving.toppings)
+        selectedToppings.splice(0, serving.toppings)
       );
     },
-    [setValue, order.currentItem.flavors, order.currentItem.toppings]
+    [setValue, selectedFlavors, selectedToppings]
   );
 
-  const listItems = servings.map((serving) => {
-    let defaultClass = "Serving-Item";
-    if (
-      order.currentItem.serving &&
-      order.currentItem.serving.id === serving.id
-    )
-      defaultClass += " Item-selected";
-
-    return (
-      <div
-        key={serving.id.toString()}
-        className={defaultClass}
-        onClick={() => selectServing(serving)}
-      >
-        <img className="Item-image" src={serving.image} alt="" />
-        <div className="Item-title">{serving.name}</div>
-        <div>{serving.desc}</div>
-      </div>
-    );
-  });
-
-  return <div className="Serving-container">{listItems}</div>;
+  return (
+    <ItemsContainer>
+      {servings.map((serving) => {
+        const isSelected = selectedServing?.id === serving.id;
+        return (
+          <ItemContainer
+            key={serving.id.toString()}
+            selected={isSelected}
+            onClick={() => selectServing(serving)}
+          >
+            <ItemPrimaryInfo style={{ alignItems: "center" }}>
+              <ItemImage src={serving.image} alt="" />
+              <ItemTitle>{serving.name}</ItemTitle>
+              <ItemDescription>{serving.desc}</ItemDescription>
+            </ItemPrimaryInfo>
+          </ItemContainer>
+        );
+      })}
+    </ItemsContainer>
+  );
 };
 
 const ServingsStep = () => {

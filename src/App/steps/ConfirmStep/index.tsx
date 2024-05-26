@@ -5,6 +5,14 @@ import { Flavor, Item, KioskFormData, Topping } from "~/App/types.ts";
 import * as Helpers from "~/App/utils.ts";
 import { useFormContext } from "react-hook-form";
 import { useStepHandler } from "~/App/hooks/useStepHandler.ts";
+import {
+  ItemCategory,
+  ItemContainer,
+  ItemPrimaryInfo,
+  ItemsContainer,
+  ItemTitle
+} from "~/App/Styled.ts";
+import styled from "@emotion/styled";
 
 const strings = {
   reviewOrder: "Review Order",
@@ -16,12 +24,30 @@ const strings = {
   toppings: "Toppings"
 };
 
+const StyledItemContainer = styled(ItemContainer)`
+  width: 380px;
+  height: 380px;
+
+  > .Item-title {
+    font-size: 30px;
+    font-weight: 400;
+    margin-bottom: 24px;
+  }
+
+  > .Item-image {
+    position: absolute;
+    right: 20px;
+    width: 70px;
+    top: 20px;
+  }
+`;
+
 interface FlavorProps {
   flavors: Flavor[];
 }
 
 const Flavors = ({ flavors }: FlavorProps) => (
-  <div>
+  <>
     {flavors.map((flavor, i) => (
       <div key={i} className="Order-Item-container">
         <div className="Order-Item-title-container">{flavor.name}</div>
@@ -30,7 +56,7 @@ const Flavors = ({ flavors }: FlavorProps) => (
         </div>
       </div>
     ))}
-  </div>
+  </>
 );
 
 interface ToppingProps {
@@ -38,7 +64,7 @@ interface ToppingProps {
 }
 
 const Toppings = ({ toppings }: ToppingProps) => (
-  <div>
+  <>
     {toppings.map((topping, i) => (
       <div key={i} className="Order-Item-container">
         <div className="Order-Item-title-container">{topping.name}</div>
@@ -47,7 +73,7 @@ const Toppings = ({ toppings }: ToppingProps) => (
         </div>
       </div>
     ))}
-  </div>
+  </>
 );
 
 const OrderList = () => {
@@ -64,30 +90,43 @@ const OrderList = () => {
 
       setValue("order", updatedOrder);
 
-      if (updatedOrder.items.length < 1) {
+      if (updatedOrder.items.length < 1)
         return stepHandler(AppConfig.Steps.Servings);
-      }
     },
     [order, stepHandler, setValue]
   );
 
-  const listItems = order.items.map((item: Item, i) => (
-    <div key={i} className="Order-Item">
-      <img className="Item-image" src={item.serving!.image} alt="" />
-      <div className="Item-title">{item.serving!.name}</div>
-      <div className="Item-category">{strings.scoops}</div>
-      <Flavors flavors={item.flavors} />
-      {item.toppings.length > 0 && (
-        <div className="Item-category">{strings.toppings}</div>
-      )}
-      <Toppings toppings={item.toppings} />
-      <div className="Order-action-remove" onClick={() => removeItem(item)}>
-        {strings.remove}
-      </div>
-    </div>
-  ));
+  return (
+    <ItemsContainer>
+      {order.items.map((item: Item, i) => {
+        const hasToppings = item.toppings.length > 0;
+        return (
+          <StyledItemContainer key={i}>
+            <img className="Item-image" src={item.serving!.image} />
+            <ItemPrimaryInfo>
+              <ItemTitle>{item.serving!.name}</ItemTitle>
 
-  return <div className="Order-container">{listItems}</div>;
+              <ItemCategory>{strings.scoops}</ItemCategory>
+              <Flavors flavors={item.flavors} />
+
+              {hasToppings && (
+                <>
+                  <ItemCategory>{strings.toppings}</ItemCategory>
+                  <Toppings toppings={item.toppings} />
+                </>
+              )}
+            </ItemPrimaryInfo>
+            <div
+              className="Order-action-remove"
+              onClick={() => removeItem(item)}
+            >
+              {strings.remove}
+            </div>
+          </StyledItemContainer>
+        );
+      })}
+    </ItemsContainer>
+  );
 };
 
 const ConfirmStep = () => {
@@ -98,7 +137,7 @@ const ConfirmStep = () => {
   const totalPrice = Helpers.calculatePrice(order);
 
   const handleStep = useCallback(
-    (gotoStep: number) => {
+    (gotoStep: number) => () => {
       setValue("order", order);
       return stepHandler(gotoStep);
     },
@@ -123,14 +162,14 @@ const ConfirmStep = () => {
         <div className={"Step-Control"}>
           <div
             className="Button-step Button-prev"
-            onClick={() => handleStep(AppConfig.Steps.Servings)}
+            onClick={handleStep(AppConfig.Steps.Servings)}
           >
             <i className="fa fa-plus Icon-step" /> {strings.addItem}
           </div>
 
           <div
             className="Button-step Button-next"
-            onClick={() => handleStep(AppConfig.Steps.Payment)}
+            onClick={handleStep(AppConfig.Steps.Payment)}
           >
             {strings.checkout} <i className="fa fa-check Icon-step" />
           </div>

@@ -1,49 +1,13 @@
-.Serving-Item,
-.Topping-Item,
-.Flavor-Item,
-.Order-Item {
-  width: 280px;
-  margin: 20px;
-  height: 240px;
-  padding: 30px;
-  font-weight: 400;
-  box-sizing: border-box;
-  display: inline-block;
-  background: white;
-  border-radius: 5px;
-  box-shadow: 0 0 40px rgba(0, 0, 0, 0.05);
-  vertical-align: top;
-  transition: all ease 0.3s;
-  cursor: pointer;
-  border: 3px solid rgba(0, 0, 0, 0);
-  text-align: left;
-  position: relative;
-}
-
-.Serving-Item:hover,
-.Topping-Item:hover,
-.Flavor-Item:hover {
-  background: #fafafa;
-  border: 3px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.02);
-}
-
-.Serving-Item {
-  text-align: center;
-}
-
-.Order-Item {
-  width: 370px;
-  text-align: left;
-  height: 380px;
-}
-
 .Flavor-container,
 .Serving-container,
 .Topping-container,
 .Order-container {
   width: 100%;
   height: 100%;
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
   overflow-y: auto;
   padding: 20px 0;
 }
@@ -52,105 +16,11 @@
   padding: 20px 0 150px 0;
 }
 
-.Item-title {
-  font-size: 20px;
-  margin-bottom: 20px;
-}
-
-.Order-Item > .Item-title {
-  font-size: 30px;
-  font-weight: 400;
-  margin-bottom: 25px;
-}
-
-.Item-image {
-  width: 100px;
-  margin-bottom: 10px;
-  opacity: 0.7;
-}
-
-.Order-Item > .Item-image {
-  position: absolute;
-  right: 20px;
-  width: 70px;
-  top: 20px;
-}
-
-.Item-selected {
-  border: 3px solid rgba(100, 149, 237, 1) !important;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3) !important;
-  background: white !important;
-}
-
-.Item-desc {
-  line-height: 23px;
-}
-
-.Item-category {
-  font-weight: 600;
-  margin-top: 10px;
-  color: cornflowerblue;
-  margin-bottom: 5px;
-}
-
-.Item-info {
-  position: absolute;
-  bottom: 70px;
-  width: 100%;
-  left: 0;
-  box-sizing: border-box;
-  padding-left: inherit;
-  padding-right: inherit;
-}
-
-.Topping-Item > .Item-info {
-  bottom: 20px;
-}
-
-.Item-calories {
-  float: left;
-  color: #aaa;
-}
-
-.Item-price {
-  float: right;
-  font-weight: 600;
-  color: cornflowerblue;
-}
-
-.MultiScoop-container {
-  position: absolute;
-  bottom: 20px;
-}
-
-.MultiScoop-selected {
-  margin: 50px 10px 0 0;
-  color: cornflowerblue;
-  font-weight: 600;
-  float: left;
-  font-size: 12px;
-  text-transform: uppercase;
-  box-sizing: border-box;
-  text-align: center;
-  border-radius: 5px;
-}
-
-.MultiScoop-action,
-.MultiScoop-action-disabled {
-  margin: 50px 10px 0 10px;
-  color: #555;
-}
-
-.MultiScoop-action-disabled {
-  opacity: 0.2;
-}
-
 .Order-action-remove {
   font-weight: 600;
   float: left;
   font-size: 12px;
   text-transform: uppercase;
-  box-sizing: border-box;
   text-align: center;
   border-radius: 5px;
   margin: 0;

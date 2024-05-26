@@ -79,9 +79,16 @@ const KioskContent = () => {
   const scoopsToShow =
     currentStep === AppConfig.Steps.Start ? randomFlavors : selectedScoops;
 
+  const shouldShowRenderer = currentStep < AppConfig.Steps.Confirm;
+
   return (
     <div className="App">
-      <IceCreamRenderer scoopsToShow={scoopsToShow} serving={selectedServing} />
+      {shouldShowRenderer && (
+        <IceCreamRenderer
+          scoopsToShow={scoopsToShow}
+          serving={selectedServing}
+        />
+      )}
       {currentStep === AppConfig.Steps.Start && <StartStep />}
       {currentStep === AppConfig.Steps.Servings && <ServingsStep />}
       {currentStep === AppConfig.Steps.Flavors && <FlavorsStep />}
