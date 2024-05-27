@@ -89,3 +89,13 @@ export const ItemSecondaryInfo = styled.div`
   display: flex;
   justify-content: space-between;
 `;
+
+export const CenteredContent = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+`;

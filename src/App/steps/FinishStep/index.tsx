@@ -1,26 +1,19 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as AppConfig from "../../config";
-
-import styled from "@emotion/styled";
 import { useStepHandler } from "~/App/hooks/useStepHandler.ts";
 import { KioskFormData } from "~/App/types.ts";
 import { useFormContext } from "react-hook-form";
+import { useSetHeaderPrompt } from "~/App/Header/prompt.atom.ts";
+import { CenteredContent } from "~/App/Styled.ts";
 
 const strings = {
-  thankYou: "Thank You For Your Order",
+  prompt: "Thank You For Your Order",
   orderNumber: "Order #",
   placedAt: "Placed at",
   paidBy: "paid by",
   endingWith: "ending with",
   refreshIn: "This page will refresh in"
 };
-
-const RootContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
 
 const FinishStep = () => {
   const { stepHandler, currentStep } = useStepHandler();
@@ -49,12 +42,10 @@ const FinishStep = () => {
 
   if (currentStep !== AppConfig.Steps.Finish) return null;
 
-  return (
-    <RootContainer>
-      <div className="App-prompt" style={{ marginTop: "32px" }}>
-        {strings.thankYou}
-      </div>
+  useSetHeaderPrompt(strings.prompt);
 
+  return (
+    <CenteredContent>
       <div className="Payment-amount Order-number">
         {strings.orderNumber}
         {order.number}
@@ -81,7 +72,7 @@ const FinishStep = () => {
       <div className="cardSwipePrompt">
         {strings.refreshIn} {timer} seconds
       </div>
-    </RootContainer>
+    </CenteredContent>
   );
 };
 

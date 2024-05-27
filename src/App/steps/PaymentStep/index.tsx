@@ -1,11 +1,12 @@
 import { useCallback, useEffect } from "react";
-import Header from "../../Header";
 import * as AppConfig from "../../config";
 import { usePaymentHandler } from "~/App/hooks/usePaymentHandler.ts";
 import { useStepHandler } from "~/App/hooks/useStepHandler.ts";
+import { useSetHeaderPrompt } from "~/App/Header/prompt.atom.ts";
+import { CenteredContent } from "~/App/Styled.ts";
 
 const strings = {
-  makePayment: "Make Payment",
+  prompt: "Make Payment",
   cardCharged: "Your Card Will Be Charged: $",
   swipeCardPrompt: "Swipe Card To Complete Payment",
   paymentAlert: "Click on animation to simulate payment"
@@ -30,10 +31,10 @@ const PaymentStep = () => {
     alert(strings.paymentAlert);
   }, []);
 
-  return (
-    <div className="App-header-padding">
-      <Header prompt={strings.makePayment} />
+  useSetHeaderPrompt(strings.prompt);
 
+  return (
+    <CenteredContent>
       <div className="Payment-amount">
         {strings.cardCharged}
         {totalPrice.toFixed(2)}
@@ -45,7 +46,7 @@ const PaymentStep = () => {
       </div>
 
       <div className="cardSwipePrompt">{strings.swipeCardPrompt}</div>
-    </div>
+    </CenteredContent>
   );
 };
 

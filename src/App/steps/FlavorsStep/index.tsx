@@ -1,6 +1,5 @@
 import React, { useCallback } from "react";
 import * as AppConfig from "../../config";
-import Header from "../../Header";
 import { Flavor, KioskFormData } from "~/App/types";
 import { useFormContext } from "react-hook-form";
 import { useStepHandler } from "~/App/hooks/useStepHandler";
@@ -16,11 +15,13 @@ import {
   ItemSecondaryInfo,
   ItemTitle
 } from "~/App/Styled";
+import { useSetHeaderPrompt } from "~/App/Header/prompt.atom.ts";
 
 const strings = {
   selectToppings: "Select Toppings",
   back: "Back",
-  selectAtLeastOneScoop: "Select at least one scoop"
+  selectAtLeastOneScoop: "Select at least one scoop",
+  prompt: (maxScoops: number) => `Select Up To ${maxScoops} Flavors`
 };
 
 const ActionContainer = styled.div<{ visible: boolean }>`
@@ -149,12 +150,11 @@ const FlavorsStep = () => {
     [order, stepHandler, setValue]
   );
 
-  const prompt = `Select Up To ${order.currentItem.serving?.scoops ?? 0} Flavors`;
+  const maxScoops = order.currentItem.serving!.scoops;
+  useSetHeaderPrompt(strings.prompt(maxScoops));
 
   return (
-    <div className="App-header-padding">
-      <Header prompt={prompt} />
-
+    <>
       <FlavorsList />
       <div className={"Action-Container"}>
         <div className={"Step-Control"}>
@@ -174,7 +174,7 @@ const FlavorsStep = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

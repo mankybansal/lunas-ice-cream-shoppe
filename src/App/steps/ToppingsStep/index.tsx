@@ -1,9 +1,9 @@
 import { useCallback } from "react";
 import * as AppConfig from "../../config";
-import Header from "../../Header";
 import { KioskFormData, Topping } from "~/App/types";
-import { useStepHandler } from "~/App/hooks/useStepHandler.ts";
+import { useStepHandler } from "~/App/hooks/useStepHandler";
 import { useFormContext } from "react-hook-form";
+import pluralize from "pluralize";
 import {
   ItemCalories,
   ItemContainer,
@@ -14,10 +14,13 @@ import {
   ItemSecondaryInfo,
   ItemTitle
 } from "~/App/Styled.ts";
+import { useSetHeaderPrompt } from "~/App/Header/prompt.atom";
 
 const strings = {
   back: "Back",
-  reviewOrder: "Review Order"
+  reviewOrder: "Review Order",
+  prompt: (maxToppings: number) =>
+    `Select Up To ${maxToppings} ${pluralize("Topping", maxToppings)}`
 };
 
 const ToppingsList = () => {
@@ -99,12 +102,11 @@ const ToppingsStep = () => {
     [order, stepHandler, setValue]
   );
 
-  const prompt = `Select ${order.currentItem.serving ? order.currentItem.serving.toppings : 0} Topping${order.currentItem.serving && order.currentItem.serving.toppings <= 1 ? "" : "s"}`;
+  const maxToppings = order.currentItem.serving!.toppings;
+  useSetHeaderPrompt(strings.prompt(maxToppings));
 
   return (
-    <div className="App-header-padding">
-      <Header prompt={prompt} />
-
+    <>
       <ToppingsList />
 
       <div className={"Action-Container"}>
@@ -125,7 +127,7 @@ const ToppingsStep = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

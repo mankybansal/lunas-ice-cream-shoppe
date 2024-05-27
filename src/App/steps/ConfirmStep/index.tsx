@@ -1,6 +1,5 @@
 import { useCallback } from "react";
 import * as AppConfig from "../../config";
-import Header from "../../Header";
 import { Flavor, Item, KioskFormData, Topping } from "~/App/types.ts";
 import * as Helpers from "~/App/utils.ts";
 import { useFormContext } from "react-hook-form";
@@ -13,9 +12,10 @@ import {
   ItemTitle
 } from "~/App/Styled.ts";
 import styled from "@emotion/styled";
+import { useSetHeaderPrompt } from "~/App/Header/prompt.atom.ts";
 
 const strings = {
-  reviewOrder: "Review Order",
+  prompt: "Review Order",
   orderTotal: "Your Order Total Is: ",
   addItem: "Add Another Item",
   checkout: "Checkout",
@@ -144,12 +144,10 @@ const ConfirmStep = () => {
     [order, stepHandler, setValue]
   );
 
-  const prompt = strings.reviewOrder;
+  useSetHeaderPrompt(strings.prompt);
 
   return (
-    <div className="App-header-padding">
-      <Header prompt={prompt} />
-
+    <>
       <OrderList />
 
       <div className={"Action-Container"}>
@@ -175,7 +173,7 @@ const ConfirmStep = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

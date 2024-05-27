@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import * as AppConfig from "../../config";
-import Header from "../../Header";
+
 import { KioskFormData, Serving } from "~/App/types";
 import { useStepHandler } from "~/App/hooks/useStepHandler.ts";
 import { useFormContext } from "react-hook-form";
@@ -12,6 +12,7 @@ import {
   ItemsContainer,
   ItemTitle
 } from "~/App/Styled.ts";
+import { useSetHeaderPrompt } from "~/App/Header/prompt.atom.ts";
 
 const strings = {
   prompt: "What Serving Would You Like?",
@@ -91,12 +92,11 @@ const ServingsStep = () => {
     [order, stepHandler, setValue]
   );
 
+  useSetHeaderPrompt(strings.prompt);
+
   return (
-    <div className="App-header-padding">
-      <Header prompt={strings.prompt} />
-
+    <>
       <ServingsList />
-
       <div className={"Action-Container"}>
         <div className={"Step-Control"}>
           <div
@@ -108,7 +108,7 @@ const ServingsStep = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
