@@ -15,7 +15,8 @@ import {
   ItemSecondaryInfo,
   ItemTitle
 } from "~/App/Styled";
-import { useSetHeaderPrompt } from "~/App/Header/prompt.atom.ts";
+import { useSetHeaderPrompt } from "~/App/Header/headerState.atom";
+import { useActionButtons } from "~/App/ActionBar/actionBarState.atom.ts";
 
 const strings = {
   selectToppings: "Select Toppings",
@@ -153,29 +154,20 @@ const FlavorsStep = () => {
   const maxScoops = order.currentItem.serving!.scoops;
   useSetHeaderPrompt(strings.prompt(maxScoops));
 
-  return (
-    <>
-      <FlavorsList />
-      <div className={"Action-Container"}>
-        <div className={"Step-Control"}>
-          <div
-            className="Button-step Button-prev"
-            onClick={() => handleStep(AppConfig.Steps.Servings)}
-          >
-            <i className="fa fa-chevron-left Icon-step" /> {strings.back}
-          </div>
+  useActionButtons({
+    next: {
+      label: strings.selectToppings,
+      onClick: () => handleStep(AppConfig.Steps.Toppings),
+      icon: <i className="fa fa-chevron-right Icon-step" />
+    },
+    back: {
+      label: strings.back,
+      onClick: () => handleStep(AppConfig.Steps.Servings),
+      icon: <i className="fa fa-chevron-left Icon-step" />
+    }
+  });
 
-          <div
-            className="Button-step Button-next"
-            onClick={() => handleStep(AppConfig.Steps.Toppings)}
-          >
-            {strings.selectToppings}{" "}
-            <i className="fa fa-chevron-right Icon-step" />
-          </div>
-        </div>
-      </div>
-    </>
-  );
+  return <FlavorsList />;
 };
 
 export default FlavorsStep;

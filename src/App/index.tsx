@@ -21,6 +21,7 @@ import { useAppInit } from "~/App/hooks/useAppInit";
 import { IceCreamRenderer } from "~/App/IceCreamRenderer";
 import styled from "@emotion/styled";
 import Header from "~/App/Header";
+import { ActionBar } from "~/App/ActionBar";
 
 const RootContainer = styled.div`
   text-align: center;
@@ -28,7 +29,6 @@ const RootContainer = styled.div`
   width: 100%;
   height: 100vh;
   display: flex;
-  overflow-y: auto;
   background: #fff5e1;
 `;
 
@@ -91,11 +91,15 @@ const KioskContent = () => {
 
   const shouldShowRenderer = currentStep < AppConfig.Steps.Confirm;
   const shouldShowHeader = currentStep !== AppConfig.Steps.Start;
+  const shouldShowActionBar =
+    currentStep !== AppConfig.Steps.Finish &&
+    currentStep !== AppConfig.Steps.Payment &&
+    currentStep !== AppConfig.Steps.Start;
 
   return (
     <RootContainer>
       {shouldShowHeader && <Header />}
-      <div style={{ display: "flex" }}>
+      <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
         {shouldShowRenderer && (
           <IceCreamRenderer
             scoopsToShow={scoopsToShow}
@@ -110,6 +114,7 @@ const KioskContent = () => {
         {currentStep === AppConfig.Steps.Payment && <PaymentStep />}
         {currentStep === AppConfig.Steps.Finish && <FinishStep />}
       </div>
+      {shouldShowActionBar && <ActionBar />}
     </RootContainer>
   );
 };

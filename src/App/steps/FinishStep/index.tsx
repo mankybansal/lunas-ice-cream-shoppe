@@ -3,7 +3,7 @@ import * as AppConfig from "../../config";
 import { useStepHandler } from "~/App/hooks/useStepHandler.ts";
 import { KioskFormData } from "~/App/types.ts";
 import { useFormContext } from "react-hook-form";
-import { useSetHeaderPrompt } from "~/App/Header/prompt.atom.ts";
+import { useSetHeaderPrompt } from "~/App/Header/headerState.atom";
 import { CenteredContent } from "~/App/Styled.ts";
 
 const strings = {

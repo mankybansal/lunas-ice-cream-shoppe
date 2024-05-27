@@ -12,7 +12,8 @@ import {
   ItemsContainer,
   ItemTitle
 } from "~/App/Styled.ts";
-import { useSetHeaderPrompt } from "~/App/Header/prompt.atom.ts";
+import { useSetHeaderPrompt } from "~/App/Header/headerState.atom";
+import { useActionButtons } from "~/App/ActionBar/actionBarState.atom.ts";
 
 const strings = {
   prompt: "What Serving Would You Like?",
@@ -94,22 +95,15 @@ const ServingsStep = () => {
 
   useSetHeaderPrompt(strings.prompt);
 
-  return (
-    <>
-      <ServingsList />
-      <div className={"Action-Container"}>
-        <div className={"Step-Control"}>
-          <div
-            className="Button-step Button-next"
-            onClick={() => handleStep(AppConfig.Steps.Flavors)}
-          >
-            {strings.selectFlavors}{" "}
-            <i className="fa fa-chevron-right Icon-step" />
-          </div>
-        </div>
-      </div>
-    </>
-  );
+  useActionButtons({
+    next: {
+      label: strings.selectFlavors,
+      onClick: () => handleStep(AppConfig.Steps.Flavors),
+      icon: <i className="fa fa-chevron-right Icon-step" />
+    }
+  });
+
+  return <ServingsList />;
 };
 
 export default ServingsStep;

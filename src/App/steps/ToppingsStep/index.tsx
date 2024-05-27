@@ -14,7 +14,8 @@ import {
   ItemSecondaryInfo,
   ItemTitle
 } from "~/App/Styled.ts";
-import { useSetHeaderPrompt } from "~/App/Header/prompt.atom";
+import { useSetHeaderPrompt } from "~/App/Header/headerState.atom";
+import { useActionButtons } from "~/App/ActionBar/actionBarState.atom.ts";
 
 const strings = {
   back: "Back",
@@ -105,30 +106,20 @@ const ToppingsStep = () => {
   const maxToppings = order.currentItem.serving!.toppings;
   useSetHeaderPrompt(strings.prompt(maxToppings));
 
-  return (
-    <>
-      <ToppingsList />
+  useActionButtons({
+    next: {
+      label: strings.reviewOrder,
+      onClick: () => handleStep(AppConfig.Steps.Confirm),
+      icon: <i className="fa fa-shopping-cart Icon-step" />
+    },
+    back: {
+      label: strings.back,
+      onClick: () => handleStep(AppConfig.Steps.Toppings),
+      icon: <i className="fa fa-chevron-left Icon-step" />
+    }
+  });
 
-      <div className={"Action-Container"}>
-        <div className={"Step-Control"}>
-          <div
-            className="Button-step Button-prev"
-            onClick={() => handleStep(AppConfig.Steps.Flavors)}
-          >
-            <i className="fa fa-chevron-left Icon-step" /> {strings.back}
-          </div>
-
-          <div
-            className="Button-step Button-next"
-            onClick={() => handleStep(AppConfig.Steps.Confirm)}
-          >
-            {strings.reviewOrder}{" "}
-            <i className="fa fa-shopping-cart Icon-step" />
-          </div>
-        </div>
-      </div>
-    </>
-  );
+  return <ToppingsList />;
 };
 
 export default ToppingsStep;

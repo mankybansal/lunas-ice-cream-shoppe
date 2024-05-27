@@ -12,7 +12,8 @@ import {
   ItemTitle
 } from "~/App/Styled.ts";
 import styled from "@emotion/styled";
-import { useSetHeaderPrompt } from "~/App/Header/prompt.atom.ts";
+import { useSetHeaderPrompt } from "~/App/Header/headerState.atom";
+import { useActionButtons } from "~/App/ActionBar/actionBarState.atom";
 
 const strings = {
   prompt: "Review Order",
@@ -146,35 +147,27 @@ const ConfirmStep = () => {
 
   useSetHeaderPrompt(strings.prompt);
 
-  return (
-    <>
-      <OrderList />
-
-      <div className={"Action-Container"}>
-        <div className="Payment-breakup-container">
-          <i className="fa fa-shopping-cart Icon-step Icon-step-right" />
-          {strings.orderTotal} &nbsp;&nbsp;
-          <span style={{ color: "black" }}>${totalPrice.toFixed(2)}</span>
-        </div>
-
-        <div className={"Step-Control"}>
-          <div
-            className="Button-step Button-prev"
-            onClick={handleStep(AppConfig.Steps.Servings)}
-          >
-            <i className="fa fa-plus Icon-step" /> {strings.addItem}
-          </div>
-
-          <div
-            className="Button-step Button-next"
-            onClick={handleStep(AppConfig.Steps.Payment)}
-          >
-            {strings.checkout} <i className="fa fa-check Icon-step" />
-          </div>
-        </div>
+  useActionButtons({
+    next: {
+      label: strings.checkout,
+      onClick: handleStep(AppConfig.Steps.Payment),
+      icon: <i className="fa fa-check Icon-step" />
+    },
+    back: {
+      label: strings.addItem,
+      onClick: handleStep(AppConfig.Steps.Servings),
+      icon: <i className="fa fa-plus Icon-step" />
+    },
+    review: (
+      <div className="Payment-breakup-container">
+        <i className="fa fa-shopping-cart Icon-step Icon-step-right" />
+        {strings.orderTotal} &nbsp;&nbsp;
+        <span style={{ color: "black" }}>${totalPrice.toFixed(2)}</span>
       </div>
-    </>
-  );
+    )
+  });
+
+  return <OrderList />;
 };
 
 export default ConfirmStep;

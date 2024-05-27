@@ -2,7 +2,7 @@ import { useCallback, useEffect } from "react";
 import * as AppConfig from "../../config";
 import { usePaymentHandler } from "~/App/hooks/usePaymentHandler.ts";
 import { useStepHandler } from "~/App/hooks/useStepHandler.ts";
-import { useSetHeaderPrompt } from "~/App/Header/prompt.atom.ts";
+import { useSetHeaderPrompt } from "~/App/Header/headerState.atom";
 import { CenteredContent } from "~/App/Styled.ts";
 
 const strings = {

@@ -1,7 +1,7 @@
 import * as AppConfig from "../config";
 import { useStepHandler } from "~/App/hooks/useStepHandler";
 import { useAtomValue } from "jotai";
-import { headerStateAtom } from "./prompt.atom";
+import { headerStateAtom } from "./headerState.atom";
 import styled from "@emotion/styled";
 
 const strings = {
@@ -13,6 +13,9 @@ const strings = {
 const RootContainer = styled.div`
   display: flex;
   justify-content: center;
+  position: sticky;
+  top: 0;
+  z-index: 1;
   padding: 16px 24px;
   flex-direction: column;
   width: 100%;
