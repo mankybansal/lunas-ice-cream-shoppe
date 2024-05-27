@@ -48,9 +48,9 @@
 
 .Button-prev {
   background: #f5e6cc;
-  color: black;
+  color: #5d4037;
   flex: 1;
-  max-width: 400px;
+  max-width: 500px;
 
   @media screen (max-width: 768px) {
     flex: 1;

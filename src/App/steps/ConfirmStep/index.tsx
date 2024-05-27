@@ -14,6 +14,7 @@ import {
 import styled from "@emotion/styled";
 import { useSetHeaderPrompt } from "~/App/Header/headerState.atom";
 import { useActionButtons } from "~/App/ActionBar/actionBarState.atom";
+import Animations from "~/App/animations.ts";
 
 const strings = {
   prompt: "Review Order",
@@ -102,8 +103,12 @@ const OrderList = () => {
       {order.items.map((item: Item, i) => {
         const hasToppings = item.toppings.length > 0;
         return (
-          <StyledItemContainer key={i}>
-            <img className="Item-image" src={item.serving!.image} />
+          <StyledItemContainer key={i} {...Animations.AnimateInUp}>
+            <img
+              className="Item-image"
+              src={item.serving!.image}
+              alt={"serving-image"}
+            />
             <ItemPrimaryInfo>
               <ItemTitle>{item.serving!.name}</ItemTitle>
 

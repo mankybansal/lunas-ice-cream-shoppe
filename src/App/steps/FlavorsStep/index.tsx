@@ -6,6 +6,7 @@ import { useStepHandler } from "~/App/hooks/useStepHandler";
 import styled from "@emotion/styled";
 
 import {
+  EmptyItem,
   ItemCalories,
   ItemContainer,
   ItemDescription,
@@ -17,6 +18,7 @@ import {
 } from "~/App/Styled";
 import { useSetHeaderPrompt } from "~/App/Header/headerState.atom";
 import { useActionButtons } from "~/App/ActionBar/actionBarState.atom.ts";
+import Animations from "~/App/animations.ts";
 
 const strings = {
   selectToppings: "Select Toppings",
@@ -90,6 +92,9 @@ const FlavorsList = () => {
     [setValue, selectedFlavors]
   );
 
+  // Round up to nearest 3.
+  const emptyItems = new Array(3 - (flavors.length % 3)).fill(null);
+
   return (
     <ItemsContainer>
       {flavors.map((flavor) => {
@@ -105,6 +110,7 @@ const FlavorsList = () => {
 
         return (
           <ItemContainer
+            {...Animations.AnimateInUp}
             key={flavor.id}
             selected={isSelected}
             onClick={selectFlavor(flavor)}
@@ -125,6 +131,9 @@ const FlavorsList = () => {
           </ItemContainer>
         );
       })}
+      {emptyItems.map((_, i) => (
+        <EmptyItem key={`empty-${i}`} />
+      ))}
     </ItemsContainer>
   );
 };

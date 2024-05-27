@@ -10,7 +10,7 @@ import * as AppConfig from "./config";
 
 const RootContainer = styled(motion.div)<{ wide: boolean }>`
   width: 100%;
-  max-width: ${({ wide }) => (wide ? "500px" : "400px")};
+  max-width: ${({ wide }) => (wide ? "500px" : "500px")};
   height: 100%;
   overflow: hidden;
 `;

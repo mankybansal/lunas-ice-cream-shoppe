@@ -5,6 +5,7 @@ import { KioskFormData, Serving } from "~/App/types";
 import { useStepHandler } from "~/App/hooks/useStepHandler.ts";
 import { useFormContext } from "react-hook-form";
 import {
+  EmptyItem,
   ItemContainer,
   ItemDescription,
   ItemImage,
@@ -14,6 +15,7 @@ import {
 } from "~/App/Styled.ts";
 import { useSetHeaderPrompt } from "~/App/Header/headerState.atom";
 import { useActionButtons } from "~/App/ActionBar/actionBarState.atom.ts";
+import Animations from "~/App/animations.ts";
 
 const strings = {
   prompt: "What Serving Would You Like?",
@@ -48,12 +50,16 @@ const ServingsList = () => {
     [setValue, selectedFlavors, selectedToppings]
   );
 
+  // Round up to nearest 3.
+  const emptyItems = new Array(3 - (servings.length % 3)).fill(null);
+
   return (
     <ItemsContainer>
       {servings.map((serving) => {
         const isSelected = selectedServing?.id === serving.id;
         return (
           <ItemContainer
+            {...Animations.AnimateInUp}
             key={serving.id.toString()}
             selected={isSelected}
             onClick={() => selectServing(serving)}
@@ -66,6 +72,8 @@ const ServingsList = () => {
           </ItemContainer>
         );
       })}
+      {selectedServing &&
+        emptyItems.map((_, i) => <EmptyItem key={`empty-${i}`} />)}
     </ItemsContainer>
   );
 };

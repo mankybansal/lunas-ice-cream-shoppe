@@ -117,7 +117,9 @@ const KioskContent = () => {
   const scoopsToShow =
     currentStep === AppConfig.Steps.Start ? randomFlavors : selectedScoops;
 
-  const shouldShowRenderer = currentStep < AppConfig.Steps.Confirm;
+  const shouldShowRenderer =
+    currentStep < AppConfig.Steps.Confirm &&
+    (currentStep === AppConfig.Steps.Servings ? !!serving : true);
   const shouldShowHeader = currentStep !== AppConfig.Steps.Start;
   const shouldShowActionBar =
     currentStep !== AppConfig.Steps.Finish &&

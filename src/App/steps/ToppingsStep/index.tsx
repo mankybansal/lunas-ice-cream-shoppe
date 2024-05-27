@@ -5,6 +5,7 @@ import { useStepHandler } from "~/App/hooks/useStepHandler";
 import { useFormContext } from "react-hook-form";
 import pluralize from "pluralize";
 import {
+  EmptyItem,
   ItemCalories,
   ItemContainer,
   ItemDescription,
@@ -16,6 +17,7 @@ import {
 } from "~/App/Styled.ts";
 import { useSetHeaderPrompt } from "~/App/Header/headerState.atom";
 import { useActionButtons } from "~/App/ActionBar/actionBarState.atom.ts";
+import Animations from "~/App/animations.ts";
 
 const strings = {
   back: "Back",
@@ -52,6 +54,9 @@ const ToppingsList = () => {
     [setValue, selectedToppings]
   );
 
+  // Round up to nearest 3.
+  const emptyItems = new Array(3 - (toppings.length % 3)).fill(null);
+
   return (
     <ItemsContainer>
       {toppings.map((topping) => {
@@ -60,6 +65,7 @@ const ToppingsList = () => {
         );
         return (
           <ItemContainer
+            {...Animations.AnimateInUp}
             key={topping.id.toString()}
             selected={isSelected}
             onClick={() => selectTopping(topping)}
@@ -75,6 +81,9 @@ const ToppingsList = () => {
           </ItemContainer>
         );
       })}
+      {emptyItems.map((_, i) => (
+        <EmptyItem key={`empty-${i}`} />
+      ))}
     </ItemsContainer>
   );
 };

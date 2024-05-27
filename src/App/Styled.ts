@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { css } from "@emotion/react";
+import { motion } from "framer-motion";
 
 export const ItemsContainer = styled.div`
   width: 100%;
@@ -13,7 +14,7 @@ export const ItemsContainer = styled.div`
   padding: 24px;
 `;
 
-export const ItemContainer = styled.div<{ selected?: boolean }>`
+export const ItemContainer = styled(motion.div)<{ selected?: boolean }>`
   width: 300px;
   height: 260px;
   display: flex;
@@ -32,16 +33,22 @@ export const ItemContainer = styled.div<{ selected?: boolean }>`
   ${({ selected }) =>
     selected &&
     css`
-      border: 3px solid rgba(100, 149, 237, 1) !important;
+      border: 3px solid rgba(93, 64, 55, 1) !important;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.3) !important;
       background: white !important;
     `}
 
   :hover {
-    background: #fafafa;
+    background: #fff5e1;
     border: 3px solid rgba(0, 0, 0, 0.1);
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.02);
   }
+`;
+
+export const EmptyItem = styled.div`
+  width: 300px;
+  height: 260px;
+  display: flex;
 `;
 
 export const ItemPrimaryInfo = styled.div`
@@ -55,6 +62,7 @@ export const ItemPrimaryInfo = styled.div`
 export const ItemTitle = styled.div`
   font-weight: bold;
   font-size: 20px;
+  color: #5d4037;
   margin-bottom: 20px;
 `;
 
@@ -71,7 +79,7 @@ export const ItemDescription = styled.div`
 export const ItemCategory = styled.div`
   font-weight: 600;
   margin-top: 10px;
-  color: cornflowerblue;
+  color: #fa8758;
   margin-bottom: 5px;
 `;
 
@@ -81,7 +89,7 @@ export const ItemCalories = styled.div`
 
 export const ItemPrice = styled.div`
   font-weight: 600;
-  color: cornflowerblue;
+  color: #fa8758;
 `;
 
 export const ItemSecondaryInfo = styled.div`
