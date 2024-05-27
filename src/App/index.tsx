@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import "./styles/Containers.css";
 import "./styles/Interactions.css";
@@ -64,27 +64,55 @@ const getRandomServing = (): string => {
   return "SER" + randomIndex.toString();
 };
 
+const getRandomRender = () => {
+  const serving = getRandomServing();
+  return {
+    scoops: getRandomFlavors(serving === "SER1" ? 3 : 2),
+    serving
+  };
+};
+
 const KioskContent = () => {
   const { watch } = useFormContext<KioskFormData>();
   const { appInit } = useAppInit();
+
+  const [randomRender, setRandomRender] = useState<{
+    scoops: string[];
+    serving: string;
+  }>(getRandomRender());
+
+  const intervalRef = useRef<number | null>(null);
+
+  const serving = watch("order.currentItem.serving");
+  const currentStep = watch("currentStep");
+  const selectedScoops = watch("order.currentItem.flavors").map((f) => f.id);
+
+  useEffect(() => {
+    if (currentStep !== AppConfig.Steps.Start) {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    }
+
+    if (currentStep === AppConfig.Steps.Start) {
+      intervalRef.current = setInterval(() => {
+        setRandomRender(getRandomRender());
+      }, 5000);
+    }
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [currentStep]);
 
   useEffect(() => {
     void appInit();
   }, [appInit]);
 
-  const serving = watch("order.currentItem.serving");
   const selectedServing = useMemo(
-    () => (serving ? serving.id : getRandomServing()),
-    [serving]
+    () => (serving ? serving.id : randomRender.serving),
+    [serving, randomRender.serving]
   );
 
-  const randomFlavors = useMemo(
-    () => getRandomFlavors(selectedServing === "SER1" ? 3 : 2),
-    [selectedServing]
-  );
-
-  const currentStep = watch("currentStep");
-  const selectedScoops = watch("order.currentItem.flavors").map((f) => f.id);
+  const randomFlavors = useMemo(() => randomRender.scoops, [randomRender]);
 
   const scoopsToShow =
     currentStep === AppConfig.Steps.Start ? randomFlavors : selectedScoops;

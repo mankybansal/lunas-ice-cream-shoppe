@@ -2,10 +2,15 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import styled from "@emotion/styled";
 import React, { useEffect } from "react";
+import { motion } from "framer-motion";
+import Animations from "~/App/animations.ts";
+import { useStepHandler } from "~/App/hooks/useStepHandler.ts";
 
-const RootContainer = styled.div`
+import * as AppConfig from "./config";
+
+const RootContainer = styled(motion.div)<{ wide: boolean }>`
   width: 100%;
-  max-width: 400px;
+  max-width: ${({ wide }) => (wide ? "500px" : "400px")};
   height: 100%;
   overflow: hidden;
 `;
@@ -34,6 +39,7 @@ interface Props {
 
 export const IceCreamRenderer = ({ scoopsToShow, serving }: Props) => {
   const ref = React.useRef<HTMLDivElement>(null);
+  const { currentStep } = useStepHandler();
 
   const servingType = servingToObject[serving];
 
@@ -85,7 +91,7 @@ export const IceCreamRenderer = ({ scoopsToShow, serving }: Props) => {
       const geometry = new THREE.CylinderGeometry(2, 2.6, 2, 32);
       const material = new THREE.MeshPhongMaterial({ map: cupTexture });
       const cup = new THREE.Mesh(geometry, material);
-      cup.position.y = -0.5;
+      cup.position.y = -1.5;
       cup.castShadow = true;
       cup.receiveShadow = true;
       cup.rotation.x = Math.PI;
@@ -118,10 +124,10 @@ export const IceCreamRenderer = ({ scoopsToShow, serving }: Props) => {
           scoopGLTF.scale.set(2, 2, 2);
 
           if (i == 2) {
-            scoopGLTF.position.y = 1.7;
+            scoopGLTF.position.y = 0.7;
             scoopGLTF.position.x = 0.2;
           } else {
-            scoopGLTF.position.y = 0.4;
+            scoopGLTF.position.y = -0.4;
             scoopGLTF.position.x = -1 + i * 2;
           }
         }
@@ -167,5 +173,12 @@ export const IceCreamRenderer = ({ scoopsToShow, serving }: Props) => {
     };
   }, [servingType, scoopsToShow]);
 
-  return <RootContainer id="ice-cream-renderer" ref={ref} />;
+  return (
+    <RootContainer
+      wide={currentStep === AppConfig.Steps.Start}
+      id="ice-cream-renderer"
+      ref={ref}
+      {...Animations.AnimateInUp}
+    />
+  );
 };

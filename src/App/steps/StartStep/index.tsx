@@ -13,6 +13,7 @@ const RootContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
+  padding-right: 200px;
   justify-content: center;
   height: 100%;
   align-items: center;

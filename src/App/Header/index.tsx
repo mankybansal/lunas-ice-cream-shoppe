@@ -3,6 +3,8 @@ import { useStepHandler } from "~/App/hooks/useStepHandler";
 import { useAtomValue } from "jotai";
 import { headerStateAtom } from "./headerState.atom";
 import styled from "@emotion/styled";
+import Animations from "~/App/animations.ts";
+import { motion } from "framer-motion";
 
 const strings = {
   appLogo: "Luna's Ice Cream",
@@ -10,7 +12,7 @@ const strings = {
   help: "Help"
 };
 
-const RootContainer = styled.div`
+const RootContainer = styled(motion.div)`
   display: flex;
   justify-content: center;
   position: sticky;
@@ -87,7 +89,7 @@ const Header = () => {
   const { stepHandler, currentStep } = useStepHandler();
   const handleClickCancel = () => stepHandler(AppConfig.Steps.Start);
   return (
-    <RootContainer>
+    <RootContainer {...Animations.AnimateInDown}>
       <InnerContainer>
         <Logo>{strings.appLogo}</Logo>
         <Prompt>{prompt}</Prompt>

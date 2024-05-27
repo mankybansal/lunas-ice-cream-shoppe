@@ -1,11 +1,13 @@
 import { useAtomValue } from "jotai";
 import { actionBarStateAtom } from "./actionBarState.atom";
+import { motion } from "framer-motion";
+import Animations from "~/App/animations.ts";
 
 export const ActionBar = () => {
   const { back, next, review } = useAtomValue(actionBarStateAtom);
   if (!back && !next) return null;
   return (
-    <div className={"Action-Container"}>
+    <motion.div className={"Action-Container"} {...Animations.AnimateInUp}>
       {review}
       <div className={"Step-Control"}>
         {back && (
@@ -19,6 +21,6 @@ export const ActionBar = () => {
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };

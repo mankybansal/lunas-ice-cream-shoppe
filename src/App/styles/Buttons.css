@@ -50,6 +50,7 @@
   background: #f5e6cc;
   color: black;
   flex: 1;
+  max-width: 400px;
 
   @media screen (max-width: 768px) {
     flex: 1;

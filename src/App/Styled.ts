@@ -4,6 +4,7 @@ import { css } from "@emotion/react";
 export const ItemsContainer = styled.div`
   width: 100%;
   height: 100%;
+  background: white;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;

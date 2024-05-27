@@ -114,7 +114,7 @@ const ToppingsStep = () => {
     },
     back: {
       label: strings.back,
-      onClick: () => handleStep(AppConfig.Steps.Toppings),
+      onClick: () => handleStep(AppConfig.Steps.Flavors),
       icon: <i className="fa fa-chevron-left Icon-step" />
     }
   });
