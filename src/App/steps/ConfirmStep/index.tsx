@@ -15,6 +15,9 @@ import styled from "@emotion/styled";
 import { useSetHeaderPrompt } from "~/App/Header/headerState.atom";
 import { useActionButtons } from "~/App/ActionBar/actionBarState.atom";
 import Animations from "~/App/animations.ts";
+import { ShoppingCart } from "~/App/icons/ShoppingCart.tsx";
+import { PlusCircle } from "~/App/icons/PlusCircle.tsx";
+import { Check } from "~/App/icons/Check.tsx";
 
 const strings = {
   prompt: "Review Order",
@@ -156,18 +159,18 @@ const ConfirmStep = () => {
     next: {
       label: strings.checkout,
       onClick: handleStep(AppConfig.Steps.Payment),
-      icon: <i className="fa fa-check Icon-step" />
+      icon: <Check />
     },
     back: {
       label: strings.addItem,
       onClick: handleStep(AppConfig.Steps.Servings),
-      icon: <i className="fa fa-plus Icon-step" />
+      icon: <PlusCircle />
     },
     review: (
       <div className="Payment-breakup-container">
-        <i className="fa fa-shopping-cart Icon-step Icon-step-right" />
-        {strings.orderTotal} &nbsp;&nbsp;
-        <span style={{ color: "black" }}>${totalPrice.toFixed(2)}</span>
+        <ShoppingCart />
+        {strings.orderTotal}
+        <span style={{ fontWeight: "bold" }}>${totalPrice.toFixed(2)}</span>
       </div>
     )
   });

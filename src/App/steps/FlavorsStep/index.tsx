@@ -19,6 +19,8 @@ import {
 import { useSetHeaderPrompt } from "~/App/Header/headerState.atom";
 import { useActionButtons } from "~/App/ActionBar/actionBarState.atom.ts";
 import Animations from "~/App/animations.ts";
+import { ArrowLeft } from "~/App/icons/ArrowLeft.tsx";
+import { ArrowRight } from "~/App/icons/ArrowRight.tsx";
 
 const strings = {
   selectToppings: "Select Toppings",
@@ -167,12 +169,12 @@ const FlavorsStep = () => {
     next: {
       label: strings.selectToppings,
       onClick: () => handleStep(AppConfig.Steps.Toppings),
-      icon: <i className="fa fa-chevron-right Icon-step" />
+      icon: <ArrowRight />
     },
     back: {
       label: strings.back,
       onClick: () => handleStep(AppConfig.Steps.Servings),
-      icon: <i className="fa fa-chevron-left Icon-step" />
+      icon: <ArrowLeft />
     }
   });
 

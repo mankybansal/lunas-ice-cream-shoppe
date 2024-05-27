@@ -18,6 +18,8 @@ import {
 import { useSetHeaderPrompt } from "~/App/Header/headerState.atom";
 import { useActionButtons } from "~/App/ActionBar/actionBarState.atom.ts";
 import Animations from "~/App/animations.ts";
+import { ShoppingCart } from "~/App/icons/ShoppingCart.tsx";
+import { ArrowLeft } from "~/App/icons/ArrowLeft.tsx";
 
 const strings = {
   back: "Back",
@@ -119,12 +121,12 @@ const ToppingsStep = () => {
     next: {
       label: strings.reviewOrder,
       onClick: () => handleStep(AppConfig.Steps.Confirm),
-      icon: <i className="fa fa-shopping-cart Icon-step" />
+      icon: <ShoppingCart />
     },
     back: {
       label: strings.back,
       onClick: () => handleStep(AppConfig.Steps.Flavors),
-      icon: <i className="fa fa-chevron-left Icon-step" />
+      icon: <ArrowLeft />
     }
   });
 

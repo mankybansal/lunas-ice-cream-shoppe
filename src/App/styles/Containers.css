@@ -30,6 +30,7 @@
 .Payment-breakup-container {
   box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
   display: flex;
+  gap: 16px;
   justify-content: center;
   align-items: center;
   text-align: center;
@@ -37,7 +38,6 @@
   width: 100%;
   padding: 42px 0;
   flex: 1;
-  color: #777;
   background: white;
 
   @media screen (max-width: 768px) {

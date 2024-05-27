@@ -16,6 +16,7 @@ import {
 import { useSetHeaderPrompt } from "~/App/Header/headerState.atom";
 import { useActionButtons } from "~/App/ActionBar/actionBarState.atom.ts";
 import Animations from "~/App/animations.ts";
+import { ArrowRight } from "~/App/icons/ArrowRight.tsx";
 
 const strings = {
   prompt: "What Serving Would You Like?",
@@ -107,7 +108,7 @@ const ServingsStep = () => {
     next: {
       label: strings.selectFlavors,
       onClick: () => handleStep(AppConfig.Steps.Flavors),
-      icon: <i className="fa fa-chevron-right Icon-step" />
+      icon: <ArrowRight />
     }
   });
 
