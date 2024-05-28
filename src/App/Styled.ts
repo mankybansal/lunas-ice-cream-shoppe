@@ -19,7 +19,7 @@ export const ItemContainer = styled(motion.div)<{ selected?: boolean }>`
   height: 260px;
   display: flex;
   background: white;
-  border-radius: 5px;
+  border-radius: 8px;
   box-shadow: 0 0 40px rgba(0, 0, 0, 0.05);
   transition: all ease 0.3s;
   cursor: pointer;
@@ -52,7 +52,7 @@ export const EmptyItem = styled.div`
 `;
 
 export const ItemPrimaryInfo = styled.div`
-  padding: 32px 32px 0px 32px;
+  padding: 32px 32px 0 32px;
   width: 100%;
   flex-direction: column;
   display: flex;

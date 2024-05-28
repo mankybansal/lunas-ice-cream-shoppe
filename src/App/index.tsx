@@ -1,5 +1,4 @@
 import "~/App/styles/Containers.css";
-import "~/App/styles/Interactions.css";
 import { ActionBar } from "~/App/ActionBar";
 
 import {

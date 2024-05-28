@@ -89,6 +89,19 @@ const Prompt = styled.div`
   }
 `;
 
+const Circle = styled.div`
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  color: white;
+  border-radius: 50%;
+  background: #fa8758;
+  margin-right: -8px;
+`;
+
 const Header = () => {
   const { watch, setValue } = useFormContext<KioskFormData>();
 
@@ -108,25 +121,29 @@ const Header = () => {
         <ActionsContainer>
           {(currentStep === AppConfig.Steps.Servings ||
             currentStep === AppConfig.Steps.Flavors ||
-            (currentStep === AppConfig.Steps.Toppings && itemCount > 0)) && (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "16px",
-                cursor: "pointer",
-                padding: "0px 16px"
-              }}
-              onClick={() => {
-                // Reset the current item.
-                setValue("order.currentItem", defaultCurrentItem());
-                void stepHandler(AppConfig.Steps.Confirm);
-              }}
-            >
-              <ShoppingCart height={"24px"} width={"24px"} /> {itemCount}
-              <span style={{ fontWeight: "bold" }}>${totalPrice}</span>
-            </div>
-          )}
+            currentStep === AppConfig.Steps.Toppings) &&
+            itemCount > 0 && (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                  cursor: "pointer",
+                  padding: "0px 16px"
+                }}
+                onClick={() => {
+                  // Reset the current item.
+                  setValue("order.currentItem", defaultCurrentItem());
+                  void stepHandler(AppConfig.Steps.Confirm);
+                }}
+              >
+                <Circle>{itemCount}</Circle>
+                <ShoppingCart height={"24px"} width={"24px"} />
+                <span style={{ fontWeight: "bold" }}>
+                  ${totalPrice.toFixed(2)}
+                </span>
+              </div>
+            )}
           {currentStep !== AppConfig.Steps.Finish && (
             <Action onClick={handleClickCancel}>{strings.cancelOrder}</Action>
           )}

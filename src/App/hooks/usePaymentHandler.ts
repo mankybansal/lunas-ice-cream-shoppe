@@ -8,7 +8,7 @@ export const usePaymentHandler = () => {
   const { setValue, watch } = useFormContext<KioskFormData>();
 
   const order = watch("order");
-  const totalPrice = Helpers.calculatePrice(order);
+  const totalPrice = Helpers.calculateOrderPrice(order);
 
   const paymentHandler = async () => {
     console.log("\nProcessing Payment...\n");

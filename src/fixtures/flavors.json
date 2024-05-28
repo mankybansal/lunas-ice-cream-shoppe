@@ -3,7 +3,7 @@
     "id": "FLA1",
     "name": "Boring Vanilla",
     "desc": "Not your usual vanilla ice cream",
-    "price": 3.29,
+    "price": 2.29,
     "calories": 150,
     "image": "default.png"
   },
@@ -11,7 +11,7 @@
     "id": "FLA2",
     "name": "Just Chocolate",
     "desc": "Psst.. We really like chocolate",
-    "price": 4.39,
+    "price": 3.39,
     "calories": 170,
     "image": "default.png"
   },
@@ -19,7 +19,7 @@
     "id": "FLA3",
     "name": "Very Berry Strawberry",
     "desc": "Fresh strawberry, hand churned to perfection",
-    "price": 3.99,
+    "price": 2.99,
     "calories": 120,
     "image": "default.png"
   },
@@ -27,7 +27,7 @@
     "id": "FLA4",
     "name": "Don't Be Depresso",
     "desc": "Our finest ground coffee flavor to cheer you up",
-    "price": 4.39,
+    "price": 3.39,
     "calories": 200,
     "image": "default.png"
   },
@@ -35,7 +35,7 @@
     "id": "FLA5",
     "name": "Let that Mango",
     "desc": "Mango ice cream so fresh you won't let go",
-    "price": 3.29,
+    "price": 2.29,
     "calories": 100,
     "image": "default.png"
   },
@@ -43,7 +43,7 @@
     "id": "FLA6",
     "name": "Cached Cookie Dough",
     "desc": "Get some of grandma's best baked cookies",
-    "price": 4.59,
+    "price": 2.59,
     "calories": 220,
     "image": "default.png"
   },
@@ -51,7 +51,7 @@
     "id": "FLA7",
     "name": "Mint Some Money",
     "desc": "The best mint ice cream money can buy",
-    "price": 4.59,
+    "price": 2.59,
     "calories": 170,
     "image": "default.png"
   },
@@ -59,7 +59,7 @@
     "id": "FLA8",
     "name": "A Smooth Caramel",
     "desc": "Annie was hit by our award winning caramel",
-    "price": 3.49,
+    "price": 2.49,
     "calories": 170,
     "image": "default.png"
   }
