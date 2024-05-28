@@ -1,3 +1,4 @@
+import * as AppConfig from "~/App/config";
 import { useEffect, useRef, useState } from "react";
 import { useStepHandler } from "~/App/hooks/useStepHandler";
 import { KioskFormData } from "~/App/types";
@@ -64,7 +65,7 @@ const FinishStep = () => {
     intervalRef.current = setInterval(() => {
       setTimer((prevTimer) => {
         if (prevTimer <= 0) {
-          // void stepHandler(AppConfig.Steps.Start);
+          void stepHandler(AppConfig.Steps.Start);
           if (intervalRef.current) clearInterval(intervalRef.current);
           return 20;
         }

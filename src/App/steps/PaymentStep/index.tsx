@@ -11,10 +11,15 @@ import { SpinnerGap } from "~/App/icons/SpinnerGap.tsx";
 
 const strings = {
   prompt: "Make Payment",
-  cardCharged: "Your Card Will Be Charged: $",
-  swipeCardPrompt: "Swipe or tap card To Complete Payment",
-  simulate: "Simulate payment success",
-  simulateError: "Simulate payment error"
+  cardCharged: "Your card will be charged: $",
+  idle: "Swipe or tap card to complete payment",
+  complete: "Payment complete",
+  failed: "Payment failed. Please try again.",
+  processing: "Processing payment...",
+  buttons: {
+    simulateSuccess: "Simulate payment success",
+    simulateError: "Simulate payment error"
+  }
 };
 
 const SimulationBar = styled.div`
@@ -28,7 +33,7 @@ const SimulateButton = styled.div`
   font-size: 14px;
   font-weight: 500;
   padding: 12px 24px;
-  background: #eee;
+  background: #fafafa;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -193,6 +198,7 @@ const PaymentStep = () => {
   useSetHeaderPrompt(strings.prompt);
 
   const handleSimulate = async (state: PaymentState) => {
+    if (paymentState === "loading") return;
     if (timeoutRef?.current) clearTimeout(timeoutRef.current);
     setPaymentState("loading");
     await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -226,13 +232,21 @@ const PaymentStep = () => {
         {paymentState === undefined && <PaymentCard />}
       </PaymentInteraction>
 
-      <Prompt>{strings.swipeCardPrompt}</Prompt>
-      <SimulationBar>
+      <Prompt>
+        {paymentState === "loading"
+          ? strings.processing
+          : paymentState === "failed"
+            ? strings.failed
+            : paymentState === "success"
+              ? strings.complete
+              : strings.idle}
+      </Prompt>
+      <SimulationBar style={{ opacity: paymentState !== undefined ? 0.3 : 1 }}>
         <SimulateButton onClick={() => handleSimulate("success")}>
-          {strings.simulate}
+          {strings.buttons.simulateSuccess}
         </SimulateButton>
         <SimulateButton onClick={() => handleSimulate("failed")}>
-          {strings.simulateError}
+          {strings.buttons.simulateError}
         </SimulateButton>
       </SimulationBar>
     </CenteredContent>

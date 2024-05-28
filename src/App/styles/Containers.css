@@ -16,6 +16,12 @@
   }
 }
 
+.Payment-amount {
+  font-weight: 400;
+  color: #fa8758;
+  font-size: 40px;
+  margin-bottom: 20px;
+}
 
 .Order-number {
   font-size: 80px;
