@@ -3,8 +3,8 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import styled from "@emotion/styled";
 import React, { useEffect } from "react";
 import { motion } from "framer-motion";
-import Animations from "~/App/animations.ts";
-import { useStepHandler } from "~/App/hooks/useStepHandler.ts";
+import Animations from "~/App/animations";
+import { useStepHandler } from "~/App/hooks/useStepHandler";
 
 import * as AppConfig from "./config";
 
@@ -27,7 +27,7 @@ const flavorToFile: Record<string, string> = {
   FLA8: "scoop-caramel.gltf"
 };
 
-const servingToObject: Record<any, any> = {
+const servingToObject: Record<string, string> = {
   SER1: "cup",
   SER2: "cone"
 };
@@ -44,11 +44,13 @@ export const IceCreamRenderer = ({ scoopsToShow, serving }: Props) => {
   const servingType = servingToObject[serving];
 
   useEffect(() => {
+    const target = ref.current;
+
     // Set up the scene, camera, and renderer
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
       75,
-      ref.current!.clientWidth / ref.current!.clientHeight,
+      target!.clientWidth / target!.clientHeight,
       0.1,
       1000
     );
@@ -157,8 +159,8 @@ export const IceCreamRenderer = ({ scoopsToShow, serving }: Props) => {
     }
 
     const handleResize = () => {
-      const width = ref.current!.clientWidth;
-      const height = ref.current!.clientHeight;
+      const width = target!.clientWidth;
+      const height = target!.clientHeight;
       renderer.setSize(width, height);
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
@@ -168,7 +170,7 @@ export const IceCreamRenderer = ({ scoopsToShow, serving }: Props) => {
 
     return () => {
       window.removeEventListener("resize", handleResize);
-      ref.current?.removeChild(renderer.domElement);
+      target?.removeChild(renderer.domElement);
       renderer.dispose();
     };
   }, [servingType, scoopsToShow]);

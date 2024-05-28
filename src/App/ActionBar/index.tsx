@@ -1,7 +1,7 @@
 import { useAtomValue } from "jotai";
 import { actionBarStateAtom } from "./actionBarState.atom";
 import { motion } from "framer-motion";
-import Animations from "~/App/animations.ts";
+import Animations from "~/App/animations";
 
 export const ActionBar = () => {
   const { back, next, review } = useAtomValue(actionBarStateAtom);

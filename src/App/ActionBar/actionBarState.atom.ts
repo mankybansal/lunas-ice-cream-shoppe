@@ -35,5 +35,5 @@ export const useActionButtons = (value: AtomState) => {
   useEffect(() => {
     setState(value);
     return () => setState({});
-  }, []);
+  }, [setState, value]);
 };

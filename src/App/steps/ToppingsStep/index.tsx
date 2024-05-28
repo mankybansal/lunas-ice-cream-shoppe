@@ -14,12 +14,12 @@ import {
   ItemsContainer,
   ItemSecondaryInfo,
   ItemTitle
-} from "~/App/Styled.ts";
+} from "~/App/Styled";
 import { useSetHeaderPrompt } from "~/App/Header/headerState.atom";
-import { useActionButtons } from "~/App/ActionBar/actionBarState.atom.ts";
-import Animations from "~/App/animations.ts";
-import { ShoppingCart } from "~/App/icons/ShoppingCart.tsx";
-import { ArrowLeft } from "~/App/icons/ArrowLeft.tsx";
+import { useActionButtons } from "~/App/ActionBar/actionBarState.atom";
+import Animations from "~/App/animations";
+import { ShoppingCart } from "~/App/icons/ShoppingCart";
+import { ArrowLeft } from "~/App/icons/ArrowLeft";
 
 const strings = {
   back: "Back",
@@ -53,7 +53,7 @@ const ToppingsList = () => {
       newToppings.push(topping);
       setValue("order.currentItem.toppings", newToppings);
     },
-    [setValue, selectedToppings]
+    [selectedToppings, selectedServing.toppings, setValue]
   );
 
   // Round up to nearest 3.
@@ -101,7 +101,7 @@ const ToppingsStep = () => {
         return stepHandler(gotoStep);
       }
 
-      let updatedOrder = { ...order };
+      const updatedOrder = { ...order };
       if (updatedOrder.currentItem.serving !== null) {
         updatedOrder.items.push(updatedOrder.currentItem);
         updatedOrder.currentItem = AppConfig.defaultCurrentItem();

@@ -1,4 +1,4 @@
-import { CompletedOrder } from "~/api.ts";
+import { CompletedOrder } from "~/api";
 import * as AppConfig from "./config";
 
 export interface KioskFormData {

@@ -1,7 +1,7 @@
-import REQUESTS, { ApiResponse, PaymentDetails } from "~/api.ts";
-import * as AppConfig from "~/App/config.ts";
-import * as Helpers from "~/App/utils.ts";
-import { KioskFormData } from "~/App/types.ts";
+import REQUESTS, { ApiResponse, PaymentDetails } from "~/api";
+import * as AppConfig from "~/App/config";
+import * as Helpers from "~/App/utils";
+import { KioskFormData } from "~/App/types";
 import { useFormContext } from "react-hook-form";
 
 export const usePaymentHandler = () => {

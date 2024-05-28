@@ -11,5 +11,5 @@ export const useSetHeaderPrompt = (prompt: string) => {
   useEffect(() => {
     setHeaderState({ prompt });
     return () => setHeaderState({ prompt: "" });
-  }, []);
+  }, [prompt, setHeaderState]);
 };

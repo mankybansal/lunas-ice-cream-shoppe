@@ -1,7 +1,7 @@
 import { useFormContext } from "react-hook-form";
-import * as AppConfig from "~/App/config.ts";
+import * as AppConfig from "~/App/config";
 import { useAppInit } from "./useAppInit";
-import { KioskFormData } from "~/App/types.ts";
+import { KioskFormData } from "~/App/types";
 
 export const useStepHandler = () => {
   const { reset, setValue, watch } = useFormContext<KioskFormData>();

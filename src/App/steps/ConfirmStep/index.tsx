@@ -1,23 +1,23 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import * as AppConfig from "../../config";
-import { Flavor, Item, KioskFormData, Topping } from "~/App/types.ts";
-import * as Helpers from "~/App/utils.ts";
+import { Flavor, Item, KioskFormData, Topping } from "~/App/types";
+import * as Helpers from "~/App/utils";
 import { useFormContext } from "react-hook-form";
-import { useStepHandler } from "~/App/hooks/useStepHandler.ts";
+import { useStepHandler } from "~/App/hooks/useStepHandler";
 import {
   ItemCategory,
   ItemContainer,
   ItemPrimaryInfo,
   ItemsContainer,
   ItemTitle
-} from "~/App/Styled.ts";
+} from "~/App/Styled";
 import styled from "@emotion/styled";
 import { useSetHeaderPrompt } from "~/App/Header/headerState.atom";
 import { useActionButtons } from "~/App/ActionBar/actionBarState.atom";
-import Animations from "~/App/animations.ts";
-import { ShoppingCart } from "~/App/icons/ShoppingCart.tsx";
-import { PlusCircle } from "~/App/icons/PlusCircle.tsx";
-import { Check } from "~/App/icons/Check.tsx";
+import Animations from "~/App/animations";
+import { ShoppingCart } from "~/App/icons/ShoppingCart";
+import { PlusCircle } from "~/App/icons/PlusCircle";
+import { Check } from "~/App/icons/Check";
 
 const strings = {
   prompt: "Review Order",
@@ -88,10 +88,12 @@ const OrderList = () => {
 
   const removeItem = useCallback(
     (item: Item) => {
-      let updatedOrder = { ...order };
+      const updatedOrder = { ...order };
 
-      if (updatedOrder.items.includes(item))
+      // use client ids here
+      if (updatedOrder.items.includes(item)) {
         updatedOrder.items.splice(updatedOrder.items.indexOf(item), 1);
+      }
 
       setValue("order", updatedOrder);
 
@@ -143,7 +145,7 @@ const ConfirmStep = () => {
   const { watch, setValue } = useFormContext<KioskFormData>();
 
   const order = watch("order");
-  const totalPrice = Helpers.calculatePrice(order);
+  const totalPrice = useMemo(() => Helpers.calculatePrice(order), [order]);
 
   const handleStep = useCallback(
     (gotoStep: number) => () => {

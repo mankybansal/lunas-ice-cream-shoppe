@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import * as AppConfig from "../../config";
-import { useStepHandler } from "~/App/hooks/useStepHandler.ts";
-import { KioskFormData } from "~/App/types.ts";
+import { useStepHandler } from "~/App/hooks/useStepHandler";
+import { KioskFormData } from "~/App/types";
 import { useFormContext } from "react-hook-form";
 import { useSetHeaderPrompt } from "~/App/Header/headerState.atom";
-import { CenteredContent } from "~/App/Styled.ts";
+import { CenteredContent } from "~/App/Styled";
 
 const strings = {
   prompt: "Thank You For Your Order",
@@ -16,7 +16,7 @@ const strings = {
 };
 
 const FinishStep = () => {
-  const { stepHandler, currentStep } = useStepHandler();
+  const { stepHandler } = useStepHandler();
 
   const { getValues } = useFormContext<KioskFormData>();
   const order = getValues("completedOrder")!;
@@ -39,8 +39,6 @@ const FinishStep = () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
   }, [stepHandler]);
-
-  if (currentStep !== AppConfig.Steps.Finish) return null;
 
   useSetHeaderPrompt(strings.prompt);
 

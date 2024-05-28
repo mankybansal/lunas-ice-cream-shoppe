@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import * as AppConfig from "../../config";
 
 import { KioskFormData, Serving } from "~/App/types";
-import { useStepHandler } from "~/App/hooks/useStepHandler.ts";
+import { useStepHandler } from "~/App/hooks/useStepHandler";
 import { useFormContext } from "react-hook-form";
 import {
   EmptyItem,
@@ -12,11 +12,11 @@ import {
   ItemPrimaryInfo,
   ItemsContainer,
   ItemTitle
-} from "~/App/Styled.ts";
+} from "~/App/Styled";
 import { useSetHeaderPrompt } from "~/App/Header/headerState.atom";
-import { useActionButtons } from "~/App/ActionBar/actionBarState.atom.ts";
-import Animations from "~/App/animations.ts";
-import { ArrowRight } from "~/App/icons/ArrowRight.tsx";
+import { useActionButtons } from "~/App/ActionBar/actionBarState.atom";
+import Animations from "~/App/animations";
+import { ArrowRight } from "~/App/icons/ArrowRight";
 
 const strings = {
   prompt: "What Serving Would You Like?",

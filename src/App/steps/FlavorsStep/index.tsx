@@ -17,10 +17,10 @@ import {
   ItemTitle
 } from "~/App/Styled";
 import { useSetHeaderPrompt } from "~/App/Header/headerState.atom";
-import { useActionButtons } from "~/App/ActionBar/actionBarState.atom.ts";
-import Animations from "~/App/animations.ts";
-import { ArrowLeft } from "~/App/icons/ArrowLeft.tsx";
-import { ArrowRight } from "~/App/icons/ArrowRight.tsx";
+import { useActionButtons } from "~/App/ActionBar/actionBarState.atom";
+import Animations from "~/App/animations";
+import { ArrowLeft } from "~/App/icons/ArrowLeft";
+import { ArrowRight } from "~/App/icons/ArrowRight";
 
 const strings = {
   selectToppings: "Select Toppings",
@@ -79,7 +79,7 @@ const FlavorsList = () => {
       newFlavors.push(flavor);
       setValue("order.currentItem.flavors", newFlavors);
     },
-    [setValue, selectedFlavors]
+    [selectedFlavors, selectedServing.scoops, setValue]
   );
 
   const removeFlavor = useCallback(

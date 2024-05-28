@@ -1,9 +1,9 @@
 import { useCallback, useEffect } from "react";
 import * as AppConfig from "../../config";
-import { usePaymentHandler } from "~/App/hooks/usePaymentHandler.ts";
-import { useStepHandler } from "~/App/hooks/useStepHandler.ts";
+import { usePaymentHandler } from "~/App/hooks/usePaymentHandler";
+import { useStepHandler } from "~/App/hooks/useStepHandler";
 import { useSetHeaderPrompt } from "~/App/Header/headerState.atom";
-import { CenteredContent } from "~/App/Styled.ts";
+import { CenteredContent } from "~/App/Styled";
 
 const strings = {
   prompt: "Make Payment",

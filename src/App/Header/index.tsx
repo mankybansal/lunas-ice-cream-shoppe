@@ -3,12 +3,12 @@ import { useStepHandler } from "~/App/hooks/useStepHandler";
 import { useAtomValue } from "jotai";
 import { headerStateAtom } from "./headerState.atom";
 import styled from "@emotion/styled";
-import Animations from "~/App/animations.ts";
+import Animations from "~/App/animations";
 import { motion } from "framer-motion";
 import { useFormContext } from "react-hook-form";
-import { KioskFormData } from "~/App/types.ts";
-import { ShoppingCart } from "~/App/icons/ShoppingCart.tsx";
-import { usePaymentHandler } from "~/App/hooks/usePaymentHandler.ts";
+import { KioskFormData } from "~/App/types";
+import { ShoppingCart } from "~/App/icons/ShoppingCart";
+import { usePaymentHandler } from "~/App/hooks/usePaymentHandler";
 
 const strings = {
   appLogo: "Luna's Ice Cream",

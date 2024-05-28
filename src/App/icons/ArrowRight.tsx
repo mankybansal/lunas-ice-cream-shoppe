@@ -1,6 +1,6 @@
 import { SVGProps } from "react";
 
-export const ArrowRight = (props: SVGProps<any>) => (
+export const ArrowRight = (props: SVGProps<SVGSVGElement>) => (
   <svg
     width="32"
     height="32"

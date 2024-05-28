@@ -1,5 +1,5 @@
-import { Order, Menu } from "./types";
-import { CompletedOrder, PaymentDetails } from "~/api.ts";
+import { Menu, Order } from "./types";
+import { CompletedOrder, PaymentDetails } from "~/api";
 
 export function calculatePrice(order: Order): number {
   let totalPrice = 0;

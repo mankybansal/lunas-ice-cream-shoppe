@@ -1,4 +1,4 @@
-import { Item, Menu, Order } from "~/App/types.ts";
+import { Item, Menu, Order } from "~/App/types";
 
 export enum Steps {
   Start = 0,

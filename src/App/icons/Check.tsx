@@ -1,6 +1,6 @@
 import { SVGProps } from "react";
 
-export const Check = (props: SVGProps<any>) => (
+export const Check = (props: SVGProps<SVGSVGElement>) => (
   <svg
     width="32"
     height="32"

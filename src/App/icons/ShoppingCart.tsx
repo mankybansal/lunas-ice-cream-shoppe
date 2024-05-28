@@ -1,6 +1,6 @@
 import { SVGProps } from "react";
 
-export const ShoppingCart = (props: SVGProps<any>) => {
+export const ShoppingCart = (props: SVGProps<SVGSVGElement>) => {
   return (
     <svg
       width="32"
