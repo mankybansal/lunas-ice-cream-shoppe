@@ -99,7 +99,7 @@ export const ItemSecondaryInfo = styled.div`
   justify-content: space-between;
 `;
 
-export const CenteredContent = styled.div`
+export const CenteredContent = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: center;

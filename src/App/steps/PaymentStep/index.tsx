@@ -1,29 +1,42 @@
-import { useCallback } from "react";
-import * as AppConfig from "../../config";
+import { useState } from "react";
 import { usePaymentHandler } from "~/App/hooks/usePaymentHandler";
-import { useStepHandler } from "~/App/hooks/useStepHandler";
 import { useSetHeaderPrompt } from "~/App/Header/headerState.atom";
 import { CenteredContent } from "~/App/Styled";
 import styled from "@emotion/styled";
 import { keyframes } from "@emotion/react";
+import Animations from "~/App/animations.ts";
+import { CheckCircle } from "~/App/icons/CheckCircle.tsx";
+import { XCircle } from "~/App/icons/XCircle.tsx";
+import { SpinnerGap } from "~/App/icons/SpinnerGap.tsx";
 
 const strings = {
   prompt: "Make Payment",
   cardCharged: "Your Card Will Be Charged: $",
   swipeCardPrompt: "Swipe Card To Complete Payment",
-  simulate: "Simulate payment"
+  simulate: "Simulate payment success",
+  simulateError: "Simulate payment error"
 };
 
-const SimulateButton = styled.button`
+const SimulationBar = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 128px;
+  gap: 16px;
+`;
+
+const SimulateButton = styled.div`
   font-size: 14px;
   font-weight: 500;
   padding: 12px 24px;
   background: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   color: #000;
   border: 1px solid #ccc;
   border-radius: 8px;
   cursor: pointer;
-  margin-top: 64px;
 `;
 
 const PaymentInteraction = styled.div`
@@ -34,7 +47,7 @@ const PaymentInteraction = styled.div`
   margin: -20px auto 0 auto;
 `;
 
-const PaymentDevice = styled.div`
+const PaymentDevice = styled.div<{ state: PaymentState }>`
   width: 200px;
   height: 140px;
   border: 1px solid #777;
@@ -43,9 +56,15 @@ const PaymentDevice = styled.div`
   position: absolute;
   background: #fff;
   z-index: 4;
+  transition: all ease 0.3s;
 
   ::after {
-    background-color: #eee;
+    background-color: ${({ state }) =>
+      state === "success"
+        ? "#31f631"
+        : state === "failed"
+          ? "#f56060"
+          : "#eee"};
     content: "";
     position: absolute;
     top: 10px;
@@ -53,6 +72,7 @@ const PaymentDevice = styled.div`
     width: 180px;
     height: 90px;
     border-radius: 5px;
+    transition: all ease 0.3s;
   }
 
   ::before {
@@ -65,6 +85,7 @@ const PaymentDevice = styled.div`
     width: 60px;
     height: 20px;
     border-radius: 5px;
+    transition: all ease 0.3s;
   }
 `;
 
@@ -107,6 +128,54 @@ const PaymentCard = styled.div`
   }
 `;
 
+const IconContainer = styled.div`
+  position: absolute;
+  z-index: 10;
+  width: 100%;
+  top: calc(50% - 40px);
+  transition: all ease 0.3s;
+`;
+
+const IconAnimation = keyframes`
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+  100% { transform: scale(1); }
+`;
+
+const StyledCheckCircle = styled(CheckCircle)`
+  width: 48px;
+  height: 48px;
+  animation: ${IconAnimation} 0.3s ease-out;
+`;
+
+const StyledXCircle = styled(XCircle)`
+  width: 48px;
+  height: 48px;
+  animation: ${IconAnimation} 0.3s ease-out;
+`;
+
+const SpinningAnimation = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+`;
+
+const StyledSpinnerGap = styled(SpinnerGap)`
+  height: 48px;
+  width: 48px;
+  color: #666;
+  animation: ${SpinningAnimation} 0.75s linear infinite;
+`;
+
 const Prompt = styled.div`
   width: 100%;
   font-size: 30px;
@@ -114,36 +183,55 @@ const Prompt = styled.div`
   color: #888;
 `;
 
+type PaymentState = "loading" | "success" | "failed" | undefined;
+
 const PaymentStep = () => {
   const { paymentHandler, totalPrice } = usePaymentHandler();
-  const { stepHandler } = useStepHandler();
-
-  const handleStep = useCallback(
-    (gotoStep?: number) => () => {
-      if (gotoStep && gotoStep < AppConfig.Steps.Payment)
-        return stepHandler(gotoStep);
-
-      return paymentHandler();
-    },
-    [stepHandler, paymentHandler]
-  );
+  const [paymentState, setPaymentState] = useState<PaymentState>();
 
   useSetHeaderPrompt(strings.prompt);
 
+  const handleSimulate = async (state: PaymentState) => {
+    setPaymentState("loading");
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    setPaymentState(state);
+
+    if (state !== "success") {
+      return setTimeout(() => {
+        setPaymentState(undefined);
+      }, 2500);
+    }
+
+    setTimeout(paymentHandler, 300);
+  };
+
   return (
-    <CenteredContent>
+    <CenteredContent {...Animations.AnimateInUp}>
       <div className="Payment-amount">
         {strings.cardCharged}
         {totalPrice.toFixed(2)}
       </div>
 
       <PaymentInteraction>
-        <PaymentDevice />
-        <PaymentCard />
+        <PaymentDevice state={paymentState}>
+          <IconContainer>
+            {paymentState === "success" && <StyledCheckCircle />}
+            {paymentState === "failed" && <StyledXCircle />}
+            {paymentState === "loading" && <StyledSpinnerGap />}
+          </IconContainer>
+        </PaymentDevice>
+        {paymentState === undefined && <PaymentCard />}
       </PaymentInteraction>
 
       <Prompt>{strings.swipeCardPrompt}</Prompt>
-      <SimulateButton onClick={handleStep()}>{strings.simulate}</SimulateButton>
+      <SimulationBar>
+        <SimulateButton onClick={() => handleSimulate("success")}>
+          {strings.simulate}
+        </SimulateButton>
+        <SimulateButton onClick={() => handleSimulate("failed")}>
+          {strings.simulateError}
+        </SimulateButton>
+      </SimulationBar>
     </CenteredContent>
   );
 };

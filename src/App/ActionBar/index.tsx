@@ -14,7 +14,7 @@ const RootContainer = styled(motion.div)`
   bottom: 0;
 `;
 
-const ActionButton = styled.button`
+const ActionButton = styled(motion.button)`
   padding: 24px;
   font-size: 20px;
   font-weight: 400;
@@ -28,6 +28,7 @@ const ActionButton = styled.button`
   justify-content: center;
   color: white;
   text-align: center;
+  transition: all ease 0.3s;
 `;
 
 const NextButton = styled(ActionButton)`
@@ -72,12 +73,12 @@ export const ActionBar = () => {
       {review}
       <StepControl>
         {back && (
-          <PrevButton onClick={back.onClick}>
+          <PrevButton onClick={back.onClick} {...Animations.AnimateInRight}>
             {back.icon} {back.label}
           </PrevButton>
         )}
         {next && (
-          <NextButton onClick={next.onClick}>
+          <NextButton onClick={next.onClick} {...Animations.AnimateInRight}>
             {next.label} {next.icon}
           </NextButton>
         )}
