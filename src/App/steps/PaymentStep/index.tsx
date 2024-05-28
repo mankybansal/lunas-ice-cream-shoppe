@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { usePaymentHandler } from "~/App/hooks/usePaymentHandler";
 import { useSetHeaderPrompt } from "~/App/Header/headerState.atom";
 import { CenteredContent } from "~/App/Styled";
@@ -12,7 +12,7 @@ import { SpinnerGap } from "~/App/icons/SpinnerGap.tsx";
 const strings = {
   prompt: "Make Payment",
   cardCharged: "Your Card Will Be Charged: $",
-  swipeCardPrompt: "Swipe Card To Complete Payment",
+  swipeCardPrompt: "Swipe or tap card To Complete Payment",
   simulate: "Simulate payment success",
   simulateError: "Simulate payment error"
 };
@@ -188,18 +188,21 @@ type PaymentState = "loading" | "success" | "failed" | undefined;
 const PaymentStep = () => {
   const { paymentHandler, totalPrice } = usePaymentHandler();
   const [paymentState, setPaymentState] = useState<PaymentState>();
+  const timeoutRef = useRef<number | undefined>();
 
   useSetHeaderPrompt(strings.prompt);
 
   const handleSimulate = async (state: PaymentState) => {
+    if (timeoutRef?.current) clearTimeout(timeoutRef.current);
     setPaymentState("loading");
     await new Promise((resolve) => setTimeout(resolve, 2000));
     setPaymentState(state);
 
     if (state !== "success") {
-      return setTimeout(() => {
+      timeoutRef.current = setTimeout(() => {
         setPaymentState(undefined);
       }, 2500);
+      return;
     }
 
     setTimeout(paymentHandler, 300);

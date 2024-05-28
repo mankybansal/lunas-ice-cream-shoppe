@@ -5,6 +5,7 @@ import * as Helpers from "~/App/utils/app.ts";
 import { useFormContext } from "react-hook-form";
 import { useStepHandler } from "~/App/hooks/useStepHandler";
 import {
+  Divider,
   ItemCategory,
   ItemContainer,
   ItemPrimaryInfo,
@@ -62,12 +63,6 @@ const RemoveButton = styled.button`
   color: #fa8758;
 `;
 
-const Divider = styled.div`
-  width: 100%;
-  height: 1px;
-  background: #efefef;
-`;
-
 const OrderBottomContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -75,6 +70,12 @@ const OrderBottomContainer = styled.div`
   margin-top: auto;
   padding: 32px;
   width: 100%;
+`;
+
+const OrderActions = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const TotalContainer = styled.div`
@@ -121,13 +122,7 @@ const OrderList = () => {
             </ItemPrimaryInfo>
             <OrderBottomContainer>
               <Divider />
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center"
-                }}
-              >
+              <OrderActions>
                 <RemoveButton onClick={() => removeItem(item)}>
                   <MinusCircle width={"24px"} height={"24px"} />
                   {strings.remove}
@@ -138,7 +133,7 @@ const OrderList = () => {
                     ${itemPrice.toFixed(2)}
                   </span>
                 </TotalContainer>
-              </div>
+              </OrderActions>
             </OrderBottomContainer>
           </StyledItemContainer>
         );
