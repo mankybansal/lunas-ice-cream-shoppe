@@ -34,6 +34,8 @@ const ServingsList = () => {
 
   const selectServing = useCallback(
     (serving: Serving) => {
+      if (selectedServing?.id === serving.id) return;
+
       setValue("order.currentItem.serving", serving);
 
       // Remove flavors and toppings if they exceed the serving size.

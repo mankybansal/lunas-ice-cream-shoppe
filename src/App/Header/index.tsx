@@ -37,6 +37,7 @@ const InnerContainer = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
+  max-width: 1460px;
   height: 72px;
   align-items: center;
 
