@@ -1,6 +1,7 @@
 import * as AppConfig from "../../config";
 import styled from "@emotion/styled";
 import { useStepHandler } from "~/App/hooks/useStepHandler";
+import { TouchToBegin } from "./TouchToBegin";
 
 const strings = {
   title: "Welcome to Luna's Ice Cream Shoppe",
@@ -54,14 +55,7 @@ const StartStep = () => {
     <RootContainer>
       <AppTitle>{strings.title}</AppTitle>
       <AppSubtitle>{strings.subtitle}</AppSubtitle>
-      <div onClick={handleClickStart} className="circleClickerContainer">
-        <div className="circleClicker">
-          <div className="circleClickerPersistent">
-            <div className="circleClickerPersistent2" />
-          </div>
-        </div>
-        <div className="circleClickerPrompt">{strings.touchToBegin}</div>
-      </div>
+      <TouchToBegin onClick={handleClickStart} label={strings.touchToBegin} />
     </RootContainer>
   );
 };

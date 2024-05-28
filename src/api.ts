@@ -1,6 +1,6 @@
-import servings from "./Data/servings.json";
-import flavors from "./Data/flavors.json";
-import toppings from "./Data/toppings.json";
+import servings from "~/fixtures/servings.json";
+import flavors from "~/fixtures/flavors.json";
+import toppings from "~/fixtures/toppings.json";
 import { CardDetails } from "~/App/config";
 import { Menu, Order } from "./App/types";
 

@@ -1,9 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import "~/App/styles/Containers.css";
+import "~/App/styles/Interactions.css";
+import { ActionBar } from "~/App/ActionBar";
 
-import "./styles/Containers.css";
-import "./styles/Interactions.css";
-import "./styles/Buttons.css";
-import "./styles/Icons.css";
 import {
   ConfirmStep,
   FinishStep,
@@ -13,6 +11,7 @@ import {
   StartStep,
   ToppingsStep
 } from "./steps";
+import { useEffect, useMemo, useRef, useState } from "react";
 import * as AppConfig from "./config";
 
 import { KioskFormData } from "./types";
@@ -21,7 +20,6 @@ import { useAppInit } from "~/App/hooks/useAppInit";
 import { IceCreamRenderer } from "~/App/IceCreamRenderer";
 import styled from "@emotion/styled";
 import Header from "~/App/Header";
-import { ActionBar } from "~/App/ActionBar";
 
 const RootContainer = styled.div`
   text-align: center;
@@ -30,6 +28,12 @@ const RootContainer = styled.div`
   height: 100vh;
   display: flex;
   background: #fff5e1;
+`;
+
+const ContentContainer = styled.div`
+  display: flex;
+  flex: 1;
+  overflow: hidden;
 `;
 
 const IceCreamKiosk = () => {
@@ -129,7 +133,7 @@ const KioskContent = () => {
   return (
     <RootContainer>
       {shouldShowHeader && <Header />}
-      <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
+      <ContentContainer>
         {shouldShowRenderer && (
           <IceCreamRenderer
             scoopsToShow={scoopsToShow}
@@ -143,7 +147,7 @@ const KioskContent = () => {
         {currentStep === AppConfig.Steps.Confirm && <ConfirmStep />}
         {currentStep === AppConfig.Steps.Payment && <PaymentStep />}
         {currentStep === AppConfig.Steps.Finish && <FinishStep />}
-      </div>
+      </ContentContainer>
       {shouldShowActionBar && <ActionBar />}
     </RootContainer>
   );
