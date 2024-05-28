@@ -30,10 +30,12 @@ export const actionBarStateAtom = atom<AtomState>({
   review: null
 });
 
-export const useActionButtons = (value: AtomState) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const useActionButtons = (value: AtomState, deps: any[] = []) => {
   const setState = useSetAtom(actionBarStateAtom);
   useEffect(() => {
     setState(value);
     return () => setState({});
-  }, [setState, value]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setState, value, ...deps]);
 };

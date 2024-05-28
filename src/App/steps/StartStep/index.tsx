@@ -1,4 +1,3 @@
-import * as AppConfig from "../../config";
 import styled from "@emotion/styled";
 import { useStepHandler } from "~/App/hooks/useStepHandler";
 import { TouchToBegin } from "./TouchToBegin";
@@ -49,13 +48,12 @@ const AppSubtitle = styled.div`
 `;
 
 const StartStep = () => {
-  const { stepHandler } = useStepHandler();
-  const handleClickStart = () => stepHandler(AppConfig.Steps.Servings);
+  const { createNewItem } = useStepHandler();
   return (
     <RootContainer>
       <AppTitle>{strings.title}</AppTitle>
       <AppSubtitle>{strings.subtitle}</AppSubtitle>
-      <TouchToBegin onClick={handleClickStart} label={strings.touchToBegin} />
+      <TouchToBegin onClick={createNewItem} label={strings.touchToBegin} />
     </RootContainer>
   );
 };

@@ -1,6 +1,6 @@
 import { useFormContext } from "react-hook-form";
 import { useCallback } from "react";
-import * as Helpers from "~/App/utils";
+import * as Helpers from "~/App/utils/app.ts";
 import REQUESTS from "~/api";
 import * as AppConfig from "~/App/config";
 import { KioskFormData } from "~/App/types";

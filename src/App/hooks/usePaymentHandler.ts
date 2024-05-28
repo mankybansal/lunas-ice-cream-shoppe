@@ -1,6 +1,6 @@
 import REQUESTS, { ApiResponse, PaymentDetails } from "~/api";
 import * as AppConfig from "~/App/config";
-import * as Helpers from "~/App/utils";
+import * as Helpers from "~/App/utils/app.ts";
 import { KioskFormData } from "~/App/types";
 import { useFormContext } from "react-hook-form";
 

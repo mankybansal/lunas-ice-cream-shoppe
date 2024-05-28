@@ -1,7 +1,7 @@
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import * as AppConfig from "../../config";
 import { Flavor, Item, KioskFormData, Topping } from "~/App/types";
-import * as Helpers from "~/App/utils";
+import * as Helpers from "~/App/utils/app.ts";
 import { useFormContext } from "react-hook-form";
 import { useStepHandler } from "~/App/hooks/useStepHandler";
 import {
@@ -32,19 +32,13 @@ const strings = {
 const StyledItemContainer = styled(ItemContainer)`
   width: 380px;
   height: 380px;
+`;
 
-  > .Item-title {
-    font-size: 30px;
-    font-weight: 400;
-    margin-bottom: 24px;
-  }
-
-  > .Item-image {
-    position: absolute;
-    right: 20px;
-    width: 70px;
-    top: 20px;
-  }
+const ItemImage = styled.img`
+  position: absolute;
+  right: 20px;
+  width: 70px;
+  top: 20px;
 `;
 
 interface FlavorProps {
@@ -88,17 +82,9 @@ const OrderList = () => {
 
   const removeItem = useCallback(
     (item: Item) => {
-      const updatedOrder = { ...order };
-
-      // use client ids here
-      if (updatedOrder.items.includes(item)) {
-        updatedOrder.items.splice(updatedOrder.items.indexOf(item), 1);
-      }
-
-      setValue("order", updatedOrder);
-
-      if (updatedOrder.items.length < 1)
-        return stepHandler(AppConfig.Steps.Servings);
+      const newItems = order.items.filter((i) => i.clientId !== item.clientId);
+      setValue("order.items", newItems);
+      if (newItems.length < 1) return stepHandler(AppConfig.Steps.Servings);
     },
     [order, stepHandler, setValue]
   );
@@ -109,11 +95,7 @@ const OrderList = () => {
         const hasToppings = item.toppings.length > 0;
         return (
           <StyledItemContainer key={i} {...Animations.AnimateInUp}>
-            <img
-              className="Item-image"
-              src={item.serving!.image}
-              alt={"serving-image"}
-            />
+            <ItemImage src={item.serving!.image} alt={"serving-image"} />
             <ItemPrimaryInfo>
               <ItemTitle>{item.serving!.name}</ItemTitle>
 
@@ -141,11 +123,11 @@ const OrderList = () => {
 };
 
 const ConfirmStep = () => {
-  const { stepHandler } = useStepHandler();
+  const { stepHandler, createNewItem } = useStepHandler();
   const { watch, setValue } = useFormContext<KioskFormData>();
 
   const order = watch("order");
-  const totalPrice = useMemo(() => Helpers.calculatePrice(order), [order]);
+  const totalPrice = Helpers.calculatePrice(order);
 
   const handleStep = useCallback(
     (gotoStep: number) => () => {
@@ -157,25 +139,28 @@ const ConfirmStep = () => {
 
   useSetHeaderPrompt(strings.prompt);
 
-  useActionButtons({
-    next: {
-      label: strings.checkout,
-      onClick: handleStep(AppConfig.Steps.Payment),
-      icon: <Check />
+  useActionButtons(
+    {
+      next: {
+        label: strings.checkout,
+        onClick: handleStep(AppConfig.Steps.Payment),
+        icon: <Check />
+      },
+      back: {
+        label: strings.addItem,
+        onClick: createNewItem,
+        icon: <PlusCircle />
+      },
+      review: (
+        <div className="Payment-breakup-container">
+          <ShoppingCart />
+          {strings.orderTotal}
+          <span style={{ fontWeight: "bold" }}>${totalPrice.toFixed(2)}</span>
+        </div>
+      )
     },
-    back: {
-      label: strings.addItem,
-      onClick: handleStep(AppConfig.Steps.Servings),
-      icon: <PlusCircle />
-    },
-    review: (
-      <div className="Payment-breakup-container">
-        <ShoppingCart />
-        {strings.orderTotal}
-        <span style={{ fontWeight: "bold" }}>${totalPrice.toFixed(2)}</span>
-      </div>
-    )
-  });
+    [totalPrice]
+  );
 
   return <OrderList />;
 };

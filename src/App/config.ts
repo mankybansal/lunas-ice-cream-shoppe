@@ -1,4 +1,5 @@
 import { Item, Menu, Order } from "~/App/types";
+import { generateClientId } from "~/App/utils/clientId.ts";
 
 export enum Steps {
   Start = 0,
@@ -33,13 +34,12 @@ export function defaultState(): State {
   };
 }
 
-export function defaultCurrentItem(): Item {
-  return {
-    serving: undefined,
-    flavors: [],
-    toppings: []
-  };
-}
+export const defaultCurrentItem = (): Item => ({
+  clientId: generateClientId(),
+  serving: undefined,
+  flavors: [],
+  toppings: []
+});
 
 export interface CardDetails {
   name: string;

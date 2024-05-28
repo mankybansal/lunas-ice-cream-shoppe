@@ -1,4 +1,5 @@
 import * as AppConfig from "../config";
+import { defaultCurrentItem } from "../config";
 import { useStepHandler } from "~/App/hooks/useStepHandler";
 import { useAtomValue } from "jotai";
 import { headerStateAtom } from "./headerState.atom";
@@ -98,6 +99,7 @@ const Header = () => {
   const { prompt } = useAtomValue(headerStateAtom);
   const { stepHandler, currentStep } = useStepHandler();
   const handleClickCancel = () => stepHandler(AppConfig.Steps.Start);
+
   return (
     <RootContainer {...Animations.AnimateInDown}>
       <InnerContainer>
@@ -116,11 +118,8 @@ const Header = () => {
                 padding: "0px 16px"
               }}
               onClick={() => {
-                setValue("order.currentItem", {
-                  flavors: [],
-                  toppings: [],
-                  serving: undefined
-                });
+                // Reset the current item.
+                setValue("order.currentItem", defaultCurrentItem());
                 void stepHandler(AppConfig.Steps.Confirm);
               }}
             >

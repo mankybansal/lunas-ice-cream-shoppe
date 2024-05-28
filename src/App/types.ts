@@ -37,6 +37,7 @@ export interface Serving {
 }
 
 export interface Item {
+  clientId: string;
   serving: Serving | undefined;
   flavors: Flavor[];
   toppings: Topping[];
