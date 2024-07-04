@@ -90,6 +90,8 @@ const KioskContent = () => {
   const currentStep = watch("currentStep");
   const selectedScoops = watch("order.currentItem.flavors").map((f) => f.id);
 
+  const memoizedScoops = useMemo(() => selectedScoops, [selectedScoops]);
+
   useEffect(() => {
     if (currentStep !== AppConfig.Steps.Start) {
       if (intervalRef.current) clearInterval(intervalRef.current);
@@ -117,12 +119,18 @@ const KioskContent = () => {
 
   const randomFlavors = useMemo(() => randomRender.scoops, [randomRender]);
 
-  const scoopsToShow =
-    currentStep === AppConfig.Steps.Start ? randomFlavors : selectedScoops;
+  const scoopsToShow = useMemo(
+    () =>
+      currentStep === AppConfig.Steps.Start ? randomFlavors : memoizedScoops,
+    [currentStep, memoizedScoops, randomFlavors]
+  );
 
-  const shouldShowRenderer =
-    currentStep < AppConfig.Steps.Confirm &&
-    (currentStep === AppConfig.Steps.Servings ? !!serving : true);
+  const shouldShowRenderer = useMemo(
+    () =>
+      currentStep < AppConfig.Steps.Confirm &&
+      (currentStep === AppConfig.Steps.Servings ? !!serving : true),
+    [currentStep, serving]
+  );
   const shouldShowHeader = currentStep !== AppConfig.Steps.Start;
   const shouldShowActionBar =
     currentStep !== AppConfig.Steps.Finish &&
@@ -137,6 +145,7 @@ const KioskContent = () => {
           <IceCreamRenderer
             scoopsToShow={scoopsToShow}
             serving={selectedServing}
+            wide={currentStep === AppConfig.Steps.Start}
           />
         )}
         {currentStep === AppConfig.Steps.Start && <StartStep />}

@@ -183,7 +183,14 @@ const FinishStep = () => {
             {strings.orderNumber}
             {order.number}
           </div>
-          <span style={{}}>Collect your receipt</span>
+          <span
+            style={{
+              fontSize: "32px",
+              marginBottom: "16px"
+            }}
+          >
+            Collect your receipt
+          </span>
 
           <br />
           <br />

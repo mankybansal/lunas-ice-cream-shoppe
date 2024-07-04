@@ -4,9 +4,6 @@ import styled from "@emotion/styled";
 import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import Animations from "~/App/animations";
-import { useStepHandler } from "~/App/hooks/useStepHandler";
-
-import * as AppConfig from "./config";
 
 const RootContainer = styled(motion.div)<{ wide: boolean }>`
   width: 100%;
@@ -35,9 +32,10 @@ const servingToObject: Record<string, string> = {
 interface Props {
   scoopsToShow: string[];
   serving: string;
+  wide: boolean;
 }
 
-export const IceCreamRenderer = ({ scoopsToShow, serving }: Props) => {
+export const IceCreamRenderer = ({ scoopsToShow, serving, wide }: Props) => {
   const ref = React.useRef<HTMLDivElement>(null);
   const { currentStep } = useStepHandler();
 
@@ -177,7 +175,7 @@ export const IceCreamRenderer = ({ scoopsToShow, serving }: Props) => {
 
   return (
     <RootContainer
-      wide={currentStep === AppConfig.Steps.Start}
+      wide={wide}
       id="ice-cream-renderer"
       ref={ref}
       {...Animations.AnimateInUp}
