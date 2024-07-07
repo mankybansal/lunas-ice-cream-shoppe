@@ -13,7 +13,6 @@ const RootContainer = styled(motion.div)<{ wide: boolean }>`
 `;
 
 const flavorToFile: Record<string, string> = {
-  FLA0: "scoop-init.gltf",
   FLA1: "scoop-vanilla.gltf",
   FLA2: "scoop-chocolate.gltf",
   FLA3: "scoop-strawberry.gltf",
@@ -24,6 +23,17 @@ const flavorToFile: Record<string, string> = {
   FLA8: "scoop-caramel.gltf"
 };
 
+const toppingToFile: Record<string, string> = {
+  TOP1: "peanuts.gltf",
+  TOP2: "sauce.gltf",
+  TOP3: "beans.gltf",
+  TOP4: "marshmallows.gltf",
+  TOP5: "cherry.gltf",
+  TOP6: "sprinkles.gltf",
+  TOP7: "whipped-cream.gltf",
+  TOP8: "chocolate-chips.gltf"
+};
+
 const servingToObject: Record<string, string> = {
   SER1: "cup",
   SER2: "cone"
@@ -31,13 +41,18 @@ const servingToObject: Record<string, string> = {
 
 interface Props {
   scoopsToShow: string[];
+  toppingsToShow: string[];
   serving: string;
   wide: boolean;
 }
 
-export const IceCreamRenderer = ({ scoopsToShow, serving, wide }: Props) => {
+export const IceCreamRenderer = ({
+  scoopsToShow,
+  toppingsToShow,
+  serving,
+  wide
+}: Props) => {
   const ref = React.useRef<HTMLDivElement>(null);
-  const { currentStep } = useStepHandler();
 
   const servingType = servingToObject[serving];
 
@@ -87,7 +102,7 @@ export const IceCreamRenderer = ({ scoopsToShow, serving, wide }: Props) => {
 
     if (servingType === "cup") {
       // Create Cup
-      const cupTexture = textureLoader.load("cup-texture.png", animate);
+      const cupTexture = textureLoader.load("images/cup-texture.png", animate);
       const geometry = new THREE.CylinderGeometry(2, 2.6, 2, 32);
       const material = new THREE.MeshPhongMaterial({ map: cupTexture });
       const cup = new THREE.Mesh(geometry, material);
@@ -100,7 +115,10 @@ export const IceCreamRenderer = ({ scoopsToShow, serving, wide }: Props) => {
 
     if (servingType === "cone") {
       // Create Cone
-      const waffleTexture = textureLoader.load("waffle-texture.jpg", animate);
+      const waffleTexture = textureLoader.load(
+        "images/waffle-texture.jpg",
+        animate
+      );
       const geometry = new THREE.ConeGeometry(1.5, 6, 50);
       const material = new THREE.MeshPhongMaterial({ map: waffleTexture });
       const cone = new THREE.Mesh(geometry, material);
@@ -115,7 +133,7 @@ export const IceCreamRenderer = ({ scoopsToShow, serving, wide }: Props) => {
 
     // TODO Preload all the flavors, then show the scoops.
     scoopsToShow.forEach((flavor, i) =>
-      gltfLoader.load("gltf/" + flavorToFile[flavor], (gltf) => {
+      gltfLoader.load("gltf/scoops/" + flavorToFile[flavor], (gltf) => {
         const scoopGLTF = gltf.scene;
         if (servingType === "cone") {
           scoopGLTF.scale.set(2.5, 2.5, 2.5);
@@ -133,7 +151,6 @@ export const IceCreamRenderer = ({ scoopsToShow, serving, wide }: Props) => {
         }
         scoopGLTF.rotation.y = THREE.MathUtils.degToRad(5) * (i * 300);
 
-        // Traverse the model and enable shadows for all meshes
         scoopGLTF.traverse((child) => {
           child.castShadow = true;
           child.receiveShadow = true;
@@ -142,6 +159,29 @@ export const IceCreamRenderer = ({ scoopsToShow, serving, wide }: Props) => {
         sceneGroup.add(scoopGLTF);
       })
     );
+
+    toppingsToShow.forEach((topping) => {
+      gltfLoader.load("gltf/toppings/" + toppingToFile[topping], (gltf) => {
+        const toppingGLTF = gltf.scene;
+        if (servingType === "cone") {
+          toppingGLTF.scale.set(2.5, 2.5, 2.5);
+          toppingGLTF.position.y = scoopsToShow.length === 2 ? 2 : 0.5;
+        } else {
+          toppingGLTF.scale.set(2, 2, 2);
+          toppingGLTF.position.y = -0.35;
+          toppingGLTF.position.x = -1;
+        }
+        toppingGLTF.rotation.y = THREE.MathUtils.degToRad(5) * 300;
+
+        // Traverse the model and enable shadows for all meshes
+        toppingGLTF.traverse((child) => {
+          child.castShadow = true;
+          child.receiveShadow = true;
+        });
+
+        sceneGroup.add(toppingGLTF);
+      });
+    });
 
     // Position the camera
     camera.position.z = 10;

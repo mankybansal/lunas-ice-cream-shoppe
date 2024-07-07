@@ -62,6 +62,12 @@ const getRandomFlavors = (scoops: number): string[] => {
   return Array.from(selectedFlavors);
 };
 
+const getRandomToppings = (): string[] => {
+  // Currently only one topping is supported.
+  const randomIndex = Math.floor(Math.random() * 8) + 1;
+  return ["TOP" + randomIndex.toString()];
+};
+
 const getRandomServing = (): string => {
   const randomIndex = Math.floor(Math.random() * 2) + 1;
   return "SER" + randomIndex.toString();
@@ -89,8 +95,7 @@ const KioskContent = () => {
   const serving = watch("order.currentItem.serving");
   const currentStep = watch("currentStep");
   const selectedScoops = watch("order.currentItem.flavors").map((f) => f.id);
-
-  const memoizedScoops = useMemo(() => selectedScoops, [selectedScoops]);
+  const selectedToppings = watch("order.currentItem.toppings").map((t) => t.id);
 
   useEffect(() => {
     if (currentStep !== AppConfig.Steps.Start) {
@@ -119,10 +124,18 @@ const KioskContent = () => {
 
   const randomFlavors = useMemo(() => randomRender.scoops, [randomRender]);
 
+  const randomToppings = useMemo(() => getRandomToppings(), []);
+
   const scoopsToShow = useMemo(
     () =>
-      currentStep === AppConfig.Steps.Start ? randomFlavors : memoizedScoops,
-    [currentStep, memoizedScoops, randomFlavors]
+      currentStep === AppConfig.Steps.Start ? randomFlavors : selectedScoops,
+    [currentStep, selectedScoops, randomFlavors]
+  );
+
+  const toppingsToShow = useMemo(
+    () =>
+      currentStep === AppConfig.Steps.Start ? randomToppings : selectedToppings,
+    [currentStep, randomToppings, selectedToppings]
   );
 
   const shouldShowRenderer = useMemo(
@@ -144,6 +157,7 @@ const KioskContent = () => {
         {shouldShowRenderer && (
           <IceCreamRenderer
             scoopsToShow={scoopsToShow}
+            toppingsToShow={toppingsToShow}
             serving={selectedServing}
             wide={currentStep === AppConfig.Steps.Start}
           />

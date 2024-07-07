@@ -1,6 +1,5 @@
-import { atom } from "jotai";
+import { atom, useSetAtom } from "jotai";
 import React, { useEffect } from "react";
-import { useSetAtom } from "jotai/index";
 
 interface AtomState {
   back?: {

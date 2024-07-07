@@ -1,5 +1,4 @@
-import { atom } from "jotai";
-import { useSetAtom } from "jotai/index";
+import { atom, useSetAtom } from "jotai";
 import { useEffect } from "react";
 
 export const headerStateAtom = atom({
