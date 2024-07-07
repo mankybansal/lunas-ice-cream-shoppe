@@ -1,11 +1,12 @@
-import { CompletedOrder } from "~/api.ts";
+import { CompletedOrder } from "~/api";
+import * as AppConfig from "./config";
 
 export interface KioskFormData {
   menu: Menu;
   completedOrder: CompletedOrder | null;
   order: Order;
   totalPrice: number;
-  currentStep: number;
+  currentStep: AppConfig.Steps;
 }
 
 export interface Flavor {
@@ -36,6 +37,7 @@ export interface Serving {
 }
 
 export interface Item {
+  clientId: string;
   serving: Serving | undefined;
   flavors: Flavor[];
   toppings: Topping[];

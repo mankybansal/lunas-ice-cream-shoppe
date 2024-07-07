@@ -1,15 +1,14 @@
-import { Order, Menu } from "./types";
+import { Item, Menu, Order } from "../types.ts";
 import { CompletedOrder, PaymentDetails } from "~/api.ts";
 
-export function calculatePrice(order: Order): number {
-  let totalPrice = 0;
-  order.items.forEach((item) => {
-    item.flavors.forEach((flavor) => (totalPrice += flavor.price));
-    item.toppings.forEach((topping) => (totalPrice += topping.price));
-  });
+export const calculateItemPrice = (item: Item) => {
+  const flavorsTotal = item.flavors.reduce((t, { price }) => t + price, 0);
+  const toppingsTotal = item.toppings.reduce((t, { price }) => t + price, 0);
+  return flavorsTotal + toppingsTotal;
+};
 
-  return totalPrice;
-}
+export const calculateOrderPrice = (order: Order) =>
+  order.items.reduce((total, item) => total + calculateItemPrice(item), 0);
 
 export function appInitPrinter(): void {
   console.log("\n\n");

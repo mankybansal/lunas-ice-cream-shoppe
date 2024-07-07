@@ -1,7 +1,8 @@
 import { useFormContext } from "react-hook-form";
-import * as AppConfig from "~/App/config.ts";
+import * as AppConfig from "~/App/config";
+import { defaultCurrentItem } from "~/App/config";
 import { useAppInit } from "./useAppInit";
-import { KioskFormData } from "~/App/types.ts";
+import { KioskFormData } from "~/App/types";
 
 export const useStepHandler = () => {
   const { reset, setValue, watch } = useFormContext<KioskFormData>();
@@ -10,13 +11,18 @@ export const useStepHandler = () => {
   const currentStep = watch("currentStep");
 
   const stepHandler = async (gotoStep: number) => {
-    if (gotoStep === AppConfig.steps.Start) {
+    if (gotoStep === AppConfig.Steps.Start) {
       reset();
-      await appInit();
-    } else {
-      setValue("currentStep", gotoStep);
+      return appInit();
     }
+
+    setValue("currentStep", gotoStep);
   };
 
-  return { stepHandler, currentStep };
+  const createNewItem = async () => {
+    await stepHandler(AppConfig.Steps.Servings);
+    setValue("order.currentItem", defaultCurrentItem());
+  };
+
+  return { stepHandler, currentStep, createNewItem };
 };

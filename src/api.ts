@@ -1,7 +1,7 @@
-import servings from "./Data/servings.json";
-import flavors from "./Data/flavors.json";
-import toppings from "./Data/toppings.json";
-import { CardDetails } from "~/App/config.ts";
+import servings from "~/fixtures/servings.json";
+import flavors from "~/fixtures/flavors.json";
+import toppings from "~/fixtures/toppings.json";
+import { CardDetails } from "~/App/config";
 import { Menu, Order } from "./App/types";
 
 /*****************
@@ -55,6 +55,7 @@ function SendPayment(
 ): ApiResponse<PaymentDetails> {
   // API Sends Payment Info to Gateway
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { cvv: _, ...restCardDetails } = cardDetails;
   const last4Digits = cardDetails.number.toString().slice(12, 16);
 

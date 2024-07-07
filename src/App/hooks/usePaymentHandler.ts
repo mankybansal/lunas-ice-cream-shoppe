@@ -1,14 +1,14 @@
-import REQUESTS, { ApiResponse, PaymentDetails } from "~/api.ts";
-import * as AppConfig from "~/App/config.ts";
-import * as Helpers from "~/App/utils.ts";
-import { KioskFormData } from "~/App/types.ts";
+import REQUESTS, { ApiResponse, PaymentDetails } from "~/api";
+import * as AppConfig from "~/App/config";
+import * as Helpers from "~/App/utils/app.ts";
+import { KioskFormData } from "~/App/types";
 import { useFormContext } from "react-hook-form";
 
 export const usePaymentHandler = () => {
   const { setValue, watch } = useFormContext<KioskFormData>();
 
   const order = watch("order");
-  const totalPrice = Helpers.calculatePrice(order);
+  const totalPrice = Helpers.calculateOrderPrice(order);
 
   const paymentHandler = async () => {
     console.log("\nProcessing Payment...\n");
@@ -25,7 +25,7 @@ export const usePaymentHandler = () => {
           const { success, data: sendOrderResponse } = response;
           if (!success) return;
           setValue("completedOrder", sendOrderResponse);
-          setValue("currentStep", AppConfig.steps.Finish);
+          setValue("currentStep", AppConfig.Steps.Finish);
           Helpers.orderPrinter(sendOrderResponse);
         });
       }

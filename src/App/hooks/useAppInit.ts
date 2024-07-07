@@ -1,9 +1,9 @@
 import { useFormContext } from "react-hook-form";
 import { useCallback } from "react";
-import * as Helpers from "~/App/utils.ts";
-import REQUESTS from "~/api.ts";
-import * as AppConfig from "~/App/config.ts";
-import { KioskFormData } from "~/App/types.ts";
+import * as Helpers from "~/App/utils/app.ts";
+import REQUESTS from "~/api";
+import * as AppConfig from "~/App/config";
+import { KioskFormData } from "~/App/types";
 
 export const useAppInit = () => {
   const { setValue } = useFormContext<KioskFormData>();
@@ -13,7 +13,7 @@ export const useAppInit = () => {
     return REQUESTS.GetMenu(({ success, data }) => {
       if (!success) return;
       setValue("menu", data);
-      setValue("currentStep", AppConfig.steps.Start);
+      setValue("currentStep", AppConfig.Steps.Start);
       Helpers.menuPrinter(data);
     });
   }, [setValue]);

@@ -1,13 +1,31 @@
 import { useCallback } from "react";
 import * as AppConfig from "../../config";
-import Header from "../../Header";
 import { KioskFormData, Topping } from "~/App/types";
-import { useStepHandler } from "~/App/hooks/useStepHandler.ts";
+import { useStepHandler } from "~/App/hooks/useStepHandler";
 import { useFormContext } from "react-hook-form";
+import pluralize from "pluralize";
+import {
+  EmptyItem,
+  ItemCalories,
+  ItemContainer,
+  ItemDescription,
+  ItemPrice,
+  ItemPrimaryInfo,
+  ItemsContainer,
+  ItemSecondaryInfo,
+  ItemTitle
+} from "~/App/Styled";
+import { useSetHeaderPrompt } from "~/App/Header/headerState.atom";
+import { useActionButtons } from "~/App/ActionBar/actionBarState.atom";
+import Animations from "~/App/animations";
+import { ShoppingCart } from "~/App/icons/ShoppingCart";
+import { ArrowLeft } from "~/App/icons/ArrowLeft";
 
 const strings = {
   back: "Back",
-  reviewOrder: "Review Order"
+  reviewOrder: "Review Order",
+  prompt: (maxToppings: number) =>
+    `Select Up To ${maxToppings} ${pluralize("Topping", maxToppings)}`
 };
 
 const ToppingsList = () => {
@@ -15,50 +33,61 @@ const ToppingsList = () => {
   const order = watch("order");
   const toppings = getValues("menu.toppings");
 
+  const selectedToppings = order.currentItem.toppings;
+  const selectedServing = order.currentItem.serving!;
+
   const selectTopping = useCallback(
     (topping: Topping) => {
-      const newToppings = [...order.currentItem.toppings];
+      const newToppings = [...selectedToppings];
 
-      const toppingIndex = newToppings.findIndex((t) => t.id === topping.id);
+      const toppingIndex = newToppings.findIndex(({ id }) => id === topping.id);
+
       if (toppingIndex > -1) {
         newToppings.splice(toppingIndex, 1);
-      } else {
-        if (newToppings.length < order.currentItem.serving!.toppings) {
-          newToppings.push(topping);
-        }
+        setValue("order.currentItem.toppings", newToppings);
+        return;
       }
 
+      if (newToppings.length >= selectedServing.toppings) return;
+
+      newToppings.push(topping);
       setValue("order.currentItem.toppings", newToppings);
     },
-    [setValue, order.currentItem.toppings, order.currentItem.serving]
+    [selectedToppings, selectedServing.toppings, setValue]
   );
 
-  const listItems = toppings.map((topping) => {
-    let defaultClass = "Topping-Item";
+  // Round up to nearest 3.
+  const emptyItems = new Array(3 - (toppings.length % 3)).fill(null);
 
-    const hasTopping = order.currentItem.toppings.find(
-      (t) => t.id === topping.id
-    );
-
-    if (hasTopping) defaultClass += " Item-selected";
-
-    return (
-      <div
-        key={topping.id.toString()}
-        className={defaultClass}
-        onClick={() => selectTopping(topping)}
-      >
-        <div className="Item-title">{topping.name}</div>
-        <div className="Item-desc">{topping.desc}</div>
-        <div className="Item-info">
-          <div className="Item-calories">{topping.calories} Calories</div>
-          <div className="Item-price">${topping.price.toFixed(2)}</div>
-        </div>
-      </div>
-    );
-  });
-
-  return <div className="Topping-container">{listItems}</div>;
+  return (
+    <ItemsContainer>
+      {toppings.map((topping) => {
+        const isSelected = !!selectedToppings.find(
+          ({ id }) => id === topping.id
+        );
+        return (
+          <ItemContainer
+            {...Animations.AnimateInUp}
+            key={topping.id.toString()}
+            selected={isSelected}
+            onClick={() => selectTopping(topping)}
+          >
+            <ItemPrimaryInfo>
+              <ItemTitle>{topping.name}</ItemTitle>
+              <ItemDescription>{topping.desc}</ItemDescription>
+            </ItemPrimaryInfo>
+            <ItemSecondaryInfo>
+              <ItemCalories>{topping.calories} Calories</ItemCalories>
+              <ItemPrice>${topping.price.toFixed(2)}</ItemPrice>
+            </ItemSecondaryInfo>
+          </ItemContainer>
+        );
+      })}
+      {emptyItems.map((_, i) => (
+        <EmptyItem key={`empty-${i}`} />
+      ))}
+    </ItemsContainer>
+  );
 };
 
 const ToppingsStep = () => {
@@ -67,12 +96,12 @@ const ToppingsStep = () => {
   const order = watch("order");
 
   const handleStep = useCallback(
-    (gotoStep: number) => {
-      if (gotoStep < AppConfig.steps.Toppings) {
+    (gotoStep: AppConfig.Steps) => {
+      if (gotoStep < AppConfig.Steps.Toppings) {
         return stepHandler(gotoStep);
       }
 
-      let updatedOrder = { ...order };
+      const updatedOrder = { ...order };
       if (updatedOrder.currentItem.serving !== null) {
         updatedOrder.items.push(updatedOrder.currentItem);
         updatedOrder.currentItem = AppConfig.defaultCurrentItem();
@@ -85,34 +114,23 @@ const ToppingsStep = () => {
     [order, stepHandler, setValue]
   );
 
-  const prompt = `Select ${order.currentItem.serving ? order.currentItem.serving.toppings : 0} Topping${order.currentItem.serving && order.currentItem.serving.toppings <= 1 ? "" : "s"}`;
+  const maxToppings = order.currentItem.serving!.toppings;
+  useSetHeaderPrompt(strings.prompt(maxToppings));
 
-  return (
-    <div className="App-header-padding">
-      <Header prompt={prompt} stepHandler={handleStep} />
+  useActionButtons({
+    next: {
+      label: strings.reviewOrder,
+      onClick: () => handleStep(AppConfig.Steps.Confirm),
+      icon: <ShoppingCart />
+    },
+    back: {
+      label: strings.back,
+      onClick: () => handleStep(AppConfig.Steps.Flavors),
+      icon: <ArrowLeft />
+    }
+  });
 
-      <ToppingsList />
-
-      <div className={"Action-Container"}>
-        <div className={"Step-Control"}>
-          <div
-            className="Button-step Button-prev"
-            onClick={() => handleStep(AppConfig.steps.Flavors)}
-          >
-            <i className="fa fa-chevron-left Icon-step" /> {strings.back}
-          </div>
-
-          <div
-            className="Button-step Button-next"
-            onClick={() => handleStep(AppConfig.steps.Confirm)}
-          >
-            {strings.reviewOrder}{" "}
-            <i className="fa fa-shopping-cart Icon-step" />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  return <ToppingsList />;
 };
 
 export default ToppingsStep;

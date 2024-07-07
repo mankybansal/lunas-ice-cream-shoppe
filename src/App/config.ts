@@ -1,19 +1,18 @@
-import { Item, Menu, Order } from "~/App/types.ts";
+import { Item, Menu, Order } from "~/App/types";
+import { generateClientId } from "~/App/utils/clientId.ts";
 
-export const steps = {
-  Start: 0,
-  Servings: 1,
-  Flavors: 2,
-  Toppings: 3,
-  Confirm: 4,
-  Payment: 5,
-  Finish: 6
-} as const;
-
-export type Steps = (typeof steps)[keyof typeof steps];
+export enum Steps {
+  Start = 0,
+  Servings = 1,
+  Flavors = 2,
+  Toppings = 3,
+  Confirm = 4,
+  Payment = 5,
+  Finish = 6
+}
 
 export interface State {
-  currentStep: Steps | -1;
+  currentStep: Steps;
   menu: Menu;
   order: Order;
   totalPrice: number;
@@ -21,7 +20,7 @@ export interface State {
 
 export function defaultState(): State {
   return {
-    currentStep: -1,
+    currentStep: Steps.Start,
     menu: {
       servings: [],
       flavors: [],
@@ -35,13 +34,12 @@ export function defaultState(): State {
   };
 }
 
-export function defaultCurrentItem(): Item {
-  return {
-    serving: undefined,
-    flavors: [],
-    toppings: []
-  };
-}
+export const defaultCurrentItem = (): Item => ({
+  clientId: generateClientId(),
+  serving: undefined,
+  flavors: [],
+  toppings: []
+});
 
 export interface CardDetails {
   name: string;

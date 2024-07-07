@@ -1,9 +1,22 @@
 import { useCallback } from "react";
 import * as AppConfig from "../../config";
-import Header from "../../Header";
+
 import { KioskFormData, Serving } from "~/App/types";
-import { useStepHandler } from "~/App/hooks/useStepHandler.ts";
+import { useStepHandler } from "~/App/hooks/useStepHandler";
 import { useFormContext } from "react-hook-form";
+import {
+  EmptyItem,
+  ItemContainer,
+  ItemDescription,
+  ItemImage,
+  ItemPrimaryInfo,
+  ItemsContainer,
+  ItemTitle
+} from "~/App/Styled";
+import { useSetHeaderPrompt } from "~/App/Header/headerState.atom";
+import { useActionButtons } from "~/App/ActionBar/actionBarState.atom";
+import Animations from "~/App/animations";
+import { ArrowRight } from "~/App/icons/ArrowRight";
 
 const strings = {
   prompt: "What Serving Would You Like?",
@@ -15,47 +28,57 @@ const ServingsList = () => {
   const order = watch("order");
   const servings = getValues("menu.servings");
 
+  const selectedFlavors = order.currentItem.flavors;
+  const selectedToppings = order.currentItem.toppings;
+  const selectedServing = order.currentItem.serving!;
+
   const selectServing = useCallback(
     (serving: Serving) => {
+      if (selectedServing?.id === serving.id) return;
+
       setValue("order.currentItem.serving", serving);
 
       // Remove flavors and toppings if they exceed the serving size.
       setValue(
         "order.currentItem.flavors",
-        order.currentItem.flavors.splice(0, serving.scoops)
+        selectedFlavors.splice(0, serving.scoops)
       );
 
       // Remove toppings if they exceed the serving size.
       setValue(
         "order.currentItem.toppings",
-        order.currentItem.toppings.splice(0, serving.toppings)
+        selectedToppings.splice(0, serving.toppings)
       );
     },
-    [setValue, order.currentItem.flavors, order.currentItem.toppings]
+    [setValue, selectedFlavors, selectedToppings]
   );
 
-  const listItems = servings.map((serving) => {
-    let defaultClass = "Serving-Item";
-    if (
-      order.currentItem.serving &&
-      order.currentItem.serving.id === serving.id
-    )
-      defaultClass += " Item-selected";
+  // Round up to nearest 3.
+  const emptyItems = new Array(3 - (servings.length % 3)).fill(null);
 
-    return (
-      <div
-        key={serving.id.toString()}
-        className={defaultClass}
-        onClick={() => selectServing(serving)}
-      >
-        <img className="Item-image" src={serving.image} alt="" />
-        <div className="Item-title">{serving.name}</div>
-        <div>{serving.desc}</div>
-      </div>
-    );
-  });
-
-  return <div className="Serving-container">{listItems}</div>;
+  return (
+    <ItemsContainer>
+      {servings.map((serving) => {
+        const isSelected = selectedServing?.id === serving.id;
+        return (
+          <ItemContainer
+            {...Animations.AnimateInUp}
+            key={serving.id.toString()}
+            selected={isSelected}
+            onClick={() => selectServing(serving)}
+          >
+            <ItemPrimaryInfo style={{ alignItems: "center" }}>
+              <ItemImage src={serving.image} alt="" />
+              <ItemTitle>{serving.name}</ItemTitle>
+              <ItemDescription>{serving.desc}</ItemDescription>
+            </ItemPrimaryInfo>
+          </ItemContainer>
+        );
+      })}
+      {selectedServing &&
+        emptyItems.map((_, i) => <EmptyItem key={`empty-${i}`} />)}
+    </ItemsContainer>
+  );
 };
 
 const ServingsStep = () => {
@@ -66,7 +89,7 @@ const ServingsStep = () => {
 
   const handleStep = useCallback(
     (gotoStep: number) => {
-      if (gotoStep === AppConfig.steps.Start) {
+      if (gotoStep === AppConfig.Steps.Start) {
         return stepHandler(gotoStep);
       }
 
@@ -81,25 +104,17 @@ const ServingsStep = () => {
     [order, stepHandler, setValue]
   );
 
-  return (
-    <div className="App-header-padding">
-      <Header prompt={strings.prompt} stepHandler={handleStep} />
+  useSetHeaderPrompt(strings.prompt);
 
-      <ServingsList />
+  useActionButtons({
+    next: {
+      label: strings.selectFlavors,
+      onClick: () => handleStep(AppConfig.Steps.Flavors),
+      icon: <ArrowRight />
+    }
+  });
 
-      <div className={"Action-Container"}>
-        <div className={"Step-Control"}>
-          <div
-            className="Button-step Button-next"
-            onClick={() => handleStep(AppConfig.steps.Flavors)}
-          >
-            {strings.selectFlavors}{" "}
-            <i className="fa fa-chevron-right Icon-step" />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  return <ServingsList />;
 };
 
 export default ServingsStep;
