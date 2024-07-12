@@ -47,11 +47,40 @@ const AppSubtitle = styled.div`
   }
 `;
 
+const MadeIn = styled.div`
+  font-size: 24px;
+  color: #ffa07a;
+  min-width: 400px;
+  margin-top: 16px;
+  font-family: Pacifico, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ::before,
+  ::after {
+    content: "";
+    flex-grow: 1;
+    height: 2px;
+    margin-top: 4px;
+    background: #ffa07a;
+  }
+
+  ::before {
+    margin-right: 10px;
+  }
+
+  ::after {
+    margin-left: 10px;
+  }
+`;
+
 const StartStep = () => {
   const { createNewItem } = useStepHandler();
   return (
     <RootContainer>
       <AppTitle>{strings.title}</AppTitle>
+      <MadeIn>Seattle, Washington</MadeIn>
       <AppSubtitle>{strings.subtitle}</AppSubtitle>
       <TouchToBegin onClick={createNewItem} label={strings.touchToBegin} />
     </RootContainer>
