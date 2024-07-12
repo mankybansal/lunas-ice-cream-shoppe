@@ -23,7 +23,7 @@ const AppTitle = styled.div`
   width: 100%;
   text-align: center;
   margin-top: 150px;
-  font-size: 48px;
+  font-size: 44px;
   font-weight: 500;
 
   @media screen and (max-width: 768px) {
@@ -38,7 +38,7 @@ const AppSubtitle = styled.div`
   margin-bottom: 100px;
   font-size: 24px;
   line-height: 32px;
-  color: #aaa;
+  color: #9c8b73;
   max-width: 800px;
 
   @media screen and (max-width: 768px) {

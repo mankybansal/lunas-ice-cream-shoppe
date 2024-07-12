@@ -1,4 +1,5 @@
 import * as AppConfig from "~/App/config";
+import { SalesTaxRate } from "~/App/config";
 import { useEffect, useRef, useState } from "react";
 import { useStepHandler } from "~/App/hooks/useStepHandler";
 import { KioskFormData } from "~/App/types";
@@ -15,7 +16,17 @@ import { Smiley } from "~/App/icons/Smiley.tsx";
 const strings = {
   prompt: "Thank You For Your Order",
   orderNumber: "Order #",
-  refreshIn: "This page will refresh in"
+  refreshIn: "This page will refresh in",
+  receiptTitle: "Receipt",
+  shopName: "Luna's Ice Cream Shoppe",
+  shopAddress: "456 Evergreen Terrace Seattle, WA 98101",
+  paymentMethod: "Payment method: ",
+  amountPaid: "Amount paid: $",
+  subtotal: "Subtotal",
+  salesTax: "Sales Tax",
+  total: "Total",
+  thankYou: "Thank you!",
+  collectReceipt: "Collect your receipt"
 };
 
 const Receipt = styled.div`
@@ -52,12 +63,61 @@ const TotalContainer = styled.div`
   width: 100%;
 `;
 
+const BoldText = styled.span`
+  font-weight: bold;
+`;
+
+const GrayText = styled.span`
+  color: #aaa;
+`;
+
+const HighlightedText = styled.span`
+  font-size: 24px;
+  font-weight: bold;
+  color: #fa8758;
+`;
+
+const LargeText = styled.span`
+  font-size: 32px;
+  margin-bottom: 16px;
+`;
+
+const TimerText = styled.div`
+  margin: 32px 0;
+`;
+
+const FlexContainer = styled.div`
+  display: flex;
+  gap: 128px;
+  align-items: center;
+`;
+
+const ThankYouContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+  width: 100%;
+`;
+
+const OrderNumber = styled.div`
+  font-weight: 400;
+  font-size: 80px;
+  color: black;
+  margin-bottom: 70px;
+`;
+
+const ReceiptGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`;
+
 const FinishStep = () => {
   const { stepHandler } = useStepHandler();
-
   const { getValues } = useFormContext<KioskFormData>();
   const order = getValues("completedOrder")!;
-
   const [timer, setTimer] = useState<number>(20);
   const intervalRef = useRef<number | null>(null);
 
@@ -83,37 +143,33 @@ const FinishStep = () => {
 
   return (
     <CenteredContent {...Animations.AnimateInUp}>
-      <div style={{ display: "flex", gap: "128px", alignItems: "center" }}>
+      <FlexContainer>
         <Receipt>
-          <span
-            style={{
-              fontSize: "24px",
-              fontWeight: "bold",
-              color: "#fa8758"
-            }}
-          >
-            Receipt
-          </span>
-          <span style={{ fontWeight: "bold" }}>Luna's Ice Cream Shoppe</span>
-          <span style={{ color: "#aaa", marginTop: "-20px" }}>
-            456 Evergreen Terrace Seattle, WA 98101
-          </span>
-          <span style={{ fontWeight: "bold" }}>
+          <HighlightedText>{strings.receiptTitle}</HighlightedText>
+          <ReceiptGroup style={{ gap: 4 }}>
+            <BoldText>{strings.shopName}</BoldText>
+            <GrayText>{strings.shopAddress}</GrayText>
+          </ReceiptGroup>
+          <BoldText>
             {strings.orderNumber}
             {order.number}
-          </span>
-          <span>
-            {DateTime.fromJSDate(order.time).toLocaleString(
-              DateTime.DATETIME_MED_WITH_WEEKDAY
-            )}
-          </span>
-          <span style={{ marginTop: "-20px" }}>
-            Payment method: {order.payment.network} {order.payment.type}{" "}
-            {order.payment.number.slice(-4)}
-          </span>
-          <span style={{ marginTop: "-20px" }}>
-            Amount paid: ${order.payment.amount.toFixed(2)}
-          </span>
+          </BoldText>
+          <ReceiptGroup style={{ gap: 4 }}>
+            <span>
+              {DateTime.fromJSDate(order.time).toLocaleString(
+                DateTime.DATETIME_MED_WITH_WEEKDAY
+              )}
+            </span>
+            <span>
+              {strings.paymentMethod}
+              {order.payment.network} {order.payment.type}{" "}
+              {order.payment.number.slice(-4)}
+            </span>
+            <span>
+              {strings.amountPaid}
+              {order.payment.amount.toFixed(2)}
+            </span>
+          </ReceiptGroup>
           <Divider />
           {order.items.map((item, i) => (
             <ReceiptItem key={i}>
@@ -124,82 +180,35 @@ const FinishStep = () => {
           ))}
           <Divider />
           <TotalContainer>
-            <span style={{ fontWeight: 400, color: "#aaa" }}>Subtotal</span>
-            <span
-              style={{
-                fontWeight: 400,
-                color: "#aaa",
-                minWidth: "48px",
-                textAlign: "right"
-              }}
-            >
-              ${orderPrice.toFixed(2)}
-            </span>
+            <GrayText>{strings.subtotal}</GrayText>
+            <GrayText>${orderPrice.toFixed(2)}</GrayText>
           </TotalContainer>
           <TotalContainer style={{ marginTop: "-24px" }}>
-            <span style={{ fontWeight: 400, color: "#aaa" }}>
-              Sales Tax (10.1%)
-            </span>
-            <span
-              style={{
-                fontWeight: 400,
-                color: "#aaa",
-                minWidth: "48px",
-                textAlign: "right"
-              }}
-            >
-              ${(orderPrice * 0.101).toFixed(2)}
-            </span>
+            <GrayText>
+              {strings.salesTax} ({(SalesTaxRate * 100).toFixed(2)}%)
+            </GrayText>
+            <GrayText>${(orderPrice * 0.101).toFixed(2)}</GrayText>
           </TotalContainer>
           <TotalContainer style={{ marginTop: "-8px" }}>
-            <span style={{ fontWeight: 600, color: "black" }}>Total</span>
-            <span
-              style={{
-                fontWeight: 600,
-                color: "black",
-                minWidth: "48px",
-                textAlign: "right"
-              }}
-            >
-              ${(orderPrice * 1.101).toFixed(2)}
-            </span>
+            <BoldText>{strings.total}</BoldText>
+            <BoldText>${(orderPrice * 1.101).toFixed(2)}</BoldText>
           </TotalContainer>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              width: "100%",
-              marginTop: "16px",
-              justifyContent: "center"
-            }}
-          >
-            <span style={{ fontWeight: "bold" }}>Thank you!</span>
+          <ThankYouContainer>
+            <BoldText>{strings.thankYou}</BoldText>
             <Smiley width={"24px"} height={"24px"} />
-          </div>
+          </ThankYouContainer>
         </Receipt>
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <div className="Payment-amount Order-number">
+          <OrderNumber>
             {strings.orderNumber}
             {order.number}
-          </div>
-          <span
-            style={{
-              fontSize: "32px",
-              marginBottom: "16px"
-            }}
-          >
-            Collect your receipt
-          </span>
-
-          <br />
-          <br />
-
-          <div className="cardSwipePrompt">
+          </OrderNumber>
+          <LargeText>{strings.collectReceipt}</LargeText>
+          <TimerText>
             {strings.refreshIn} {timer} seconds
-          </div>
+          </TimerText>
         </div>
-      </div>
+      </FlexContainer>
     </CenteredContent>
   );
 };

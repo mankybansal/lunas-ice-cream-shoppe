@@ -188,10 +188,18 @@ const Prompt = styled.div`
   color: #888;
 `;
 
+const PaymentAmount = styled.div`
+  font-weight: 400;
+  color: #fa8758;
+  font-size: 40px;
+  margin-bottom: 20px;
+`;
+
 type PaymentState = "loading" | "success" | "failed" | undefined;
 
 const PaymentStep = () => {
-  const { paymentHandler, totalPrice } = usePaymentHandler();
+  const { paymentHandler, totalPrice, totalAmount, totalTax } =
+    usePaymentHandler();
   const [paymentState, setPaymentState] = useState<PaymentState>();
   const timeoutRef = useRef<number | undefined>();
 
@@ -216,9 +224,12 @@ const PaymentStep = () => {
 
   return (
     <CenteredContent {...Animations.AnimateInUp}>
-      <div className="Payment-amount">
+      <PaymentAmount>
         {strings.cardCharged}
-        {totalPrice.toFixed(2)}
+        {totalAmount.toFixed(2)}
+      </PaymentAmount>
+      <div>
+        (Total: ${totalPrice.toFixed(2)} + Sales Tax: ${totalTax.toFixed(2)})
       </div>
 
       <PaymentInteraction>

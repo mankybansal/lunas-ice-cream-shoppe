@@ -32,6 +32,24 @@ const strings = {
   toppings: "Toppings"
 };
 
+const PaymentBreakupContainer = styled.div`
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 24px;
+  width: 100%;
+  padding: 42px 0;
+  flex: 1;
+  background: white;
+
+  @media screen (max-width: 768px) {
+    padding: 20px 0;
+  }
+`;
+
 const StyledItemContainer = styled(ItemContainer)`
   width: 380px;
   height: 380px;
@@ -172,11 +190,11 @@ const ConfirmStep = () => {
         icon: <PlusCircle />
       },
       review: (
-        <div className="Payment-breakup-container">
+        <PaymentBreakupContainer>
           <ShoppingCart />
           {strings.orderTotal}
           <span style={{ fontWeight: "bold" }}>${totalPrice.toFixed(2)}</span>
-        </div>
+        </PaymentBreakupContainer>
       )
     },
     [totalPrice]

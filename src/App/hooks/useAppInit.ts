@@ -9,12 +9,12 @@ export const useAppInit = () => {
   const { setValue } = useFormContext<KioskFormData>();
 
   const appInit = useCallback(() => {
-    Helpers.appInitPrinter();
+    Helpers.printAppInit();
     return REQUESTS.GetMenu(({ success, data }) => {
       if (!success) return;
       setValue("menu", data);
       setValue("currentStep", AppConfig.Steps.Start);
-      Helpers.menuPrinter(data);
+      Helpers.printMenu(data);
     });
   }, [setValue]);
 
