@@ -75,7 +75,13 @@ const Action = styled.button`
   height: min-content;
   white-space: nowrap;
   border: 1px solid #777;
-  border-radius: 8px;
+  border-radius: 32px;
+  transition: all ease 0.3s;
+
+  :active {
+    background: #f5f5f5;
+    border: 1px solid #000;
+  }
 `;
 
 const Prompt = styled.div`

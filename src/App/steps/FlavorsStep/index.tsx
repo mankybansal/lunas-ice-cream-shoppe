@@ -61,7 +61,7 @@ const Action = styled(ActionText)<{ disabled?: boolean; selected?: boolean }>`
 `;
 
 const ScoopCount = styled(ActionText)`
-  color: cornflowerblue;
+  color: #8b4513;
 `;
 
 const FlavorsList = () => {

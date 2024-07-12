@@ -84,7 +84,7 @@ export const ItemCategory = styled.div`
 `;
 
 export const ItemCalories = styled.div`
-  color: #aaa;
+  color: #9c8b73;
 `;
 
 export const ItemPrice = styled.div`

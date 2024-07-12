@@ -39,6 +39,10 @@ const NextButton = styled(ActionButton)`
     flex: 1;
     width: 100%;
   }
+
+  :active {
+    background: #4e342e;
+  }
 `;
 
 const PrevButton = styled(ActionButton)`
@@ -50,6 +54,11 @@ const PrevButton = styled(ActionButton)`
   @media screen (max-width: 768px) {
     flex: 1;
     width: 100%;
+  }
+
+  :active {
+    // darker
+    background: #d4c2a3;
   }
 `;
 
