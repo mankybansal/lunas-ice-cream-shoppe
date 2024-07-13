@@ -18,6 +18,10 @@ import { useAppInit } from "~/App/hooks/useAppInit";
 import { IceCreamRenderer } from "~/App/IceCreamRenderer";
 import styled from "@emotion/styled";
 import Header from "~/App/Header";
+import { useAtomValue } from "jotai";
+import { helpModalStateAtom } from "~/App/HelpModal/helpModalState.atom.ts";
+import { HelpModal } from "~/App/HelpModal";
+import { AnimatePresence } from "framer-motion";
 
 const RootContainer = styled.div`
   text-align: center;
@@ -83,6 +87,8 @@ const getRandomRender = () => {
 const KioskContent = () => {
   const { watch } = useFormContext<KioskFormData>();
   const { appInit } = useAppInit();
+
+  const { isVisible: shouldShowHelpModal } = useAtomValue(helpModalStateAtom);
 
   const [randomRender, setRandomRender] = useState<{
     scoops: string[];
@@ -152,6 +158,7 @@ const KioskContent = () => {
   return (
     <RootContainer>
       {shouldShowHeader && <Header />}
+      <AnimatePresence>{shouldShowHelpModal && <HelpModal />}</AnimatePresence>
       <ContentContainer>
         {shouldShowRenderer && (
           <IceCreamRenderer

@@ -1,7 +1,7 @@
 import * as AppConfig from "../config";
 import { defaultCurrentItem } from "../config";
 import { useStepHandler } from "~/App/hooks/useStepHandler";
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { headerStateAtom } from "./headerState.atom";
 import styled from "@emotion/styled";
 import Animations from "~/App/animations";
@@ -10,6 +10,7 @@ import { useFormContext } from "react-hook-form";
 import { KioskFormData } from "~/App/types";
 import { ShoppingCart } from "~/App/icons/ShoppingCart";
 import { usePaymentHandler } from "~/App/hooks/usePaymentHandler";
+import { helpModalStateAtom } from "~/App/HelpModal/helpModalState.atom.ts";
 
 const strings = {
   appLogo: "Luna's Ice Cream",
@@ -112,13 +113,18 @@ const Circle = styled.div`
 const Header = () => {
   const { watch, setValue } = useFormContext<KioskFormData>();
 
+  const setHelpModalState = useSetAtom(helpModalStateAtom);
+
   const order = watch("order");
   const itemCount = order.items.length;
 
   const { totalPrice } = usePaymentHandler();
   const { prompt } = useAtomValue(headerStateAtom);
   const { stepHandler, currentStep } = useStepHandler();
+
   const handleClickCancel = () => stepHandler(AppConfig.Steps.Start);
+
+  const handleClickHelp = () => setHelpModalState({ isVisible: true });
 
   return (
     <RootContainer {...Animations.AnimateInDown}>
@@ -154,7 +160,7 @@ const Header = () => {
           {currentStep !== AppConfig.Steps.Finish && (
             <Action onClick={handleClickCancel}>{strings.cancelOrder}</Action>
           )}
-          <Action>{strings.help}</Action>
+          <Action onClick={handleClickHelp}>{strings.help}</Action>
         </ActionsContainer>
       </InnerContainer>
     </RootContainer>
