@@ -48,7 +48,13 @@ const ToppingsList = () => {
         return;
       }
 
-      if (newToppings.length >= selectedServing.toppings) return;
+      if (newToppings.length >= selectedServing.toppings) {
+        // If there is more than 1 topping, we don't know how to replace.
+        if (selectedServing.toppings > 1) return;
+
+        // If there is only 1 topping, we replace it.
+        newToppings.pop();
+      }
 
       newToppings.push(topping);
       setValue("order.currentItem.toppings", newToppings);

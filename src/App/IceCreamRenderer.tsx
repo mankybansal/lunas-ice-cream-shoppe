@@ -1,15 +1,19 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import styled from "@emotion/styled";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import Animations from "~/App/animations";
+import { useFormContext } from "react-hook-form";
+import { KioskFormData } from "~/App/types.ts";
+import * as AppConfig from "~/App/config.ts";
 
 const RootContainer = styled(motion.div)<{ wide: boolean }>`
   width: 100%;
   max-width: ${({ wide }) => (wide ? "500px" : "500px")};
   height: 100%;
   overflow: hidden;
+  background: #fff5e1;
 `;
 
 const flavorToFile: Record<string, string> = {
@@ -43,21 +47,32 @@ interface Props {
   scoopsToShow: string[];
   toppingsToShow: string[];
   serving: string;
-  wide: boolean;
 }
 
 export const IceCreamRenderer = ({
   scoopsToShow,
   toppingsToShow,
-  serving,
-  wide
+  serving
 }: Props) => {
   const ref = React.useRef<HTMLDivElement>(null);
 
   const servingType = servingToObject[serving];
 
+  const { watch } = useFormContext<KioskFormData>();
+  const currentStep = watch("currentStep");
+  const selectedServing = watch("order.currentItem.serving");
+
+  const shouldShowRenderer = useMemo(
+    () =>
+      currentStep < AppConfig.Steps.Confirm &&
+      (currentStep === AppConfig.Steps.Servings ? !!selectedServing : true),
+    [currentStep, selectedServing]
+  );
+
   useEffect(() => {
     const target = ref.current;
+
+    if (!target) return;
 
     // Set up the scene, camera, and renderer
     const scene = new THREE.Scene();
@@ -102,7 +117,7 @@ export const IceCreamRenderer = ({
 
     if (servingType === "cup") {
       // Create Cup
-      const cupTexture = textureLoader.load("images/cup-texture.png", animate);
+      const cupTexture = textureLoader.load("images/cup-texture.png");
       const geometry = new THREE.CylinderGeometry(2, 2.6, 2, 32);
       const material = new THREE.MeshPhongMaterial({ map: cupTexture });
       const cup = new THREE.Mesh(geometry, material);
@@ -115,10 +130,7 @@ export const IceCreamRenderer = ({
 
     if (servingType === "cone") {
       // Create Cone
-      const waffleTexture = textureLoader.load(
-        "images/waffle-texture.jpg",
-        animate
-      );
+      const waffleTexture = textureLoader.load("images/waffle-texture.jpg");
       const geometry = new THREE.ConeGeometry(1.5, 6, 50);
       const material = new THREE.MeshPhongMaterial({ map: waffleTexture });
       const cone = new THREE.Mesh(geometry, material);
@@ -196,6 +208,8 @@ export const IceCreamRenderer = ({
       renderer.render(scene, camera);
     }
 
+    animate();
+
     const handleResize = () => {
       const width = target!.clientWidth;
       const height = target!.clientHeight;
@@ -211,11 +225,13 @@ export const IceCreamRenderer = ({
       target?.removeChild(renderer.domElement);
       renderer.dispose();
     };
-  }, [servingType, scoopsToShow]);
+  }, [servingType, scoopsToShow, toppingsToShow]);
+
+  if (!shouldShowRenderer) return <></>;
 
   return (
     <RootContainer
-      wide={wide}
+      wide={currentStep === AppConfig.Steps.Start}
       id="ice-cream-renderer"
       ref={ref}
       {...Animations.AnimateInUp}

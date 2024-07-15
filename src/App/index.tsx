@@ -18,12 +18,10 @@ import { useAppInit } from "~/App/hooks/useAppInit";
 import { IceCreamRenderer } from "~/App/IceCreamRenderer";
 import styled from "@emotion/styled";
 import Header from "~/App/Header";
-import { useAtomValue } from "jotai";
-import { helpModalStateAtom } from "~/App/HelpModal/helpModalState.atom.ts";
 import { HelpModal } from "~/App/HelpModal";
-import { AnimatePresence } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 
-const RootContainer = styled.div`
+const RootContainer = styled(motion.div)`
   text-align: center;
   flex-direction: column;
   width: 100%;
@@ -84,11 +82,21 @@ const getRandomRender = () => {
   };
 };
 
+const RootVariants: Variants = {
+  initial: {
+    opacity: 0
+  },
+  animate: {
+    opacity: 1,
+    transition: {
+      duration: 0.5
+    }
+  }
+};
+
 const KioskContent = () => {
   const { watch } = useFormContext<KioskFormData>();
   const { appInit } = useAppInit();
-
-  const { isVisible: shouldShowHelpModal } = useAtomValue(helpModalStateAtom);
 
   const [randomRender, setRandomRender] = useState<{
     scoops: string[];
@@ -143,12 +151,6 @@ const KioskContent = () => {
     [currentStep, randomToppings, selectedToppings]
   );
 
-  const shouldShowRenderer = useMemo(
-    () =>
-      currentStep < AppConfig.Steps.Confirm &&
-      (currentStep === AppConfig.Steps.Servings ? !!serving : true),
-    [currentStep, serving]
-  );
   const shouldShowHeader = currentStep !== AppConfig.Steps.Start;
   const shouldShowActionBar =
     currentStep !== AppConfig.Steps.Finish &&
@@ -156,18 +158,15 @@ const KioskContent = () => {
     currentStep !== AppConfig.Steps.Start;
 
   return (
-    <RootContainer>
+    <RootContainer {...RootVariants}>
       {shouldShowHeader && <Header />}
-      <AnimatePresence>{shouldShowHelpModal && <HelpModal />}</AnimatePresence>
+      <HelpModal />
       <ContentContainer>
-        {shouldShowRenderer && (
-          <IceCreamRenderer
-            scoopsToShow={scoopsToShow}
-            toppingsToShow={toppingsToShow}
-            serving={selectedServing}
-            wide={currentStep === AppConfig.Steps.Start}
-          />
-        )}
+        <IceCreamRenderer
+          scoopsToShow={scoopsToShow}
+          toppingsToShow={toppingsToShow}
+          serving={selectedServing}
+        />
         {currentStep === AppConfig.Steps.Start && <StartStep />}
         {currentStep === AppConfig.Steps.Servings && <ServingsStep />}
         {currentStep === AppConfig.Steps.Flavors && <FlavorsStep />}

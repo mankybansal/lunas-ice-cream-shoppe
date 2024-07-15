@@ -1,6 +1,8 @@
 import styled from "@emotion/styled";
 import { useStepHandler } from "~/App/hooks/useStepHandler";
 import { TouchToBegin } from "./TouchToBegin";
+import { motion } from "framer-motion";
+import Animations from "~/App/animations.ts";
 
 const strings = {
   title: "Welcome to Luna's Ice Cream Shoppe",
@@ -9,7 +11,7 @@ const strings = {
   touchToBegin: "Touch To Begin"
 };
 
-const RootContainer = styled.div`
+const RootContainer = styled(motion.div)`
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -78,7 +80,7 @@ const MadeIn = styled.div`
 const StartStep = () => {
   const { createNewItem } = useStepHandler();
   return (
-    <RootContainer>
+    <RootContainer {...Animations.AnimateInUp}>
       <AppTitle>{strings.title}</AppTitle>
       <MadeIn>Seattle, Washington</MadeIn>
       <AppSubtitle>{strings.subtitle}</AppSubtitle>

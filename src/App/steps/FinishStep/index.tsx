@@ -12,11 +12,13 @@ import styled from "@emotion/styled";
 import * as Helpers from "~/App/utils/app";
 import { DateTime } from "luxon";
 import { Smiley } from "~/App/icons/Smiley.tsx";
+import { ArrowClockwise } from "~/App/icons/ArrowClockwise.tsx";
 
 const strings = {
   prompt: "Thank You For Your Order",
   orderNumber: "Order #",
   refreshIn: "This page will refresh in",
+  startOver: "Start over",
   receiptTitle: "Receipt",
   shopName: "Luna's Ice Cream Shoppe",
   shopAddress: "456 Evergreen Terrace Seattle, WA 98101",
@@ -114,6 +116,44 @@ const ReceiptGroup = styled.div`
   align-items: flex-start;
 `;
 
+const StartOverText = styled.button`
+  font-weight: 500;
+  font-size: 20px;
+  justify-content: center;
+  color: #fa8758;
+  cursor: pointer;
+  margin-top: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: none;
+  border: none;
+  padding: 24px;
+  transition: all ease 0.3s;
+  border-radius: 8px;
+
+  :active {
+    background: #f5f5f5;
+  }
+`;
+
+const StyledArrowClockwise = styled(ArrowClockwise)<{ spin?: boolean }>`
+  width: 24px;
+  height: 24px;
+  color: #fa8758;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  ${({ spin }) => spin && `animation: spin 0.3s ease;`}
+`;
+
 const FinishStep = () => {
   const { stepHandler } = useStepHandler();
   const { getValues } = useFormContext<KioskFormData>();
@@ -121,10 +161,20 @@ const FinishStep = () => {
   const [timer, setTimer] = useState<number>(20);
   const intervalRef = useRef<number | null>(null);
 
+  const [isSpinning, setIsSpinning] = useState(false);
+
+  const handleClickStartover = () => {
+    setIsSpinning(true);
+    setTimeout(() => {
+      setIsSpinning(false);
+      void stepHandler(AppConfig.Steps.Start);
+    }, 300); // Duration of the spin animation
+  };
+
   useEffect(() => {
     intervalRef.current = setInterval(() => {
       setTimer((prevTimer) => {
-        if (prevTimer <= 0) {
+        if (prevTimer <= 1) {
           void stepHandler(AppConfig.Steps.Start);
           if (intervalRef.current) clearInterval(intervalRef.current);
           return 20;
@@ -207,6 +257,10 @@ const FinishStep = () => {
           <TimerText>
             {strings.refreshIn} {timer} seconds
           </TimerText>
+          <StartOverText onClick={handleClickStartover}>
+            <StyledArrowClockwise spin={isSpinning} />
+            {strings.startOver}
+          </StartOverText>
         </div>
       </FlexContainer>
     </CenteredContent>
