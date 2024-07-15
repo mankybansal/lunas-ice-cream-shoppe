@@ -1,5 +1,5 @@
 import { helpModalStateAtom } from "./helpModalState.atom";
-import { useSetAtom, useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import styled from "@emotion/styled";
 import { AnimatePresence, motion, Variants } from "framer-motion";
 import { XCircle } from "~/App/icons/XCircle.tsx";
