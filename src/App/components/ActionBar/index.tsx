@@ -6,7 +6,6 @@ import { actionBarStateAtom } from "./actionBarState.atom";
 
 import Animations from "~/App/animations";
 
-
 const RootContainer = styled(motion.div)`
   display: flex;
   flex-direction: column;
@@ -90,7 +89,7 @@ export const ActionBar = () => {
           </PrevButton>
         )}
         {next && (
-          <NextButton onClick={next.onClick} {...Animations.AnimateInRight}>
+          <NextButton onClick={next.onClick} {...Animations.AnimateInUp}>
             {next.label} {next.icon}
           </NextButton>
         )}

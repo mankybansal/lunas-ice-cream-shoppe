@@ -8,11 +8,8 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import Animations from "~/App/animations";
 import * as AppConfig from "~/App/config";
 import { KioskFormData } from "~/App/types";
-import { flavorToFile, servingToObject, toppingToFile } from "./constants.ts";
-import {
-  addScoopToScene,
-  addToppingToScene
-} from "~/App/components/IceCreamRenderer/utils.ts";
+import { flavorToFile, servingToObject, toppingToFile } from "./constants";
+import { addScoopToScene, addToppingToScene } from "./utils";
 
 const RootContainer = styled(motion.div)<{ wide: boolean }>`
   width: 100%;
@@ -201,7 +198,9 @@ export const IceCreamRenderer = ({
             sceneGroup,
             preloadedModels[topping],
             servingType,
-            scoopsToShow.length
+            scoopsToShow.length,
+            topping,
+            toppingsToShow
           )
         );
       }

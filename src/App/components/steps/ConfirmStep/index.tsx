@@ -24,6 +24,8 @@ import {
   ItemTitle
 } from "~/App/Styled";
 import { MinusCircle } from "~/App/components/icons/MinusCircle";
+import { useSetAtom } from "jotai/index";
+import { confirmationModalStateAtom } from "~/App/components/ConfirmationModal/confirmationModalState.atom.ts";
 
 const strings = {
   prompt: "Review Order",
@@ -110,6 +112,19 @@ const OrderList = () => {
   const { watch, setValue } = useFormContext<KioskFormData>();
   const order = watch("order");
   const { stepHandler } = useStepHandler();
+  const setConfirmationModalState = useSetAtom(confirmationModalStateAtom);
+
+  const handleClickRemove = (item: Item) => {
+    setConfirmationModalState({
+      isVisible: true,
+      title: "Remove Item",
+      content: `Are you sure you want to remove this ${item.serving!.name} from your order?`,
+      cancelText: "Don't remove",
+      confirmText: "Yes, remove",
+      onCancel: () => {},
+      onConfirm: () => removeItem(item)
+    });
+  };
 
   const removeItem = useCallback(
     (item: Item) => {
@@ -144,7 +159,7 @@ const OrderList = () => {
             <OrderBottomContainer>
               <Divider />
               <OrderActions>
-                <RemoveButton onClick={() => removeItem(item)}>
+                <RemoveButton onClick={() => handleClickRemove(item)}>
                   <MinusCircle width={"24px"} height={"24px"} />
                   {strings.remove}
                 </RemoveButton>

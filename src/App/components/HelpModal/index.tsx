@@ -1,75 +1,19 @@
+import React from "react";
 import styled from "@emotion/styled";
-import { AnimatePresence, motion, Variants } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { useAtomValue, useSetAtom } from "jotai";
 
 import { helpModalStateAtom } from "./helpModalState.atom";
 
-import { XCircle } from "~/App/components/icons/XCircle.tsx";
-
-const ModalOverlay = styled(motion.div)`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.2);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 100;
-`;
-
-const ModalContainer = styled(motion.div)`
-  background: white;
-  border-radius: 24px;
-  position: relative;
-  text-align: left;
-  padding: 48px;
-  max-width: 600px;
-  min-width: 400px;
-`;
+import { XCircle } from "~/App/components/icons/XCircle";
+import { CloseButton, ModalContainer, ModalOverlay } from "~/App/Styled";
+import Animations from "~/App/animations";
 
 const StyledLink = styled.a`
   color: #fa8758;
   text-decoration: underline;
   font-weight: bold;
 `;
-
-const CloseButton = styled.button`
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  background: none;
-  border: none;
-  cursor: pointer;
-`;
-
-const ModalVariants: Variants = {
-  initial: {
-    opacity: 0,
-    scale: 0.8
-  },
-  animate: {
-    opacity: 1,
-    scale: 1
-  },
-  exit: {
-    opacity: 0,
-    scale: 0.8
-  }
-};
-
-const OverlayVariants: Variants = {
-  initial: {
-    opacity: 0
-  },
-  animate: {
-    opacity: 1
-  },
-  exit: {
-    opacity: 0
-  }
-};
 
 const links = {
   vite: "https://vitejs.dev/",
@@ -102,8 +46,8 @@ export const HelpModal = () => {
   return (
     <AnimatePresence>
       {isVisible && (
-        <ModalOverlay {...OverlayVariants}>
-          <ModalContainer {...ModalVariants}>
+        <ModalOverlay {...Animations.OverlayVariants}>
+          <ModalContainer {...Animations.ModalVariants}>
             <CloseButton onClick={handleClickClose}>
               <XCircle />
             </CloseButton>

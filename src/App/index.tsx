@@ -20,6 +20,7 @@ import Header from "~/App/components/Header";
 import { HelpModal } from "~/App/components/HelpModal";
 import { IceCreamRenderer } from "~/App/components/IceCreamRenderer";
 import { useAppInit } from "~/App/hooks/useAppInit";
+import { ConfirmationModal } from "~/App/components/ConfirmationModal";
 
 const RootContainer = styled(motion.div)`
   text-align: center;
@@ -161,6 +162,7 @@ const KioskContent = () => {
     <RootContainer {...RootVariants}>
       {shouldShowHeader && <Header />}
       <HelpModal />
+      <ConfirmationModal />
       <ContentContainer>
         <IceCreamRenderer
           scoopsToShow={scoopsToShow}

@@ -4,12 +4,22 @@ export const addToppingToScene = (
   sceneGroup: THREE.Group<THREE.Object3DEventMap>,
   toppingModel: THREE.Group,
   servingType: string,
-  scoopCount: number
+  scoopCount: number,
+  topping: string,
+  toppingsToShow: string[]
 ) => {
+  const isCherry = topping === "TOP5";
+  const hasWhippedCream = toppingsToShow.includes("TOP7");
+
   if (servingType === "cone") {
     const clone = toppingModel.clone(true);
     clone.scale.set(2.5, 2.5, 2.5);
     clone.position.y = 0.5 + (scoopCount == 2 ? 1.5 : 0);
+
+    // Adjust the position of the cherry if whipped cream is present.
+    if (isCherry && hasWhippedCream) {
+      clone.position.y = 0.5 + (scoopCount == 2 ? 1.5 : 0) + 0.5;
+    }
 
     clone.rotation.y = THREE.MathUtils.degToRad(5) * (2 * 300);
 
@@ -44,6 +54,11 @@ export const addToppingToScene = (
         clone.position.z = scoopDistance * Math.sin(angle);
       }
       clone.position.y = -0.2;
+
+      // Adjust the position of the cherry if whipped cream is present.
+      if (isCherry && hasWhippedCream) {
+        clone.position.y = -0.2 + 0.5;
+      }
 
       clone.rotation.y = THREE.MathUtils.degToRad(5) * (i * 300);
 

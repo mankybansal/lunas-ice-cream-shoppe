@@ -14,6 +14,7 @@ import { helpModalStateAtom } from "~/App/components/HelpModal/helpModalState.at
 import { usePaymentHandler } from "~/App/hooks/usePaymentHandler";
 import { useStepHandler } from "~/App/hooks/useStepHandler";
 import { KioskFormData } from "~/App/types";
+import { confirmationModalStateAtom } from "~/App/components/ConfirmationModal/confirmationModalState.atom";
 
 const strings = {
   appLogo: "Luna's Ice Cream",
@@ -117,6 +118,7 @@ const Header = () => {
   const { watch, setValue } = useFormContext<KioskFormData>();
 
   const setHelpModalState = useSetAtom(helpModalStateAtom);
+  const setConfirmationModalState = useSetAtom(confirmationModalStateAtom);
 
   const order = watch("order");
   const itemCount = order.items.length;
@@ -125,12 +127,22 @@ const Header = () => {
   const { prompt } = useAtomValue(headerStateAtom);
   const { stepHandler, currentStep } = useStepHandler();
 
-  const handleClickCancel = () => stepHandler(AppConfig.Steps.Start);
+  const handleClickCancel = () => {
+    setConfirmationModalState({
+      isVisible: true,
+      onCancel: () => {},
+      onConfirm: () => stepHandler(AppConfig.Steps.Start),
+      title: "Cancel order",
+      content: "Are you sure you want to cancel your order?",
+      cancelText: "Don't cancel",
+      confirmText: "Yes, cancel"
+    });
+  };
 
   const handleClickHelp = () => setHelpModalState({ isVisible: true });
 
   return (
-    <RootContainer {...Animations.AnimateInDown}>
+    <RootContainer {...Animations.AnimateInUp}>
       <InnerContainer>
         <Logo>{strings.appLogo}</Logo>
         <Prompt>{prompt}</Prompt>

@@ -22,11 +22,12 @@ import { ArrowRight } from "~/App/components/icons/ArrowRight";
 import * as AppConfig from "~/App/config";
 import { useStepHandler } from "~/App/hooks/useStepHandler";
 import { Flavor, KioskFormData } from "~/App/types";
+import { useSetAtom } from "jotai/index";
+import { confirmationModalStateAtom } from "~/App/components/ConfirmationModal/confirmationModalState.atom.ts";
 
 const strings = {
   selectToppings: "Select Toppings",
   back: "Back",
-  selectAtLeastOneScoop: "Select at least one scoop",
   prompt: (maxScoops: number) => `Select Up To ${maxScoops} Flavors`
 };
 
@@ -143,6 +144,7 @@ const FlavorsList = () => {
 
 const FlavorsStep = () => {
   const { stepHandler } = useStepHandler();
+  const setConfirmationModalState = useSetAtom(confirmationModalStateAtom);
 
   const { watch, setValue } = useFormContext<KioskFormData>();
   const order = watch("order");
@@ -158,9 +160,17 @@ const FlavorsStep = () => {
         return stepHandler(gotoStep);
       }
 
-      alert(strings.selectAtLeastOneScoop);
+      setConfirmationModalState({
+        isVisible: true,
+        onConfirm: () => {},
+        title: "Select a Flavor",
+        content: "You must select at least one flavor before proceeding.",
+        cancelText: undefined,
+        onCancel: undefined,
+        confirmText: "OK"
+      });
     },
-    [order, stepHandler, setValue]
+    [order, setConfirmationModalState, stepHandler, setValue]
   );
 
   const maxScoops = order.currentItem.serving!.scoops;

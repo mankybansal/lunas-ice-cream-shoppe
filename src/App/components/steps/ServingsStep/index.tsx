@@ -18,6 +18,8 @@ import { ArrowRight } from "~/App/components/icons/ArrowRight";
 import * as AppConfig from "~/App/config";
 import { useStepHandler } from "~/App/hooks/useStepHandler";
 import { KioskFormData, Serving } from "~/App/types";
+import { useSetAtom } from "jotai/index";
+import { confirmationModalStateAtom } from "~/App/components/ConfirmationModal/confirmationModalState.atom.ts";
 
 const strings = {
   prompt: "What Serving Would You Like?",
@@ -85,6 +87,7 @@ const ServingsList = () => {
 const ServingsStep = () => {
   const { setValue, watch } = useFormContext<KioskFormData>();
   const { stepHandler } = useStepHandler();
+  const setConfirmationModalState = useSetAtom(confirmationModalStateAtom);
 
   const order = watch("order");
 
@@ -99,10 +102,18 @@ const ServingsStep = () => {
 
         return stepHandler(gotoStep);
       } else {
-        alert("Please select a serving size");
+        setConfirmationModalState({
+          isVisible: true,
+          onConfirm: () => {},
+          title: "Select a Serving Size",
+          content: "You must select a serving size before proceeding.",
+          cancelText: undefined,
+          onCancel: undefined,
+          confirmText: "OK"
+        });
       }
     },
-    [order, stepHandler, setValue]
+    [order, stepHandler, setValue, setConfirmationModalState]
   );
 
   useSetHeaderPrompt(strings.prompt);
