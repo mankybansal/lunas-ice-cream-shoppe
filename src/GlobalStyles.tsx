@@ -25,6 +25,14 @@ export const GlobalStyles = css`
     font-display: swap;
   }
 
+  @font-face {
+    font-family: "Pacifico";
+    src: url("/fonts/Pacifico-Regular.ttf");
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+  }
+
   * {
     box-sizing: border-box;
     font-family: CentraNo2, sans-serif;

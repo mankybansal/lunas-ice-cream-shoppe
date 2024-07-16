@@ -52,12 +52,44 @@ const AnimateInLeftWithDelay = (delay: number): Variants => ({
 
 const AnimateInLeft = AnimateInLeftWithDelay(0);
 
+const ModalVariants: Variants = {
+  initial: {
+    opacity: 0,
+    scale: 1.02,
+    y: -16
+  },
+  animate: {
+    opacity: 1,
+    scale: 1,
+    y: 0
+  },
+  exit: {
+    opacity: 0,
+    scale: 1.02,
+    y: -16
+  }
+};
+
+const OverlayVariants: Variants = {
+  initial: {
+    opacity: 0
+  },
+  animate: {
+    opacity: 1
+  },
+  exit: {
+    opacity: 0
+  }
+};
+
 const Animations = {
   AnimateInUp,
   AnimateInDown,
   AnimateInDownOutDown,
   AnimateInRight,
-  AnimateInLeft
+  AnimateInLeft,
+  ModalVariants,
+  OverlayVariants
 };
 
 export default Animations;

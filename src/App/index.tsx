@@ -1,5 +1,7 @@
-import "~/App/styles/Containers.css";
-import { ActionBar } from "~/App/ActionBar";
+import styled from "@emotion/styled";
+import { motion, Variants } from "framer-motion";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { FormProvider, useForm, useFormContext } from "react-hook-form";
 
 import {
   ConfirmStep,
@@ -9,18 +11,18 @@ import {
   ServingsStep,
   StartStep,
   ToppingsStep
-} from "./steps";
-import { useEffect, useMemo, useRef, useState } from "react";
+} from "./components/steps";
 import * as AppConfig from "./config";
-
 import { KioskFormData } from "./types";
-import { FormProvider, useForm, useFormContext } from "react-hook-form";
-import { useAppInit } from "~/App/hooks/useAppInit";
-import { IceCreamRenderer } from "~/App/IceCreamRenderer";
-import styled from "@emotion/styled";
-import Header from "~/App/Header";
 
-const RootContainer = styled.div`
+import { ActionBar } from "~/App/components/ActionBar";
+import Header from "~/App/components/Header";
+import { HelpModal } from "~/App/components/HelpModal";
+import { IceCreamRenderer } from "~/App/components/IceCreamRenderer";
+import { useAppInit } from "~/App/hooks/useAppInit";
+import { ConfirmationModal } from "~/App/components/ConfirmationModal";
+
+const RootContainer = styled(motion.div)`
   text-align: center;
   flex-direction: column;
   width: 100%;
@@ -33,6 +35,13 @@ const ContentContainer = styled.div`
   display: flex;
   flex: 1;
   overflow: hidden;
+  overflow-y: auto;
+
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
 `;
 
 const IceCreamKiosk = () => {
@@ -62,10 +71,13 @@ const getRandomFlavors = (scoops: number): string[] => {
   return Array.from(selectedFlavors);
 };
 
-const getRandomToppings = (): string[] => {
-  // Currently only one topping is supported.
-  const randomIndex = Math.floor(Math.random() * 8) + 1;
-  return ["TOP" + randomIndex.toString()];
+const getRandomToppings = (scoops: number): string[] => {
+  const selectedToppings = new Set<string>();
+  while (selectedToppings.size < scoops) {
+    const randomIndex = Math.floor(Math.random() * 8) + 1;
+    selectedToppings.add("TOP" + randomIndex.toString());
+  }
+  return Array.from(selectedToppings);
 };
 
 const getRandomServing = (): string => {
@@ -77,8 +89,21 @@ const getRandomRender = () => {
   const serving = getRandomServing();
   return {
     scoops: getRandomFlavors(serving === "SER1" ? 3 : 2),
-    serving
+    serving,
+    toppings: getRandomToppings(serving === "SER1" ? 2 : 1)
   };
+};
+
+const RootVariants: Variants = {
+  initial: {
+    opacity: 0
+  },
+  animate: {
+    opacity: 1,
+    transition: {
+      duration: 0.5
+    }
+  }
 };
 
 const KioskContent = () => {
@@ -88,6 +113,7 @@ const KioskContent = () => {
   const [randomRender, setRandomRender] = useState<{
     scoops: string[];
     serving: string;
+    toppings: string[];
   }>(getRandomRender());
 
   const intervalRef = useRef<number | null>(null);
@@ -122,28 +148,22 @@ const KioskContent = () => {
     [serving, randomRender.serving]
   );
 
-  const randomFlavors = useMemo(() => randomRender.scoops, [randomRender]);
-
-  const randomToppings = useMemo(() => getRandomToppings(), []);
-
   const scoopsToShow = useMemo(
     () =>
-      currentStep === AppConfig.Steps.Start ? randomFlavors : selectedScoops,
-    [currentStep, selectedScoops, randomFlavors]
+      currentStep === AppConfig.Steps.Start
+        ? randomRender.scoops
+        : selectedScoops,
+    [currentStep, selectedScoops, randomRender.scoops]
   );
 
   const toppingsToShow = useMemo(
     () =>
-      currentStep === AppConfig.Steps.Start ? randomToppings : selectedToppings,
-    [currentStep, randomToppings, selectedToppings]
+      currentStep === AppConfig.Steps.Start
+        ? randomRender.toppings
+        : selectedToppings,
+    [currentStep, randomRender.toppings, selectedToppings]
   );
 
-  const shouldShowRenderer = useMemo(
-    () =>
-      currentStep < AppConfig.Steps.Confirm &&
-      (currentStep === AppConfig.Steps.Servings ? !!serving : true),
-    [currentStep, serving]
-  );
   const shouldShowHeader = currentStep !== AppConfig.Steps.Start;
   const shouldShowActionBar =
     currentStep !== AppConfig.Steps.Finish &&
@@ -151,17 +171,16 @@ const KioskContent = () => {
     currentStep !== AppConfig.Steps.Start;
 
   return (
-    <RootContainer>
+    <RootContainer {...RootVariants}>
       {shouldShowHeader && <Header />}
+      <HelpModal />
+      <ConfirmationModal />
       <ContentContainer>
-        {shouldShowRenderer && (
-          <IceCreamRenderer
-            scoopsToShow={scoopsToShow}
-            toppingsToShow={toppingsToShow}
-            serving={selectedServing}
-            wide={currentStep === AppConfig.Steps.Start}
-          />
-        )}
+        <IceCreamRenderer
+          scoopsToShow={scoopsToShow}
+          toppingsToShow={toppingsToShow}
+          serving={selectedServing}
+        />
         {currentStep === AppConfig.Steps.Start && <StartStep />}
         {currentStep === AppConfig.Steps.Servings && <ServingsStep />}
         {currentStep === AppConfig.Steps.Flavors && <FlavorsStep />}

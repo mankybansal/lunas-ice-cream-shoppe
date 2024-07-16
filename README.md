@@ -13,12 +13,12 @@ git clone https://github.com/mankybansal/lunas-ice-cream-shoppe
 
 Install the required packages
 ```
-npm install
+yarn install
 ```
 
 ## Starting the App
 
 To start the app, enter the directory and then run
 ```
-npm start
+yarn dev
 ```

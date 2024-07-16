@@ -1,7 +1,9 @@
 import { useFormContext } from "react-hook-form";
+
+import { useAppInit } from "./useAppInit";
+
 import * as AppConfig from "~/App/config";
 import { defaultCurrentItem } from "~/App/config";
-import { useAppInit } from "./useAppInit";
 import { KioskFormData } from "~/App/types";
 
 export const useStepHandler = () => {

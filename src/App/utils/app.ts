@@ -1,5 +1,6 @@
-import { Item, Menu, Order } from "../types.ts";
-import { CompletedOrder, PaymentDetails } from "~/api.ts";
+import { Item, Menu, Order } from "../types";
+
+import { CompletedOrder, PaymentDetails } from "~/api";
 
 export const calculateItemPrice = (item: Item) => {
   const flavorsTotal = item.flavors.reduce((t, { price }) => t + price, 0);
@@ -10,7 +11,7 @@ export const calculateItemPrice = (item: Item) => {
 export const calculateOrderPrice = (order: Order) =>
   order.items.reduce((total, item) => total + calculateItemPrice(item), 0);
 
-export function appInitPrinter(): void {
+export function printAppInit(): void {
   console.log("\n\n");
   console.log("**********************************");
   console.log("Welcome to Luna's Ice Cream Shoppe");
@@ -18,35 +19,26 @@ export function appInitPrinter(): void {
   console.log("\nFetching Menu...\n\n");
 }
 
-export function paymentPrinter(paymentDetails: PaymentDetails): void {
+export function printPayment(paymentDetails: PaymentDetails): void {
   console.log("\n");
   console.log("Payment Processed");
+  const { amount, network, type, number } = paymentDetails;
   console.log(
-    "$" +
-      paymentDetails.amount.toFixed(2) +
-      " paid by " +
-      paymentDetails.network +
-      " " +
-      paymentDetails.type +
-      " ending with " +
-      paymentDetails.number.slice(-4)
+    `$${amount} paid by ${network} ${type} ending with ${number.slice(-4)}`
   );
   console.log("Payment", paymentDetails);
 }
 
-export function orderPrinter(sendOrderResponse: CompletedOrder): void {
+export function printOrder(sendOrderResponse: CompletedOrder): void {
   console.log("\n");
   console.log("Successfully Processed Order #" + sendOrderResponse.number);
   console.log("Order", sendOrderResponse);
-  console.log(
-    "Placed at " +
-      sendOrderResponse.time.toLocaleTimeString() +
-      " on " +
-      sendOrderResponse.time.toLocaleDateString()
-  );
+  const time = sendOrderResponse.time.toLocaleTimeString();
+  const date = sendOrderResponse.time.toLocaleDateString();
+  console.log("Placed at " + time + " on " + date);
 }
 
-export function menuPrinter(menu: Menu) {
+export function printMenu(menu: Menu) {
   console.log("Servings Available:", menu.servings);
   console.log("Flavors Available:", menu.flavors);
   console.log("Toppings Available:", menu.toppings);
