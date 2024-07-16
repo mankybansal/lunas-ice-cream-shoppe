@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { motion, Variants } from "framer-motion";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 
 import {
@@ -21,6 +21,7 @@ import { HelpModal } from "~/App/components/HelpModal";
 import { IceCreamRenderer } from "~/App/components/IceCreamRenderer";
 import { useAppInit } from "~/App/hooks/useAppInit";
 import { ConfirmationModal } from "~/App/components/ConfirmationModal";
+import { getRandomIceCream } from "~/App/utils/random.ts";
 
 const RootContainer = styled(motion.div)`
   text-align: center;
@@ -62,64 +63,26 @@ const IceCreamKiosk = () => {
   );
 };
 
-const getRandomFlavors = (scoops: number): string[] => {
-  const selectedFlavors = new Set<string>();
-  while (selectedFlavors.size < scoops) {
-    const randomIndex = Math.floor(Math.random() * 8) + 1;
-    selectedFlavors.add("FLA" + randomIndex.toString());
-  }
-  return Array.from(selectedFlavors);
-};
-
-const getRandomToppings = (scoops: number): string[] => {
-  const selectedToppings = new Set<string>();
-  while (selectedToppings.size < scoops) {
-    const randomIndex = Math.floor(Math.random() * 8) + 1;
-    selectedToppings.add("TOP" + randomIndex.toString());
-  }
-  return Array.from(selectedToppings);
-};
-
-const getRandomServing = (): string => {
-  const randomIndex = Math.floor(Math.random() * 2) + 1;
-  return "SER" + randomIndex.toString();
-};
-
-const getRandomRender = () => {
-  const serving = getRandomServing();
-  return {
-    scoops: getRandomFlavors(serving === "SER1" ? 3 : 2),
-    serving,
-    toppings: getRandomToppings(serving === "SER1" ? 2 : 1)
-  };
-};
-
 const RootVariants: Variants = {
   initial: {
     opacity: 0
   },
   animate: {
     opacity: 1,
-    transition: {
-      duration: 0.5
-    }
+    transition: { duration: 0.5 }
   }
 };
 
 const KioskContent = () => {
   const { watch } = useFormContext<KioskFormData>();
-  const { appInit } = useAppInit();
+  const { appInit, loading } = useAppInit();
 
-  const [randomRender, setRandomRender] = useState<{
-    scoops: string[];
-    serving: string;
-    toppings: string[];
-  }>(getRandomRender());
+  const [randomRender, setRandomRender] = useState(getRandomIceCream());
 
   const intervalRef = useRef<number | null>(null);
 
-  const serving = watch("order.currentItem.serving");
   const currentStep = watch("currentStep");
+  const selectedServing = watch("order.currentItem.serving.id");
   const selectedScoops = watch("order.currentItem.flavors").map((f) => f.id);
   const selectedToppings = watch("order.currentItem.toppings").map((t) => t.id);
 
@@ -130,7 +93,7 @@ const KioskContent = () => {
 
     if (currentStep === AppConfig.Steps.Start) {
       intervalRef.current = setInterval(() => {
-        setRandomRender(getRandomRender());
+        setRandomRender(getRandomIceCream());
       }, 5000);
     }
 
@@ -143,43 +106,30 @@ const KioskContent = () => {
     void appInit();
   }, [appInit]);
 
-  const selectedServing = useMemo(
-    () => (serving ? serving.id : randomRender.serving),
-    [serving, randomRender.serving]
-  );
+  let scoopsToShow = selectedScoops;
+  let toppingsToShow = selectedToppings;
+  let servingToShow = selectedServing;
 
-  const scoopsToShow = useMemo(
-    () =>
-      currentStep === AppConfig.Steps.Start
-        ? randomRender.scoops
-        : selectedScoops,
-    [currentStep, selectedScoops, randomRender.scoops]
-  );
+  if (currentStep === AppConfig.Steps.Start) {
+    scoopsToShow = randomRender.scoops;
+    toppingsToShow = randomRender.toppings;
+    servingToShow = randomRender.serving;
+  }
 
-  const toppingsToShow = useMemo(
-    () =>
-      currentStep === AppConfig.Steps.Start
-        ? randomRender.toppings
-        : selectedToppings,
-    [currentStep, randomRender.toppings, selectedToppings]
-  );
-
-  const shouldShowHeader = currentStep !== AppConfig.Steps.Start;
-  const shouldShowActionBar =
-    currentStep !== AppConfig.Steps.Finish &&
-    currentStep !== AppConfig.Steps.Payment &&
-    currentStep !== AppConfig.Steps.Start;
+  if (loading) {
+    return <RootContainer />;
+  }
 
   return (
     <RootContainer {...RootVariants}>
-      {shouldShowHeader && <Header />}
-      <HelpModal />
-      <ConfirmationModal />
+      <Header />
+      <Modals />
       <ContentContainer>
         <IceCreamRenderer
           scoopsToShow={scoopsToShow}
           toppingsToShow={toppingsToShow}
-          serving={selectedServing}
+          serving={servingToShow}
+          isRandom={!selectedServing}
         />
         {currentStep === AppConfig.Steps.Start && <StartStep />}
         {currentStep === AppConfig.Steps.Servings && <ServingsStep />}
@@ -189,8 +139,18 @@ const KioskContent = () => {
         {currentStep === AppConfig.Steps.Payment && <PaymentStep />}
         {currentStep === AppConfig.Steps.Finish && <FinishStep />}
       </ContentContainer>
-      {shouldShowActionBar && <ActionBar />}
+      <ActionBar />
     </RootContainer>
+  );
+};
+
+const Modals = () => {
+  // Todo lazy load modals to improve performance.
+  return (
+    <>
+      <HelpModal />
+      <ConfirmationModal />
+    </>
   );
 };
 

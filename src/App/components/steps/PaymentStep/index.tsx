@@ -4,11 +4,10 @@ import { useRef, useState } from "react";
 
 import Animations from "~/App/animations";
 import { CheckCircle } from "~/App/components/icons/CheckCircle.tsx";
-import { SpinnerGap } from "~/App/components/icons/SpinnerGap.tsx";
 import { XCircle } from "~/App/components/icons/XCircle.tsx";
 import { useSetHeaderPrompt } from "~/App/components/Header/headerState.atom";
 import { usePaymentHandler } from "~/App/hooks/usePaymentHandler";
-import { CenteredContent } from "~/App/Styled";
+import { CenteredContent, StyledSpinnerGap } from "~/App/Styled";
 
 const strings = {
   prompt: "Make Payment",
@@ -164,22 +163,6 @@ const StyledXCircle = styled(XCircle)`
   width: 48px;
   height: 48px;
   animation: ${IconAnimation} 0.3s ease-out;
-`;
-
-const SpinningAnimation = keyframes`
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-`;
-
-const StyledSpinnerGap = styled(SpinnerGap)`
-  height: 48px;
-  width: 48px;
-  color: #666;
-  animation: ${SpinningAnimation} 0.75s linear infinite;
 `;
 
 const Prompt = styled.div`

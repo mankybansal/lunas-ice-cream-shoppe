@@ -5,6 +5,8 @@ import { useAtomValue } from "jotai";
 import { actionBarStateAtom } from "./actionBarState.atom";
 
 import Animations from "~/App/animations";
+import * as AppConfig from "~/App/config.ts";
+import { useStepHandler } from "~/App/hooks/useStepHandler.ts";
 
 const RootContainer = styled(motion.div)`
   display: flex;
@@ -77,8 +79,18 @@ const StepControl = styled.div`
 `;
 
 export const ActionBar = () => {
+  const { currentStep } = useStepHandler();
   const { back, next, review } = useAtomValue(actionBarStateAtom);
   if (!back && !next) return null;
+
+  if (
+    currentStep === AppConfig.Steps.Finish ||
+    currentStep === AppConfig.Steps.Payment ||
+    currentStep === AppConfig.Steps.Start
+  ) {
+    return null;
+  }
+
   return (
     <RootContainer {...Animations.AnimateInUp}>
       {review}

@@ -1,6 +1,7 @@
-import { css } from "@emotion/react";
+import { css, keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import { motion } from "framer-motion";
+import { SpinnerGap } from "~/App/components/icons/SpinnerGap.tsx";
 
 export const ItemsContainer = styled.div`
   width: 100%;
@@ -146,4 +147,20 @@ export const CloseButton = styled.button`
   background: none;
   border: none;
   cursor: pointer;
+`;
+
+const SpinningAnimation = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+`;
+
+export const StyledSpinnerGap = styled(SpinnerGap)`
+  height: 48px;
+  width: 48px;
+  color: #666;
+  animation: ${SpinningAnimation} 0.75s linear infinite;
 `;
