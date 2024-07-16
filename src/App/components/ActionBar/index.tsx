@@ -1,8 +1,11 @@
-import { useAtomValue } from "jotai";
-import { actionBarStateAtom } from "./actionBarState.atom";
-import { motion } from "framer-motion";
-import Animations from "~/App/animations";
 import styled from "@emotion/styled";
+import { motion } from "framer-motion";
+import { useAtomValue } from "jotai";
+
+import { actionBarStateAtom } from "./actionBarState.atom";
+
+import Animations from "~/App/animations";
+
 
 const RootContainer = styled(motion.div)`
   display: flex;

@@ -1,18 +1,19 @@
+import styled from "@emotion/styled";
+import { DateTime } from "luxon";
+import { useEffect, useRef, useState } from "react";
+import { useFormContext } from "react-hook-form";
+
+import Animations from "~/App/animations";
+import { useSetHeaderPrompt } from "~/App/components/Header/headerState.atom";
+import { ArrowClockwise } from "~/App/components/icons/ArrowClockwise";
+import { Smiley } from "~/App/components/icons/Smiley";
+import { CategoryBreakDown } from "~/App/components/steps/ConfirmStep/CategoryBreakdown";
 import * as AppConfig from "~/App/config";
 import { SalesTaxRate } from "~/App/config";
-import { useEffect, useRef, useState } from "react";
 import { useStepHandler } from "~/App/hooks/useStepHandler";
-import { KioskFormData } from "~/App/types";
-import { useFormContext } from "react-hook-form";
-import { useSetHeaderPrompt } from "~/App/Header/headerState.atom";
 import { CenteredContent, Divider } from "~/App/Styled";
-import Animations from "~/App/animations.ts";
-import { CategoryBreakDown } from "~/App/steps/ConfirmStep/CategoryBreakdown";
-import styled from "@emotion/styled";
+import { KioskFormData } from "~/App/types";
 import * as Helpers from "~/App/utils/app";
-import { DateTime } from "luxon";
-import { Smiley } from "~/App/icons/Smiley.tsx";
-import { ArrowClockwise } from "~/App/icons/ArrowClockwise.tsx";
 
 const strings = {
   prompt: "Thank You For Your Order",

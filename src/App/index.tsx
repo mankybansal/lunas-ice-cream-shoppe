@@ -1,4 +1,7 @@
-import { ActionBar } from "~/App/ActionBar";
+import styled from "@emotion/styled";
+import { motion, Variants } from "framer-motion";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { FormProvider, useForm, useFormContext } from "react-hook-form";
 
 import {
   ConfirmStep,
@@ -8,18 +11,15 @@ import {
   ServingsStep,
   StartStep,
   ToppingsStep
-} from "./steps";
-import { useEffect, useMemo, useRef, useState } from "react";
+} from "./components/steps";
 import * as AppConfig from "./config";
-
 import { KioskFormData } from "./types";
-import { FormProvider, useForm, useFormContext } from "react-hook-form";
+
+import { ActionBar } from "~/App/components/ActionBar";
+import Header from "~/App/components/Header";
+import { HelpModal } from "~/App/components/HelpModal";
+import { IceCreamRenderer } from "~/App/components/IceCreamRenderer";
 import { useAppInit } from "~/App/hooks/useAppInit";
-import { IceCreamRenderer } from "~/App/IceCreamRenderer";
-import styled from "@emotion/styled";
-import Header from "~/App/Header";
-import { HelpModal } from "~/App/HelpModal";
-import { motion, Variants } from "framer-motion";
 
 const RootContainer = styled(motion.div)`
   text-align: center;

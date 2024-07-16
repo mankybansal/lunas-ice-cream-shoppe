@@ -1,5 +1,6 @@
-import { Item, Menu, Order } from "../types.ts";
-import { CompletedOrder, PaymentDetails } from "~/api.ts";
+import { Item, Menu, Order } from "../types";
+
+import { CompletedOrder, PaymentDetails } from "~/api";
 
 export const calculateItemPrice = (item: Item) => {
   const flavorsTotal = item.flavors.reduce((t, { price }) => t + price, 0);

@@ -1,9 +1,7 @@
 import React, { useCallback } from "react";
-import * as AppConfig from "../../config";
-import { Flavor, KioskFormData } from "~/App/types";
-import { useFormContext } from "react-hook-form";
-import { useStepHandler } from "~/App/hooks/useStepHandler";
+
 import styled from "@emotion/styled";
+import { useFormContext } from "react-hook-form";
 
 import {
   EmptyItem,
@@ -16,11 +14,14 @@ import {
   ItemSecondaryInfo,
   ItemTitle
 } from "~/App/Styled";
-import { useSetHeaderPrompt } from "~/App/Header/headerState.atom";
-import { useActionButtons } from "~/App/ActionBar/actionBarState.atom";
 import Animations from "~/App/animations";
-import { ArrowLeft } from "~/App/icons/ArrowLeft";
-import { ArrowRight } from "~/App/icons/ArrowRight";
+import { useActionButtons } from "~/App/components/ActionBar/actionBarState.atom";
+import { useSetHeaderPrompt } from "~/App/components/Header/headerState.atom";
+import { ArrowLeft } from "~/App/components/icons/ArrowLeft";
+import { ArrowRight } from "~/App/components/icons/ArrowRight";
+import * as AppConfig from "~/App/config";
+import { useStepHandler } from "~/App/hooks/useStepHandler";
+import { Flavor, KioskFormData } from "~/App/types";
 
 const strings = {
   selectToppings: "Select Toppings",
@@ -148,7 +149,7 @@ const FlavorsStep = () => {
 
   const handleStep = useCallback(
     (gotoStep: number) => {
-      if (gotoStep < AppConfig.Steps.Flavors) {
+      if (gotoStep < (AppConfig.Steps.Flavors as number)) {
         return stepHandler(gotoStep);
       }
 

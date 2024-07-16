@@ -1,13 +1,14 @@
-import { useRef, useState } from "react";
-import { usePaymentHandler } from "~/App/hooks/usePaymentHandler";
-import { useSetHeaderPrompt } from "~/App/Header/headerState.atom";
-import { CenteredContent } from "~/App/Styled";
-import styled from "@emotion/styled";
 import { keyframes } from "@emotion/react";
-import Animations from "~/App/animations.ts";
-import { CheckCircle } from "~/App/icons/CheckCircle.tsx";
-import { XCircle } from "~/App/icons/XCircle.tsx";
-import { SpinnerGap } from "~/App/icons/SpinnerGap.tsx";
+import styled from "@emotion/styled";
+import { useRef, useState } from "react";
+
+import Animations from "~/App/animations";
+import { CheckCircle } from "~/App/components/icons/CheckCircle.tsx";
+import { SpinnerGap } from "~/App/components/icons/SpinnerGap.tsx";
+import { XCircle } from "~/App/components/icons/XCircle.tsx";
+import { useSetHeaderPrompt } from "~/App/components/Header/headerState.atom";
+import { usePaymentHandler } from "~/App/hooks/usePaymentHandler";
+import { CenteredContent } from "~/App/Styled";
 
 const strings = {
   prompt: "Make Payment",

@@ -1,5 +1,5 @@
 import { Item, Menu, Order } from "~/App/types";
-import { generateClientId } from "~/App/utils/clientId.ts";
+import { generateClientId } from "~/App/utils/clientId";
 
 export const SalesTaxRate = 0.101; // 10.1%
 

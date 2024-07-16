@@ -1,12 +1,18 @@
+import styled from "@emotion/styled";
+import { motion } from "framer-motion";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useFormContext } from "react-hook-form";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import styled from "@emotion/styled";
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { motion } from "framer-motion";
+
 import Animations from "~/App/animations";
-import { useFormContext } from "react-hook-form";
-import { KioskFormData } from "~/App/types.ts";
-import * as AppConfig from "~/App/config.ts";
+import * as AppConfig from "~/App/config";
+import { KioskFormData } from "~/App/types";
+import { flavorToFile, servingToObject, toppingToFile } from "./constants.ts";
+import {
+  addScoopToScene,
+  addToppingToScene
+} from "~/App/components/IceCreamRenderer/utils.ts";
 
 const RootContainer = styled(motion.div)<{ wide: boolean }>`
   width: 100%;
@@ -15,91 +21,6 @@ const RootContainer = styled(motion.div)<{ wide: boolean }>`
   overflow: hidden;
   background: #fff5e1;
 `;
-
-const flavorToFile: Record<string, string> = {
-  FLA1: "scoop-vanilla.gltf",
-  FLA2: "scoop-chocolate.gltf",
-  FLA3: "scoop-strawberry.gltf",
-  FLA4: "scoop-coffee.gltf",
-  FLA5: "scoop-mango.gltf",
-  FLA6: "scoop-cookies.gltf",
-  FLA7: "scoop-mint.gltf",
-  FLA8: "scoop-caramel.gltf"
-};
-
-const toppingToFile: Record<string, string> = {
-  TOP1: "peanuts.gltf",
-  TOP2: "sauce.gltf",
-  TOP3: "beans.gltf",
-  TOP4: "marshmallows.gltf",
-  TOP5: "cherry.gltf",
-  TOP6: "sprinkles.gltf",
-  TOP7: "whipped-cream.gltf",
-  TOP8: "chocolate-chips.gltf"
-};
-
-const servingToObject: Record<string, string> = {
-  SER1: "cup",
-  SER2: "cone"
-};
-
-const addToppingToScene = (
-  sceneGroup: THREE.Group<THREE.Object3DEventMap>,
-  model: THREE.Group,
-  servingType: string,
-  scoopCount: number
-) => {
-  const clone = model.clone(true);
-
-  if (servingType === "cone") {
-    clone.scale.set(2.5, 2.5, 2.5);
-    clone.position.y = scoopCount === 2 ? 2 : 0.5;
-  } else {
-    clone.scale.set(2, 2, 2);
-    clone.position.y = -0.35;
-    clone.position.x = -1;
-  }
-  clone.rotation.y = THREE.MathUtils.degToRad(5) * 300;
-
-  clone.traverse((child) => {
-    child.castShadow = true;
-    child.receiveShadow = true;
-  });
-
-  sceneGroup.add(clone);
-};
-
-const addScoopToScene = (
-  sceneGroup: THREE.Group<THREE.Object3DEventMap>,
-  model: THREE.Group,
-  i: number,
-  servingType: string
-) => {
-  const clone = model.clone(true);
-
-  if (servingType === "cone") {
-    clone.scale.set(2.5, 2.5, 2.5);
-    clone.position.y = 0.5 + i * 1.5;
-  } else {
-    clone.scale.set(2, 2, 2);
-
-    if (i == 2) {
-      clone.position.y = 0.7;
-      clone.position.x = 0.2;
-    } else {
-      clone.position.y = -0.4;
-      clone.position.x = -1 + i * 2;
-    }
-  }
-  clone.rotation.y = THREE.MathUtils.degToRad(5) * (i * 300);
-
-  clone.traverse((child) => {
-    child.castShadow = true;
-    child.receiveShadow = true;
-  });
-
-  sceneGroup.add(clone);
-};
 
 interface Props {
   scoopsToShow: string[];
@@ -265,7 +186,13 @@ export const IceCreamRenderer = ({
       }
 
       scoopsToShow.forEach((flavor, i) =>
-        addScoopToScene(sceneGroup, preloadedModels[flavor], i, servingType)
+        addScoopToScene(
+          sceneGroup,
+          preloadedModels[flavor],
+          i,
+          servingType,
+          scoopsToShow.length
+        )
       );
 
       if (scoopsToShow.length > 0) {

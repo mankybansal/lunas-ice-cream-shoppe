@@ -1,9 +1,20 @@
+import styled from "@emotion/styled";
 import { useCallback } from "react";
-import * as AppConfig from "../../config";
-import { Item, KioskFormData } from "~/App/types";
-import * as Helpers from "~/App/utils/app.ts";
 import { useFormContext } from "react-hook-form";
+
+import * as AppConfig from "~/App/config";
+
+import { CategoryBreakDown } from "./CategoryBreakdown";
+
+import { useActionButtons } from "~/App/components/ActionBar/actionBarState.atom";
+import Animations from "~/App/animations";
+import { Check } from "~/App/components/icons/Check";
+import { PlusCircle } from "~/App/components/icons/PlusCircle";
+import { ShoppingCart } from "~/App/components/icons/ShoppingCart";
+import { useSetHeaderPrompt } from "~/App/components/Header/headerState.atom";
 import { useStepHandler } from "~/App/hooks/useStepHandler";
+import { Item, KioskFormData } from "~/App/types";
+import * as Helpers from "~/App/utils/app";
 import {
   Divider,
   ItemCategory,
@@ -12,15 +23,7 @@ import {
   ItemsContainer,
   ItemTitle
 } from "~/App/Styled";
-import styled from "@emotion/styled";
-import { useSetHeaderPrompt } from "~/App/Header/headerState.atom";
-import { useActionButtons } from "~/App/ActionBar/actionBarState.atom";
-import Animations from "~/App/animations";
-import { ShoppingCart } from "~/App/icons/ShoppingCart";
-import { PlusCircle } from "~/App/icons/PlusCircle";
-import { Check } from "~/App/icons/Check";
-import { MinusCircle } from "~/App/icons/MinusCircle";
-import { CategoryBreakDown } from "./CategoryBreakdown";
+import { MinusCircle } from "~/App/components/icons/MinusCircle";
 
 const strings = {
   prompt: "Review Order",

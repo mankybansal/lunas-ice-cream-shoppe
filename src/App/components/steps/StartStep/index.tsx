@@ -1,8 +1,10 @@
 import styled from "@emotion/styled";
-import { useStepHandler } from "~/App/hooks/useStepHandler";
-import { TouchToBegin } from "./TouchToBegin";
 import { motion } from "framer-motion";
-import Animations from "~/App/animations.ts";
+
+import { TouchToBegin } from "./TouchToBegin";
+
+import Animations from "~/App/animations";
+import { useStepHandler } from "~/App/hooks/useStepHandler";
 
 const strings = {
   title: "Welcome to Luna's Ice Cream Shoppe",

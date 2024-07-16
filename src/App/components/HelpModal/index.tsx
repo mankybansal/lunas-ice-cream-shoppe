@@ -1,8 +1,10 @@
-import { helpModalStateAtom } from "./helpModalState.atom";
-import { useAtomValue, useSetAtom } from "jotai";
 import styled from "@emotion/styled";
 import { AnimatePresence, motion, Variants } from "framer-motion";
-import { XCircle } from "~/App/icons/XCircle.tsx";
+import { useAtomValue, useSetAtom } from "jotai";
+
+import { helpModalStateAtom } from "./helpModalState.atom";
+
+import { XCircle } from "~/App/components/icons/XCircle.tsx";
 
 const ModalOverlay = styled(motion.div)`
   position: fixed;

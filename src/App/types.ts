@@ -1,5 +1,6 @@
-import { CompletedOrder } from "~/api";
 import * as AppConfig from "./config";
+
+import { CompletedOrder } from "~/api";
 
 export interface KioskFormData {
   menu: Menu;

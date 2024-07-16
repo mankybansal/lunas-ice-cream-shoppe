@@ -1,16 +1,19 @@
-import * as AppConfig from "../config";
-import { defaultCurrentItem } from "../config";
-import { useStepHandler } from "~/App/hooks/useStepHandler";
-import { useAtomValue, useSetAtom } from "jotai";
-import { headerStateAtom } from "./headerState.atom";
 import styled from "@emotion/styled";
-import Animations from "~/App/animations";
 import { motion } from "framer-motion";
+import { useAtomValue, useSetAtom } from "jotai";
 import { useFormContext } from "react-hook-form";
-import { KioskFormData } from "~/App/types";
-import { ShoppingCart } from "~/App/icons/ShoppingCart";
+
+import * as AppConfig from "~/App/config";
+import { defaultCurrentItem } from "~/App/config";
+
+import { headerStateAtom } from "./headerState.atom";
+
+import Animations from "~/App/animations";
+import { ShoppingCart } from "~/App/components/icons/ShoppingCart";
+import { helpModalStateAtom } from "~/App/components/HelpModal/helpModalState.atom";
 import { usePaymentHandler } from "~/App/hooks/usePaymentHandler";
-import { helpModalStateAtom } from "~/App/HelpModal/helpModalState.atom.ts";
+import { useStepHandler } from "~/App/hooks/useStepHandler";
+import { KioskFormData } from "~/App/types";
 
 const strings = {
   appLogo: "Luna's Ice Cream",

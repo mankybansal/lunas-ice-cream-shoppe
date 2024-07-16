@@ -1,9 +1,15 @@
-import { useCallback } from "react";
-import * as AppConfig from "../../config";
-import { KioskFormData, Topping } from "~/App/types";
-import { useStepHandler } from "~/App/hooks/useStepHandler";
-import { useFormContext } from "react-hook-form";
 import pluralize from "pluralize";
+import { useCallback } from "react";
+import { useFormContext } from "react-hook-form";
+
+import * as AppConfig from "~/App/config";
+
+import { useActionButtons } from "~/App/components/ActionBar/actionBarState.atom";
+import Animations from "~/App/animations";
+import { ArrowLeft } from "~/App/components/icons/ArrowLeft";
+import { ShoppingCart } from "~/App/components/icons/ShoppingCart";
+import { useSetHeaderPrompt } from "~/App/components/Header/headerState.atom";
+import { useStepHandler } from "~/App/hooks/useStepHandler";
 import {
   EmptyItem,
   ItemCalories,
@@ -15,11 +21,7 @@ import {
   ItemSecondaryInfo,
   ItemTitle
 } from "~/App/Styled";
-import { useSetHeaderPrompt } from "~/App/Header/headerState.atom";
-import { useActionButtons } from "~/App/ActionBar/actionBarState.atom";
-import Animations from "~/App/animations";
-import { ShoppingCart } from "~/App/icons/ShoppingCart";
-import { ArrowLeft } from "~/App/icons/ArrowLeft";
+import { KioskFormData, Topping } from "~/App/types";
 
 const strings = {
   back: "Back",

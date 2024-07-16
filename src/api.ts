@@ -1,8 +1,10 @@
-import servings from "~/fixtures/servings.json";
-import flavors from "~/fixtures/flavors.json";
-import toppings from "~/fixtures/toppings.json";
-import { CardDetails } from "~/App/config";
 import { Menu, Order } from "./App/types";
+
+import { CardDetails } from "~/App/config";
+import flavors from "~/fixtures/flavors.json";
+import servings from "~/fixtures/servings.json";
+import toppings from "~/fixtures/toppings.json";
+
 
 /*****************
  * API SIMULATION
