@@ -93,6 +93,11 @@ const FlexContainer = styled.div`
   display: flex;
   gap: 128px;
   align-items: center;
+
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    gap: 24px;
+  }
 `;
 
 const ThankYouContainer = styled.div`

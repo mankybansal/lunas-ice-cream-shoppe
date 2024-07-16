@@ -35,6 +35,13 @@ const ContentContainer = styled.div`
   display: flex;
   flex: 1;
   overflow: hidden;
+  overflow-y: auto;
+
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
 `;
 
 const IceCreamKiosk = () => {
@@ -64,10 +71,13 @@ const getRandomFlavors = (scoops: number): string[] => {
   return Array.from(selectedFlavors);
 };
 
-const getRandomToppings = (): string[] => {
-  // Currently only one topping is supported.
-  const randomIndex = Math.floor(Math.random() * 8) + 1;
-  return ["TOP" + randomIndex.toString()];
+const getRandomToppings = (scoops: number): string[] => {
+  const selectedToppings = new Set<string>();
+  while (selectedToppings.size < scoops) {
+    const randomIndex = Math.floor(Math.random() * 8) + 1;
+    selectedToppings.add("TOP" + randomIndex.toString());
+  }
+  return Array.from(selectedToppings);
 };
 
 const getRandomServing = (): string => {
@@ -79,7 +89,8 @@ const getRandomRender = () => {
   const serving = getRandomServing();
   return {
     scoops: getRandomFlavors(serving === "SER1" ? 3 : 2),
-    serving
+    serving,
+    toppings: getRandomToppings(serving === "SER1" ? 2 : 1)
   };
 };
 
@@ -102,6 +113,7 @@ const KioskContent = () => {
   const [randomRender, setRandomRender] = useState<{
     scoops: string[];
     serving: string;
+    toppings: string[];
   }>(getRandomRender());
 
   const intervalRef = useRef<number | null>(null);
@@ -136,20 +148,20 @@ const KioskContent = () => {
     [serving, randomRender.serving]
   );
 
-  const randomFlavors = useMemo(() => randomRender.scoops, [randomRender]);
-
-  const randomToppings = useMemo(() => getRandomToppings(), []);
-
   const scoopsToShow = useMemo(
     () =>
-      currentStep === AppConfig.Steps.Start ? randomFlavors : selectedScoops,
-    [currentStep, selectedScoops, randomFlavors]
+      currentStep === AppConfig.Steps.Start
+        ? randomRender.scoops
+        : selectedScoops,
+    [currentStep, selectedScoops, randomRender.scoops]
   );
 
   const toppingsToShow = useMemo(
     () =>
-      currentStep === AppConfig.Steps.Start ? randomToppings : selectedToppings,
-    [currentStep, randomToppings, selectedToppings]
+      currentStep === AppConfig.Steps.Start
+        ? randomRender.toppings
+        : selectedToppings,
+    [currentStep, randomRender.toppings, selectedToppings]
   );
 
   const shouldShowHeader = currentStep !== AppConfig.Steps.Start;

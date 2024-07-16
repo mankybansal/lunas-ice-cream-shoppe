@@ -86,12 +86,11 @@ const CircleContainer3 = styled.div`
 `;
 
 interface Props {
-  onClick: () => void;
   label: string;
 }
 
-export const TouchToBegin = ({ onClick, label }: Props) => (
-  <RootContainer onClick={onClick}>
+export const TouchToBegin = ({ label }: Props) => (
+  <RootContainer>
     <CircleContainer>
       <CircleContainer2>
         <CircleContainer3 />

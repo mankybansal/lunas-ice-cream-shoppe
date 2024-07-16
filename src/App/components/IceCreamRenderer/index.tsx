@@ -9,12 +9,21 @@ import Animations from "~/App/animations";
 import * as AppConfig from "~/App/config";
 import { KioskFormData } from "~/App/types";
 import { flavorToFile, servingToObject, toppingToFile } from "./constants";
-import { addScoopToScene, addToppingToScene } from "./utils";
+import {
+  addScoopToScene,
+  addToppingToScene,
+  CONE_HEIGHT,
+  CONE_RADIUS,
+  CUP_HEIGHT,
+  CUP_RADIUS_BOTTOM,
+  CUP_RADIUS_TOP
+} from "./utils";
 
 const RootContainer = styled(motion.div)<{ wide: boolean }>`
   width: 100%;
   max-width: ${({ wide }) => (wide ? "500px" : "500px")};
   height: 100%;
+  min-height: 300px;
   overflow: hidden;
   background: #fff5e1;
 `;
@@ -63,7 +72,12 @@ export const IceCreamRenderer = ({
 
       // Pre-create the cup
       const cupTexture = textureLoader.load("images/cup-texture.png");
-      const cupGeometry = new THREE.CylinderGeometry(2, 2.6, 2, 32);
+      const cupGeometry = new THREE.CylinderGeometry(
+        CUP_RADIUS_BOTTOM,
+        CUP_RADIUS_TOP,
+        CUP_HEIGHT,
+        32
+      );
       const cupMaterial = new THREE.MeshPhongMaterial({ map: cupTexture });
       const cup = new THREE.Mesh(cupGeometry, cupMaterial);
       cup.position.y = -1.5;
@@ -75,7 +89,7 @@ export const IceCreamRenderer = ({
 
       // Pre-create the cone
       const coneTexture = textureLoader.load("images/waffle-texture.jpg");
-      const coneGeometry = new THREE.ConeGeometry(1.5, 6, 50);
+      const coneGeometry = new THREE.ConeGeometry(CONE_RADIUS, CONE_HEIGHT, 50);
       const coneMaterial = new THREE.MeshPhongMaterial({ map: coneTexture });
       const cone = new THREE.Mesh(coneGeometry, coneMaterial);
       cone.position.y = -3;

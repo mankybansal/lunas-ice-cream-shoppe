@@ -21,6 +21,10 @@ const RootContainer = styled(motion.div)`
   justify-content: center;
   height: 100%;
   align-items: center;
+
+  @media screen and (max-width: 768px) {
+    padding-right: 0;
+  }
 `;
 
 const AppTitle = styled.div`
@@ -82,11 +86,11 @@ const MadeIn = styled.div`
 const StartStep = () => {
   const { createNewItem } = useStepHandler();
   return (
-    <RootContainer {...Animations.AnimateInUp}>
+    <RootContainer {...Animations.AnimateInUp} onClick={createNewItem}>
       <AppTitle>{strings.title}</AppTitle>
       <MadeIn>Seattle, Washington</MadeIn>
       <AppSubtitle>{strings.subtitle}</AppSubtitle>
-      <TouchToBegin onClick={createNewItem} label={strings.touchToBegin} />
+      <TouchToBegin label={strings.touchToBegin} />
     </RootContainer>
   );
 };

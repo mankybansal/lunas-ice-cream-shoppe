@@ -55,15 +55,18 @@ const AnimateInLeft = AnimateInLeftWithDelay(0);
 const ModalVariants: Variants = {
   initial: {
     opacity: 0,
-    scale: 0.8
+    scale: 1.02,
+    y: -16
   },
   animate: {
     opacity: 1,
-    scale: 1
+    scale: 1,
+    y: 0
   },
   exit: {
     opacity: 0,
-    scale: 0.8
+    scale: 1.02,
+    y: -16
   }
 };
 
