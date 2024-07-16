@@ -141,6 +141,8 @@ const Header = () => {
 
   const handleClickHelp = () => setHelpModalState({ isVisible: true });
 
+  if (currentStep === AppConfig.Steps.Start) return null;
+
   return (
     <RootContainer {...Animations.AnimateInUp}>
       <InnerContainer>

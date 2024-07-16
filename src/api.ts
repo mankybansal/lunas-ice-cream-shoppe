@@ -5,7 +5,6 @@ import flavors from "~/fixtures/flavors.json";
 import servings from "~/fixtures/servings.json";
 import toppings from "~/fixtures/toppings.json";
 
-
 /*****************
  * API SIMULATION
  *****************/
@@ -72,9 +71,9 @@ function SendPayment(
   return { success: true, data: payment };
 }
 
-/********************
- * FRONTEND API CODE
- ********************/
+/***************
+ * FRONTEND API
+ ***************/
 
 type Callback<T> = (response: T) => void;
 

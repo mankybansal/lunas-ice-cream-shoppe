@@ -19,6 +19,8 @@ import {
   CUP_RADIUS_TOP
 } from "./utils";
 
+const RENDERER_ID = "ice-cream-renderer";
+
 const RootContainer = styled(motion.div)<{ wide: boolean }>`
   width: 100%;
   max-width: ${({ wide }) => (wide ? "500px" : "500px")};
@@ -28,16 +30,39 @@ const RootContainer = styled(motion.div)<{ wide: boolean }>`
   background: #fff5e1;
 `;
 
+const buildLights = (scene: THREE.Scene) => {
+  // Add ambient light
+  const ambientLight = new THREE.AmbientLight(0x404040, 50); // Increase ambient light intensity
+  scene.add(ambientLight);
+
+  // Add a directional light
+  const directionalLight = new THREE.DirectionalLight(0xf5f5dc, 1.5); // Increase directional light intensity
+  directionalLight.position.set(8, 8, 6.5);
+  directionalLight.castShadow = true; // Enable shadows for the light
+  scene.add(directionalLight);
+
+  // Configure shadow properties for the light
+  directionalLight.shadow.mapSize.width = 1024;
+  directionalLight.shadow.mapSize.height = 1024;
+  directionalLight.shadow.camera.near = 0.5;
+  directionalLight.shadow.camera.far = 50;
+  directionalLight.shadow.camera.left = -10;
+  directionalLight.shadow.camera.right = 10;
+  directionalLight.shadow.camera.top = 10;
+};
+
 interface Props {
   scoopsToShow: string[];
   toppingsToShow: string[];
   serving: string;
+  isRandom: boolean;
 }
 
 export const IceCreamRenderer = ({
   scoopsToShow,
   toppingsToShow,
-  serving
+  serving,
+  isRandom
 }: Props) => {
   const ref = React.useRef<HTMLDivElement>(null);
   const [preloadedModels, setPreloadedModels] = useState<{
@@ -124,77 +149,68 @@ export const IceCreamRenderer = ({
     const target = ref.current;
     if (!target) return;
 
+    const { clientWidth, clientHeight } = target;
+    const aspect = clientWidth / clientHeight;
+
     // Set up the scene, camera, and renderer
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(
-      75,
-      target!.clientWidth / target!.clientHeight,
-      0.1,
-      1000
-    );
+    const camera = new THREE.PerspectiveCamera(80, aspect);
+    camera.position.z = 10;
+
     const renderer = new THREE.WebGLRenderer({ antialias: true });
 
-    renderer.setSize(ref.current!.clientWidth, ref.current!.clientHeight);
+    renderer.setSize(clientWidth, clientHeight);
     renderer.shadowMap.enabled = true; // Enable shadow map
     renderer.setClearColor(0xfff5e1); // Set background color to cream
-    document
-      .getElementById("ice-cream-renderer")!
-      .appendChild(renderer.domElement);
+    document.getElementById(RENDERER_ID)!.appendChild(renderer.domElement);
 
     // Render the scene with the camera
     renderer.render(scene, camera);
 
-    // Add ambient light
-    const ambientLight = new THREE.AmbientLight(0x404040, 50); // Increase ambient light intensity
-    scene.add(ambientLight);
-
-    // Add a directional light
-    const directionalLight = new THREE.DirectionalLight(0xf5f5dc, 1.5); // Increase directional light intensity
-    directionalLight.position.set(8, 8, 6.5);
-    directionalLight.castShadow = true; // Enable shadows for the light
-    scene.add(directionalLight);
-
-    // Configure shadow properties for the light
-    directionalLight.shadow.mapSize.width = 1024;
-    directionalLight.shadow.mapSize.height = 1024;
-    directionalLight.shadow.camera.near = 0.5;
-    directionalLight.shadow.camera.far = 50;
-    directionalLight.shadow.camera.left = -10;
-    directionalLight.shadow.camera.right = 10;
-    directionalLight.shadow.camera.top = 10;
+    buildLights(scene);
 
     const sceneGroup = new THREE.Group();
     scene.add(sceneGroup);
 
-    // Position the camera
-    camera.position.z = 10;
-
     // Reset the rotation, skip 3 frames worth of rotation (fudge)
     sceneGroup.rotation.y = rotationRef.current - 0.006;
 
-    // Create the animation loop
-    function animate() {
-      requestAnimationFrame(animate);
+    // Initial animation
+    const targetPosition = new THREE.Vector3(0, 0, 0);
+    const targetScale = 1;
+    const duration = 500; // 3 seconds
+    const start = performance.now();
 
-      // Set the rotation state
-      rotationRef.current = sceneGroup.rotation.y;
-
-      // Rotate the scene
-      sceneGroup.rotation.y -= 0.002;
-
-      // Render the scene
-      renderer.render(scene, camera);
+    // Easing function (easeOutCubic)
+    function easeOutCubic(t: number) {
+      return 1 - Math.pow(1 - t, 3);
     }
 
-    animate();
+    // Create the animation loop
+    function animate(time: number) {
+      const elapsedTime = time - start;
+      const fraction = Math.min(elapsedTime / duration, 1); // Clamp fraction to [0, 1]
+      rotationRef.current = sceneGroup.rotation.y; // Set the rotation state
+
+      if (elapsedTime < duration && isRandom) {
+        const easeFraction = easeOutCubic(fraction);
+        sceneGroup.rotation.y -= 0.01;
+        sceneGroup.position.lerp(targetPosition, easeFraction);
+        const scalar = THREE.MathUtils.lerp(0.5, targetScale, easeFraction);
+        sceneGroup.scale.setScalar(scalar);
+      } else {
+        sceneGroup.rotation.y -= 0.002;
+      }
+
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+
+    requestAnimationFrame(animate);
 
     if (Object.keys(preloadedModels).length > 0) {
-      // Add the cup or cone to the scene
-      if (servingType === "cup") {
-        sceneGroup.add(preloadedModels["cup"].clone(true));
-      } else if (servingType === "cone") {
-        sceneGroup.add(preloadedModels["cone"].clone(true));
-      }
+      // Add serving to the scene
+      sceneGroup.add(preloadedModels[servingType].clone(true));
 
       scoopsToShow.forEach((flavor, i) =>
         addScoopToScene(
@@ -221,10 +237,9 @@ export const IceCreamRenderer = ({
     }
 
     const handleResize = () => {
-      const width = target!.clientWidth;
-      const height = target!.clientHeight;
-      renderer.setSize(width, height);
-      camera.aspect = width / height;
+      const { clientWidth, clientHeight } = target;
+      renderer.setSize(clientWidth, clientHeight);
+      camera.aspect = clientWidth / clientHeight;
       camera.updateProjectionMatrix();
     };
 
@@ -235,14 +250,21 @@ export const IceCreamRenderer = ({
       target?.removeChild(renderer.domElement);
       renderer.dispose();
     };
-  }, [servingType, scoopsToShow, toppingsToShow, preloadedModels, rotationRef]);
+  }, [
+    servingType,
+    scoopsToShow,
+    toppingsToShow,
+    preloadedModels,
+    rotationRef,
+    isRandom
+  ]);
 
   if (!shouldShowRenderer) return <></>;
 
   return (
     <RootContainer
       wide={currentStep === AppConfig.Steps.Start}
-      id="ice-cream-renderer"
+      id={RENDERER_ID}
       ref={ref}
       {...Animations.AnimateInUp}
     />

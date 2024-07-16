@@ -1,7 +1,8 @@
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
+import { motion, Variants } from "framer-motion";
 
-const RootContainer = styled.div`
+const RootContainer = styled(motion.div)`
   width: 100%;
 `;
 
@@ -85,12 +86,22 @@ const CircleContainer3 = styled.div`
   animation: ${AppLogoSpin3} infinite 2s linear;
 `;
 
+const RootVariants: Variants = {
+  initial: {
+    opacity: 0
+  },
+  animate: {
+    opacity: 1,
+    transition: { delay: 0.5 }
+  }
+};
+
 interface Props {
   label: string;
 }
 
 export const TouchToBegin = ({ label }: Props) => (
-  <RootContainer>
+  <RootContainer {...RootVariants}>
     <CircleContainer>
       <CircleContainer2>
         <CircleContainer3 />
