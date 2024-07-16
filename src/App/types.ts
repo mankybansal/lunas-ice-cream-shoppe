@@ -42,6 +42,7 @@ export interface Item {
   serving: Serving | undefined;
   flavors: Flavor[];
   toppings: Topping[];
+  imageSrc?: string;
 }
 
 export interface Order {

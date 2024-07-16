@@ -18,6 +18,8 @@ import {
   CUP_RADIUS_BOTTOM,
   CUP_RADIUS_TOP
 } from "./utils";
+import { useSetAtom } from "jotai/index";
+import { rendererAtom } from "~/App/components/IceCreamRenderer/renderer.atom.ts";
 
 const RENDERER_ID = "ice-cream-renderer";
 
@@ -64,6 +66,7 @@ export const IceCreamRenderer = ({
   serving,
   isRandom
 }: Props) => {
+  const setRendererState = useSetAtom(rendererAtom);
   const ref = React.useRef<HTMLDivElement>(null);
   const [preloadedModels, setPreloadedModels] = useState<{
     [key: string]: THREE.Group;
@@ -157,12 +160,17 @@ export const IceCreamRenderer = ({
     const camera = new THREE.PerspectiveCamera(80, aspect);
     camera.position.z = 10;
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      preserveDrawingBuffer: true
+    });
 
     renderer.setSize(clientWidth, clientHeight);
     renderer.shadowMap.enabled = true; // Enable shadow map
     renderer.setClearColor(0xfff5e1); // Set background color to cream
     document.getElementById(RENDERER_ID)!.appendChild(renderer.domElement);
+
+    setRendererState({ renderer });
 
     // Render the scene with the camera
     renderer.render(scene, camera);

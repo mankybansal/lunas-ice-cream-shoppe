@@ -65,10 +65,9 @@ const StyledItemContainer = styled(ItemContainer)`
 `;
 
 const ItemImage = styled.img`
-  position: absolute;
-  right: 20px;
-  width: 70px;
-  top: 20px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 `;
 
 const RemoveButton = styled.button`
@@ -93,6 +92,16 @@ const OrderBottomContainer = styled.div`
   margin-top: auto;
   padding: 32px;
   width: 100%;
+`;
+
+const ImageContainer = styled.div`
+  overflow: hidden;
+  height: 80px;
+  width: 80px;
+  border-radius: 12px;
+  right: 24px;
+  position: absolute;
+  top: 20px;
 `;
 
 const OrderActions = styled.div`
@@ -142,10 +151,12 @@ const OrderList = () => {
         const itemPrice = Helpers.calculateItemPrice(item);
         return (
           <StyledItemContainer key={i} {...Animations.AnimateInUp}>
-            <ItemImage src={item.serving!.image} alt={"serving-image"} />
+            <ImageContainer>
+              <ItemImage src={item.imageSrc} alt={"Rendered Ice Cream"} />
+            </ImageContainer>
+
             <ItemPrimaryInfo>
               <ItemTitle>{item.serving!.name}</ItemTitle>
-
               <ItemCategory>{strings.scoops}</ItemCategory>
               <CategoryBreakDown items={item.flavors} />
 
@@ -156,6 +167,7 @@ const OrderList = () => {
                 </>
               )}
             </ItemPrimaryInfo>
+
             <OrderBottomContainer>
               <Divider />
               <OrderActions>

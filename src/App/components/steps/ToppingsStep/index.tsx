@@ -22,6 +22,8 @@ import {
   ItemTitle
 } from "~/App/Styled";
 import { KioskFormData, Topping } from "~/App/types";
+import { useAtomValue } from "jotai";
+import { rendererAtom } from "~/App/components/IceCreamRenderer/renderer.atom.ts";
 
 const strings = {
   back: "Back",
@@ -102,6 +104,7 @@ const ToppingsStep = () => {
   const { stepHandler } = useStepHandler();
   const { watch, setValue } = useFormContext<KioskFormData>();
   const order = watch("order");
+  const rendererState = useAtomValue(rendererAtom);
 
   const handleStep = useCallback(
     (gotoStep: AppConfig.Steps) => {
@@ -111,7 +114,10 @@ const ToppingsStep = () => {
 
       const updatedOrder = { ...order };
       if (updatedOrder.currentItem.serving !== null) {
+        updatedOrder.currentItem.imageSrc =
+          rendererState.renderer?.domElement.toDataURL();
         updatedOrder.items.push(updatedOrder.currentItem);
+
         updatedOrder.currentItem = AppConfig.defaultCurrentItem();
       }
 
@@ -119,7 +125,7 @@ const ToppingsStep = () => {
 
       return stepHandler(gotoStep);
     },
-    [order, stepHandler, setValue]
+    [order, setValue, stepHandler, rendererState.renderer?.domElement]
   );
 
   const maxToppings = order.currentItem.serving!.toppings;
