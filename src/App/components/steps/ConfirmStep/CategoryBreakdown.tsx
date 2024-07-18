@@ -1,10 +1,15 @@
 import styled from "@emotion/styled";
+import { MediaQuery } from "~/App/mediaQuery.ts";
 
 const RootContainer = styled.div`
   width: 100%;
   display: flex;
   margin-top: 5px;
   justify-content: space-between;
+
+  ${MediaQuery.BreakpointMaxWidth.MD} {
+    font-size: 14px;
+  }
 `;
 
 const Price = styled.div`

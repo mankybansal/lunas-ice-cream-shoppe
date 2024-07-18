@@ -20,6 +20,7 @@ import {
 } from "./utils";
 import { useSetAtom } from "jotai/index";
 import { rendererAtom } from "~/App/components/IceCreamRenderer/renderer.atom.ts";
+import { MediaQuery } from "~/App/mediaQuery.ts";
 
 const RENDERER_ID = "ice-cream-renderer";
 
@@ -30,6 +31,11 @@ const RootContainer = styled(motion.div)<{ wide: boolean }>`
   min-height: 300px;
   overflow: hidden;
   background: #fff5e1;
+
+  ${MediaQuery.BreakpointMaxWidth.MD} {
+    height: ${({ wide }) => (wide ? "300px" : "200px")};
+    min-height: unset;
+  }
 `;
 
 const buildLights = (scene: THREE.Scene) => {

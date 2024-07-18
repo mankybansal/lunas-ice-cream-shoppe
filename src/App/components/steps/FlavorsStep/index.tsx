@@ -24,6 +24,7 @@ import { useStepHandler } from "~/App/hooks/useStepHandler";
 import { Flavor, KioskFormData } from "~/App/types";
 import { useSetAtom } from "jotai/index";
 import { confirmationModalStateAtom } from "~/App/components/ConfirmationModal/confirmationModalState.atom.ts";
+import { MediaQuery } from "~/App/mediaQuery.ts";
 
 const strings = {
   selectToppings: "Select Toppings",
@@ -59,6 +60,10 @@ const Action = styled(ActionText)<{ disabled?: boolean; selected?: boolean }>`
 
   :last-of-type {
     justify-content: flex-end;
+  }
+
+  ${MediaQuery.BreakpointMaxWidth.MD} {
+    padding: 12px 16px;
   }
 `;
 

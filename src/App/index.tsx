@@ -22,6 +22,7 @@ import { IceCreamRenderer } from "~/App/components/IceCreamRenderer";
 import { useAppInit } from "~/App/hooks/useAppInit";
 import { ConfirmationModal } from "~/App/components/ConfirmationModal";
 import { getRandomIceCream } from "~/App/utils/random.ts";
+import { MediaQuery } from "~/App/mediaQuery.ts";
 
 const RootContainer = styled(motion.div)`
   text-align: center;
@@ -38,7 +39,7 @@ const ContentContainer = styled.div`
   overflow: hidden;
   overflow-y: auto;
 
-  @media screen and (max-width: 768px) {
+  ${MediaQuery.BreakpointMaxWidth.MD} {
     flex-direction: column;
     align-items: center;
     justify-content: center;

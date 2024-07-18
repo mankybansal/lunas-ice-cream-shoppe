@@ -8,6 +8,7 @@ import { XCircle } from "~/App/components/icons/XCircle.tsx";
 import { useSetHeaderPrompt } from "~/App/components/Header/headerState.atom";
 import { usePaymentHandler } from "~/App/hooks/usePaymentHandler";
 import { CenteredContent, StyledSpinnerGap } from "~/App/Styled";
+import { MediaQuery } from "~/App/mediaQuery.ts";
 
 const strings = {
   prompt: "Make Payment",
@@ -27,6 +28,11 @@ const SimulationBar = styled.div`
   justify-content: center;
   margin-top: 128px;
   gap: 16px;
+
+  ${MediaQuery.BreakpointMaxWidth.MD} {
+    margin-top: 64px;
+    flex-direction: column;
+  }
 `;
 
 const SimulateButton = styled.div`
@@ -47,9 +53,14 @@ const SimulateButton = styled.div`
 const PaymentInteraction = styled.div`
   width: 300px;
   height: 400px;
+  min-height: 400px;
   padding: 50px;
   transform: scale(0.8);
   margin: -20px auto 0 auto;
+
+  ${MediaQuery.BreakpointMaxWidth.MD} {
+    height: 300px;
+  }
 `;
 
 const PaymentDevice = styled.div<{ state: PaymentState }>`
@@ -62,6 +73,10 @@ const PaymentDevice = styled.div<{ state: PaymentState }>`
   background: #fff;
   z-index: 4;
   transition: all ease 0.3s;
+
+  ${MediaQuery.BreakpointMaxWidth.MD} {
+    margin: 24px auto 0 auto;
+  }
 
   ::after {
     background-color: ${({ state }) =>
@@ -170,6 +185,10 @@ const Prompt = styled.div`
   font-size: 30px;
   font-weight: 400;
   color: #888;
+
+  ${MediaQuery.BreakpointMaxWidth.MD} {
+    font-size: 18px;
+  }
 `;
 
 const PaymentAmount = styled.div`
@@ -177,6 +196,12 @@ const PaymentAmount = styled.div`
   color: #fa8758;
   font-size: 40px;
   margin-bottom: 20px;
+
+  ${MediaQuery.BreakpointMaxWidth.MD} {
+    font-size: 24px;
+    margin-top: 24px;
+    max-width: 240px;
+  }
 `;
 
 type PaymentState = "loading" | "success" | "failed" | undefined;

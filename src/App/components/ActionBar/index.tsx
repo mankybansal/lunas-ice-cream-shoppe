@@ -7,6 +7,8 @@ import { actionBarStateAtom } from "./actionBarState.atom";
 import Animations from "~/App/animations";
 import * as AppConfig from "~/App/config.ts";
 import { useStepHandler } from "~/App/hooks/useStepHandler.ts";
+import { useMediaQuery } from "~/App/hooks/useMediaQuery.ts";
+import { MediaQuery } from "~/App/mediaQuery.ts";
 
 const RootContainer = styled(motion.div)`
   display: flex;
@@ -33,16 +35,16 @@ const ActionButton = styled(motion.button)`
   color: white;
   text-align: center;
   transition: all ease 0.3s;
+
+  ${MediaQuery.BreakpointMaxWidth.MD} {
+    height: unset;
+  }
 `;
 
 const NextButton = styled(ActionButton)`
   background: #5d4037;
   flex: 2;
-
-  @media screen (max-width: 768px) {
-    flex: 1;
-    width: 100%;
-  }
+  white-space: nowrap;
 
   :active {
     background: #4e342e;
@@ -54,11 +56,6 @@ const PrevButton = styled(ActionButton)`
   color: #5d4037;
   flex: 1;
   max-width: 500px;
-
-  @media screen (max-width: 768px) {
-    flex: 1;
-    width: 100%;
-  }
 
   :active {
     // darker
@@ -72,13 +69,13 @@ const StepControl = styled.div`
   height: 120px;
   width: 100%;
 
-  @media screen and (max-width: 768px) {
-    flex-direction: column;
+  ${MediaQuery.BreakpointMaxWidth.MD} {
     height: unset;
   }
 `;
 
 export const ActionBar = () => {
+  const isMobile = useMediaQuery(MediaQuery.MaxWidth.MD);
   const { currentStep } = useStepHandler();
   const { back, next, review } = useAtomValue(actionBarStateAtom);
   if (!back && !next) return null;
@@ -97,7 +94,7 @@ export const ActionBar = () => {
       <StepControl>
         {back && (
           <PrevButton onClick={back.onClick} {...Animations.AnimateInRight}>
-            {back.icon} {back.label}
+            {back.icon} {!isMobile && back.label}
           </PrevButton>
         )}
         {next && (

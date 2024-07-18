@@ -15,6 +15,8 @@ import { usePaymentHandler } from "~/App/hooks/usePaymentHandler";
 import { useStepHandler } from "~/App/hooks/useStepHandler";
 import { KioskFormData } from "~/App/types";
 import { confirmationModalStateAtom } from "~/App/components/ConfirmationModal/confirmationModalState.atom";
+import { MediaQuery } from "~/App/mediaQuery.ts";
+import { useMediaQuery } from "~/App/hooks/useMediaQuery.ts";
 
 const strings = {
   appLogo: "Luna's Ice Cream",
@@ -25,7 +27,7 @@ const strings = {
 const RootContainer = styled(motion.div)`
   display: flex;
   justify-content: center;
-  position: sticky;
+  //position: sticky;
   top: 0;
   z-index: 1;
   padding: 16px 24px;
@@ -36,6 +38,10 @@ const RootContainer = styled(motion.div)`
   align-items: center;
   border-bottom: 2px solid #eee;
   box-shadow: 0 0 50px rgba(0, 0, 0, 0.05);
+
+  ${MediaQuery.BreakpointMaxWidth.MD} {
+    padding: 16px;
+  }
 `;
 
 const InnerContainer = styled.div`
@@ -46,7 +52,7 @@ const InnerContainer = styled.div`
   height: 72px;
   align-items: center;
 
-  @media screen and (max-width: 768px) {
+  ${MediaQuery.BreakpointMaxWidth.MD} {
     flex-direction: column;
     height: unset;
     gap: 8px;
@@ -58,8 +64,8 @@ const Logo = styled.div`
   font-size: 32px;
   flex: 1;
 
-  @media screen and (max-width: 768px) {
-    font-size: 24px;
+  ${MediaQuery.BreakpointMaxWidth.MD} {
+    font-size: 16px;
   }
 `;
 
@@ -68,6 +74,10 @@ const ActionsContainer = styled.div`
   gap: 16px;
   flex: 1;
   justify-content: flex-end;
+
+  ${MediaQuery.BreakpointMaxWidth.MD} {
+    gap: 8px;
+  }
 `;
 
 const Action = styled.button`
@@ -87,6 +97,11 @@ const Action = styled.button`
     background: #f5f5f5;
     border: 1px solid #000;
   }
+
+  ${MediaQuery.BreakpointMaxWidth.MD} {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
 `;
 
 const Prompt = styled.div`
@@ -96,8 +111,10 @@ const Prompt = styled.div`
   justify-content: center;
   font-weight: 500;
 
-  @media screen and (max-width: 768px) {
-    font-size: 24px;
+  ${MediaQuery.BreakpointMaxWidth.MD} {
+    margin: 8px 0;
+    font-size: 22px;
+    justify-content: flex-start;
   }
 `;
 
@@ -112,9 +129,24 @@ const Circle = styled.div`
   border-radius: 50%;
   background: #fa8758;
   margin-right: -8px;
+
+  ${MediaQuery.BreakpointMaxWidth.MD} {
+    width: 16px;
+    height: 16px;
+    font-size: 10px;
+  }
+`;
+
+const MobileRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  justify-content: space-between;
 `;
 
 const Header = () => {
+  const isMobile = useMediaQuery(MediaQuery.MaxWidth.MD);
   const { watch, setValue } = useFormContext<KioskFormData>();
 
   const setHelpModalState = useSetAtom(helpModalStateAtom);
@@ -143,42 +175,69 @@ const Header = () => {
 
   if (currentStep === AppConfig.Steps.Start) return null;
 
+  const cart = (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "12px",
+        cursor: "pointer",
+        padding: isMobile ? 0 : "0px 16px"
+      }}
+      onClick={() => {
+        // Reset the current item.
+        setValue("order.currentItem", defaultCurrentItem());
+        void stepHandler(AppConfig.Steps.Confirm);
+      }}
+    >
+      <Circle>{itemCount}</Circle>
+      <ShoppingCart height={"24px"} width={"24px"} />
+      {!isMobile && (
+        <span style={{ fontWeight: "bold" }}>${totalPrice.toFixed(2)}</span>
+      )}
+    </div>
+  );
+
+  const shouldShowCart =
+    (currentStep === AppConfig.Steps.Servings ||
+      currentStep === AppConfig.Steps.Flavors ||
+      currentStep === AppConfig.Steps.Toppings) &&
+    itemCount > 0;
+
+  const actions = (
+    <ActionsContainer>
+      {!isMobile && shouldShowCart && cart}
+      {currentStep !== AppConfig.Steps.Finish && (
+        <Action onClick={handleClickCancel}>{strings.cancelOrder}</Action>
+      )}
+      <Action onClick={handleClickHelp}>{strings.help}</Action>
+    </ActionsContainer>
+  );
+
+  if (isMobile) {
+    return (
+      <RootContainer {...Animations.AnimateInUp}>
+        <InnerContainer>
+          <MobileRow>
+            <Logo>{strings.appLogo}</Logo>
+            {actions}
+          </MobileRow>
+          <MobileRow>
+            <Prompt>{prompt}</Prompt>
+            {isMobile && shouldShowCart && cart}
+          </MobileRow>
+        </InnerContainer>
+      </RootContainer>
+    );
+  }
+
   return (
     <RootContainer {...Animations.AnimateInUp}>
       <InnerContainer>
         <Logo>{strings.appLogo}</Logo>
         <Prompt>{prompt}</Prompt>
-        <ActionsContainer>
-          {(currentStep === AppConfig.Steps.Servings ||
-            currentStep === AppConfig.Steps.Flavors ||
-            currentStep === AppConfig.Steps.Toppings) &&
-            itemCount > 0 && (
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "12px",
-                  cursor: "pointer",
-                  padding: "0px 16px"
-                }}
-                onClick={() => {
-                  // Reset the current item.
-                  setValue("order.currentItem", defaultCurrentItem());
-                  void stepHandler(AppConfig.Steps.Confirm);
-                }}
-              >
-                <Circle>{itemCount}</Circle>
-                <ShoppingCart height={"24px"} width={"24px"} />
-                <span style={{ fontWeight: "bold" }}>
-                  ${totalPrice.toFixed(2)}
-                </span>
-              </div>
-            )}
-          {currentStep !== AppConfig.Steps.Finish && (
-            <Action onClick={handleClickCancel}>{strings.cancelOrder}</Action>
-          )}
-          <Action onClick={handleClickHelp}>{strings.help}</Action>
-        </ActionsContainer>
+        {shouldShowCart && cart}
+        {actions}
       </InnerContainer>
     </RootContainer>
   );

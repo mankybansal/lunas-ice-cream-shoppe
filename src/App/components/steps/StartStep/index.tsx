@@ -5,6 +5,7 @@ import { TouchToBegin } from "./TouchToBegin";
 
 import Animations from "~/App/animations";
 import { useStepHandler } from "~/App/hooks/useStepHandler";
+import { MediaQuery } from "~/App/mediaQuery.ts";
 
 const strings = {
   title: "Welcome to Luna's Ice Cream Shoppe",
@@ -22,8 +23,8 @@ const RootContainer = styled(motion.div)`
   height: 100%;
   align-items: center;
 
-  @media screen and (max-width: 768px) {
-    padding-right: 0;
+  ${MediaQuery.BreakpointMaxWidth.MD} {
+    padding: 24px;
   }
 `;
 
@@ -34,8 +35,9 @@ const AppTitle = styled.div`
   font-size: 44px;
   font-weight: 500;
 
-  @media screen and (max-width: 768px) {
+  ${MediaQuery.BreakpointMaxWidth.MD} {
     font-size: 32px;
+    margin-top: 32px;
   }
 `;
 
@@ -49,9 +51,10 @@ const AppSubtitle = styled.div`
   color: #9c8b73;
   max-width: 800px;
 
-  @media screen and (max-width: 768px) {
-    font-size: 20px;
-    line-height: 24px;
+  ${MediaQuery.BreakpointMaxWidth.MD} {
+    font-size: 16px;
+    line-height: 20px;
+    margin-bottom: 32px;
   }
 `;
 
@@ -80,6 +83,10 @@ const MadeIn = styled.div`
 
   ::after {
     margin-left: 10px;
+  }
+
+  ${MediaQuery.BreakpointMaxWidth.MD} {
+    font-size: 16px;
   }
 `;
 
