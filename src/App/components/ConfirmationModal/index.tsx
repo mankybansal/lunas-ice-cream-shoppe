@@ -1,7 +1,12 @@
 import { confirmationModalStateAtom } from "./confirmationModalState.atom";
 import { useAtom } from "jotai";
 import Animations from "~/App/animations";
-import { CloseButton, ModalContainer, ModalOverlay } from "~/App/Styled";
+import {
+  CloseButton,
+  ModalContainer,
+  ModalContent,
+  ModalOverlay
+} from "~/App/Styled";
 import { XCircle } from "~/App/components/icons/XCircle";
 import { AnimatePresence } from "framer-motion";
 import styled from "@emotion/styled";
@@ -54,22 +59,26 @@ export const ConfirmationModal = () => {
             <CloseButton onClick={handleClickClose}>
               <XCircle />
             </CloseButton>
-            <h2>{confirmationModalState.title}</h2>
-            <p>{confirmationModalState.content}</p>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                marginTop: 32
-              }}
-            >
-              {onCancel && (
-                <SecondaryButton onClick={handleCancel}>
-                  {cancelText}
-                </SecondaryButton>
-              )}
-              <StyledButton onClick={handleConfirm}>{confirmText}</StyledButton>
-            </div>
+            <ModalContent>
+              <h2>{confirmationModalState.title}</h2>
+              <p>{confirmationModalState.content}</p>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginTop: 32
+                }}
+              >
+                {onCancel && (
+                  <SecondaryButton onClick={handleCancel}>
+                    {cancelText}
+                  </SecondaryButton>
+                )}
+                <StyledButton onClick={handleConfirm}>
+                  {confirmText}
+                </StyledButton>
+              </div>
+            </ModalContent>
           </ModalContainer>
         </ModalOverlay>
       )}

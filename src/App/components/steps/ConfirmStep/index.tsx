@@ -26,6 +26,7 @@ import {
 import { MinusCircle } from "~/App/components/icons/MinusCircle";
 import { useSetAtom } from "jotai/index";
 import { confirmationModalStateAtom } from "~/App/components/ConfirmationModal/confirmationModalState.atom.ts";
+import { MediaQuery } from "~/App/mediaQuery.ts";
 
 const strings = {
   prompt: "Review Order",
@@ -50,8 +51,9 @@ const PaymentBreakupContainer = styled.div`
   flex: 1;
   background: white;
 
-  @media screen (max-width: 768px) {
+  ${MediaQuery.BreakpointMaxWidth.MD} {
     padding: 20px 0;
+    font-size: 16px;
   }
 `;
 
@@ -92,6 +94,10 @@ const OrderBottomContainer = styled.div`
   margin-top: auto;
   padding: 32px;
   width: 100%;
+
+  ${MediaQuery.BreakpointMaxWidth.MD} {
+    padding: 16px;
+  }
 `;
 
 const ImageContainer = styled.div`
@@ -102,6 +108,14 @@ const ImageContainer = styled.div`
   right: 24px;
   position: absolute;
   top: 20px;
+
+  ${MediaQuery.BreakpointMaxWidth.MD} {
+    height: 60px;
+    width: 60px;
+    top: 8px;
+    right: 8px;
+    border-radius: 8px;
+  }
 `;
 
 const OrderActions = styled.div`
@@ -157,6 +171,7 @@ const OrderList = () => {
 
             <ItemPrimaryInfo>
               <ItemTitle>{item.serving!.name}</ItemTitle>
+
               <ItemCategory>{strings.scoops}</ItemCategory>
               <CategoryBreakDown items={item.flavors} />
 

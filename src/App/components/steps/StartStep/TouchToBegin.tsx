@@ -1,6 +1,7 @@
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import { motion, Variants } from "framer-motion";
+import { MediaQuery } from "~/App/mediaQuery.ts";
 
 const RootContainer = styled(motion.div)`
   width: 100%;
@@ -58,6 +59,11 @@ const CircleContainer = styled.div`
   border: 1px solid #ccc;
   margin: 0 auto;
   animation: ${AppLogoSpin} infinite 2s linear;
+
+  ${MediaQuery.BreakpointMaxWidth.MD} {
+    height: 80px;
+    width: 80px;
+  }
 `;
 
 const Prompt = styled.div`
@@ -66,11 +72,16 @@ const Prompt = styled.div`
   font-size: 30px;
   font-weight: 400;
   color: #ffa07a;
+
+  ${MediaQuery.BreakpointMaxWidth.MD} {
+    margin: 48px 0;
+    font-size: 18px;
+  }
 `;
 
 const CircleContainer2 = styled.div`
-  width: 75px;
-  height: 75px;
+  width: 50%;
+  height: 50%;
   border-radius: 50%;
   border: 1px solid #555;
   margin: 25% auto 0 auto;
@@ -78,8 +89,8 @@ const CircleContainer2 = styled.div`
 `;
 
 const CircleContainer3 = styled.div`
-  width: 75px;
-  height: 75px;
+  width: 50%;
+  height: 50%;
   border-radius: 50%;
   border: 1px solid #888;
   margin: 0 auto;

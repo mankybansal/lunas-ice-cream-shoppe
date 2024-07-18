@@ -14,6 +14,8 @@ import { useStepHandler } from "~/App/hooks/useStepHandler";
 import { CenteredContent, Divider } from "~/App/Styled";
 import { KioskFormData } from "~/App/types";
 import * as Helpers from "~/App/utils/app";
+import { MediaQuery } from "~/App/mediaQuery.ts";
+import { useMediaQuery } from "~/App/hooks/useMediaQuery.ts";
 
 const strings = {
   prompt: "Thank You For Your Order",
@@ -43,6 +45,10 @@ const Receipt = styled.div`
   border-radius: 8px;
   box-shadow: 0 0 40px rgba(0, 0, 0, 0.05);
   margin: 16px 0;
+
+  ${MediaQuery.BreakpointMaxWidth.MD} {
+    width: 100%;
+  }
 `;
 
 const ReceiptItem = styled.div`
@@ -83,10 +89,18 @@ const HighlightedText = styled.span`
 const LargeText = styled.span`
   font-size: 32px;
   margin-bottom: 16px;
+
+  ${MediaQuery.BreakpointMaxWidth.MD} {
+    font-size: 20px;
+  }
 `;
 
 const TimerText = styled.div`
   margin: 32px 0;
+
+  ${MediaQuery.BreakpointMaxWidth.MD} {
+    margin: 16px 0;
+  }
 `;
 
 const FlexContainer = styled.div`
@@ -94,7 +108,7 @@ const FlexContainer = styled.div`
   gap: 128px;
   align-items: center;
 
-  @media screen and (max-width: 768px) {
+  ${MediaQuery.BreakpointMaxWidth.MD} {
     flex-direction: column;
     gap: 24px;
   }
@@ -114,6 +128,12 @@ const OrderNumber = styled.div`
   font-size: 80px;
   color: black;
   margin-bottom: 70px;
+
+  ${MediaQuery.BreakpointMaxWidth.MD} {
+    font-size: 32px;
+    margin-bottom: 12px;
+    margin-top: 32px;
+  }
 `;
 
 const ReceiptGroup = styled.div`
@@ -141,6 +161,10 @@ const StartOverText = styled.button`
   :active {
     background: #f5f5f5;
   }
+
+  ${MediaQuery.BreakpointMaxWidth.MD} {
+    margin-top: 0px;
+  }
 `;
 
 const StyledArrowClockwise = styled(ArrowClockwise)<{ spin?: boolean }>`
@@ -161,6 +185,7 @@ const StyledArrowClockwise = styled(ArrowClockwise)<{ spin?: boolean }>`
 `;
 
 const FinishStep = () => {
+  const isMobile = useMediaQuery(MediaQuery.MaxWidth.MD);
   const { stepHandler } = useStepHandler();
   const { getValues } = useFormContext<KioskFormData>();
   const order = getValues("completedOrder")!;
@@ -197,9 +222,27 @@ const FinishStep = () => {
 
   const orderPrice = Helpers.calculateOrderPrice(order);
 
+  const orderNumber = (
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <OrderNumber>
+        {strings.orderNumber}
+        {order.number}
+      </OrderNumber>
+      <LargeText>{strings.collectReceipt}</LargeText>
+      <TimerText>
+        {strings.refreshIn} {timer} seconds
+      </TimerText>
+      <StartOverText onClick={handleClickStartover}>
+        <StyledArrowClockwise spin={isSpinning} />
+        {strings.startOver}
+      </StartOverText>
+    </div>
+  );
+
   return (
     <CenteredContent {...Animations.AnimateInUp}>
       <FlexContainer>
+        {isMobile && orderNumber}
         <Receipt>
           <HighlightedText>{strings.receiptTitle}</HighlightedText>
           <ReceiptGroup style={{ gap: 4 }}>
@@ -254,20 +297,7 @@ const FinishStep = () => {
             <Smiley width={"24px"} height={"24px"} />
           </ThankYouContainer>
         </Receipt>
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <OrderNumber>
-            {strings.orderNumber}
-            {order.number}
-          </OrderNumber>
-          <LargeText>{strings.collectReceipt}</LargeText>
-          <TimerText>
-            {strings.refreshIn} {timer} seconds
-          </TimerText>
-          <StartOverText onClick={handleClickStartover}>
-            <StyledArrowClockwise spin={isSpinning} />
-            {strings.startOver}
-          </StartOverText>
-        </div>
+        {!isMobile && orderNumber}
       </FlexContainer>
     </CenteredContent>
   );

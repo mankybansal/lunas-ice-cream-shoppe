@@ -6,7 +6,12 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { helpModalStateAtom } from "./helpModalState.atom";
 
 import { XCircle } from "~/App/components/icons/XCircle";
-import { CloseButton, ModalContainer, ModalOverlay } from "~/App/Styled";
+import {
+  CloseButton,
+  ModalContainer,
+  ModalContent,
+  ModalOverlay
+} from "~/App/Styled";
 import Animations from "~/App/animations";
 
 const StyledLink = styled.a`
@@ -51,52 +56,58 @@ export const HelpModal = () => {
             <CloseButton onClick={handleClickClose}>
               <XCircle />
             </CloseButton>
-            <h1>Help</h1>
-            <p style={{ textAlign: "left" }}>
-              This is a demo app for a fictional ice cream parlor called Luna's
-              Ice Cream Shoppe built with <Link href={links.vite}>Vite</Link>,{" "}
-              <Link href={links.react}>React</Link>,{" "}
-              <Link href={links.typescript}>Typescript</Link>, ,
-              <Link href={links.emotion}>Emotion</Link>, ,
-              <Link href={links.jotai}>Jotai</Link>,{" "}
-              <Link href={links.framer}>Framer Motion</Link>,{" "}
-              <Link href={links.reactHookForm}>React Hook Form</Link>, and{" "}
-              <Link href={links.threejs}>ThreeJS</Link>.
-            </p>
-            <p>
-              Luna's is a play on my name, which in Sanskrit means moon. Most of
-              my food related projects are part of the Luna universe.
-            </p>
-            <p>
-              I built this project 6 years ago as my first React project. As I
-              progress through my software engineering journey, every 2-3 years,
-              I keep adding more features and refactor this app to showcase my
-              skills and knowledge.
-            </p>
-            <p>
-              If you would like to see where this all began, you can check out{" "}
-              <Link href={links.firstVersion}>Luna's Ice Cream Shoppe v1</Link>.
-            </p>
-            <p>
-              All models and images were handcrafted on{" "}
-              <Link href={links.blender}>Blender</Link> and{" "}
-              <Link href={links.figma}>Figma</Link>.
-            </p>
-            <p>
-              If you have ideas, or want to submit improvements to this project,
-              feel free to check out the{" "}
-              <Link href={links.github}>repository on Github.</Link>
-            </p>
-            <p>Keep learning, and get some ice-cream 🍦.</p>
-            <h4>
-              — Mayank{" "}
-              <Link href={"https://manky.me"} style={{ fontSize: 16 }}>
-                (Website)
-              </Link>
-            </h4>
-            <b style={{ fontFamily: "Pacifico", color: "brown" }}>
-              Made in Seattle, Washington
-            </b>
+            <ModalContent>
+              <h1>Help</h1>
+              <p style={{ textAlign: "left" }}>
+                This is a demo app for a fictional ice cream parlor called
+                Luna's Ice Cream Shoppe built with{" "}
+                <Link href={links.vite}>Vite</Link>,{" "}
+                <Link href={links.react}>React</Link>,{" "}
+                <Link href={links.typescript}>Typescript</Link>, ,
+                <Link href={links.emotion}>Emotion</Link>, ,
+                <Link href={links.jotai}>Jotai</Link>,{" "}
+                <Link href={links.framer}>Framer Motion</Link>,{" "}
+                <Link href={links.reactHookForm}>React Hook Form</Link>, and{" "}
+                <Link href={links.threejs}>ThreeJS</Link>.
+              </p>
+              <p>
+                Luna's is a play on my name, which in Sanskrit means moon. Most
+                of my food related projects are part of the Luna universe.
+              </p>
+              <p>
+                I built this project 6 years ago as my first React project. As I
+                progress through my software engineering journey, every 2-3
+                years, I keep adding more features and refactor this app to
+                showcase my skills and knowledge.
+              </p>
+              <p>
+                If you would like to see where this all began, you can check out{" "}
+                <Link href={links.firstVersion}>
+                  Luna's Ice Cream Shoppe v1
+                </Link>
+                .
+              </p>
+              <p>
+                All models and images were handcrafted on{" "}
+                <Link href={links.blender}>Blender</Link> and{" "}
+                <Link href={links.figma}>Figma</Link>.
+              </p>
+              <p>
+                If you have ideas, or want to submit improvements to this
+                project, feel free to check out the{" "}
+                <Link href={links.github}>repository on Github.</Link>
+              </p>
+              <p>Keep learning, and get some ice-cream 🍦.</p>
+              <h4>
+                — Mayank{" "}
+                <Link href={"https://manky.me"} style={{ fontSize: 16 }}>
+                  (Website)
+                </Link>
+              </h4>
+              <b style={{ fontFamily: "Pacifico", color: "brown" }}>
+                Made in Seattle, Washington
+              </b>
+            </ModalContent>
           </ModalContainer>
         </ModalOverlay>
       )}
