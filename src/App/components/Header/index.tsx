@@ -224,7 +224,7 @@ const Header = () => {
           </MobileRow>
           <MobileRow>
             <Prompt>{prompt}</Prompt>
-            {isMobile && shouldShowCart && cart}
+            {shouldShowCart && cart}
           </MobileRow>
         </InnerContainer>
       </RootContainer>
@@ -236,7 +236,6 @@ const Header = () => {
       <InnerContainer>
         <Logo>{strings.appLogo}</Logo>
         <Prompt>{prompt}</Prompt>
-        {shouldShowCart && cart}
         {actions}
       </InnerContainer>
     </RootContainer>
